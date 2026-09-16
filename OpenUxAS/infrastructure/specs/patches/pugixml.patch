@@ -1,0 +1,58 @@
+*** src/pugixml.cpp	2022-09-30 10:28:07.214511429 -0400
+--- src/pugixml.cpp	2022-09-30 10:28:02.894431468 -0400
+***************
+*** 4589,4594 ****
+--- 4589,4605 ----
+  		return string_to_integer<unsigned int>(value, 0, UINT_MAX);
+  	}
+
++ 	PUGI__FN int64_t get_value_int64(const char_t* value, int64_t def)
++ 	{
++ 		if (!value) return def;
++
++ 	#ifdef PUGIXML_WCHAR_MODE
++ 		return static_cast<unsigned int>(wcstoull(value, 0, 10));
++ 	#else
++ 		return static_cast<int64_t>(strtoull(value, 0, 10));
++ 	#endif
++ 	}
++
+  	PUGI__FN double get_value_double(const char_t* value)
+  	{
+  	#ifdef PUGIXML_WCHAR_MODE
+***************
+*** 5208,5213 ****
+--- 5219,5229 ----
+  		return (_attr && _attr->value) ? impl::get_value_uint(_attr->value) : def;
+  	}
+
++ 	PUGI__FN int64_t xml_attribute::as_int64(int64_t def) const
++ 	{
++ 		return impl::get_value_int64(_attr ? _attr->value : 0, def);
++ 	}
++
+  	PUGI__FN double xml_attribute::as_double(double def) const
+  	{
+  		return (_attr && _attr->value) ? impl::get_value_double(_attr->value) : def;
+*** src/pugixml.hpp	2022-09-30 10:28:07.214511429 -0400
+--- src/pugixml.hpp	2022-09-30 10:28:02.894431468 -0400
+***************
+*** 11,16 ****
+--- 11,18 ----
+   * Copyright (C) 2003, by Kristen Wegner (kristen@tima.net)
+   */
+
++ #include <cstdint>
++
+  // Define version macro; evaluates to major * 1000 + minor * 10 + patch so that it's safe to use in less-than comparisons
+  // Note: pugixml used major * 100 + minor * 10 + patch format up until 1.9 (which had version identifier 190); starting from pugixml 1.10, the minor version number is two digits
+  #ifndef PUGIXML_VERSION
+***************
+*** 403,408 ****
+--- 405,411 ----
+  		// Get attribute value as a number, or the default value if conversion did not succeed or attribute is empty
+  		int as_int(int def = 0) const;
+  		unsigned int as_uint(unsigned int def = 0) const;
++ 		int64_t as_int64(int64_t def = 0) const;
+  		double as_double(double def = 0) const;
+  		float as_float(float def = 0) const;

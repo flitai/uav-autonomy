@@ -1,0 +1,113 @@
+package body AVTAS.LMCP.ByteBuffers.Copying with
+   SPARK_Mode
+is
+
+   package ASU renames Ada.Strings.Unbounded;
+
+   ---------------------------
+   -- Copy_Buffer_To_String --
+   ---------------------------
+
+   procedure Copy_Buffer_To_String
+     (This        : in out ByteBuffer;
+      Length      : Index;
+      Destination : in out String)
+   is
+      Old_Pos : constant Index := Position (This) with Ghost;
+   begin
+      for K in Index range 0 .. Length - 1 loop
+         Destination (Destination'First + Integer (K)) := Character'Val (This.Content (This.Position));
+
+         pragma Loop_Invariant (This.Position = This.Position'Loop_Entry + K);
+         pragma Loop_Invariant
+           (for all J in 0 .. K =>
+              Destination (Destination'First + Integer (J)) = Character'Val (This.Content (Old_Pos + J)));
+
+         This.Position := This.Position + 1;
+      end loop;
+   end Copy_Buffer_To_String;
+
+   -------------------------------------
+   -- Copy_Buffer_To_Unbounded_String --
+   -------------------------------------
+
+   procedure Copy_Buffer_To_Unbounded_String
+     (This        : in out ByteBuffer;
+      Length      : Index;
+      Destination : out Unbounded_String)
+   is
+      Old_Pos : constant Index := Position (This) with Ghost;
+   begin
+      Destination := Null_Unbounded_String;
+      pragma Assume (ASU.Length (Destination) = 0);
+      for K in 0 .. Length - 1 loop
+         Append (Destination, Character'Val (This.Content (This.Position)));
+
+         pragma Loop_Invariant (ASU.Length (Destination) = 1 + Integer (K));
+         pragma Loop_Invariant
+           (for all J in 0 .. K =>
+              Element (Destination, 1 + Integer (J)) = Character'Val (This.Content (Old_Pos + J)));
+         pragma Loop_Invariant (This.Position = Old_Pos + K);
+
+         This.Position := This.Position + 1;
+      end loop;
+   end Copy_Buffer_To_Unbounded_String;
+
+   ---------------------------
+   -- Copy_String_To_Buffer --
+   ---------------------------
+
+   procedure Copy_String_To_Buffer
+     (This : in out ByteBuffer;
+      From : String)
+   is
+   begin
+      for J in 0 .. From'Length - 1 loop
+         This.Content (This.Position) := Character'Pos (From (From'First + J));
+         This.Position := This.Position + 1;
+         if This.Position > This.Highest_Write_Pos then
+            This.Highest_Write_Pos := This.Position;
+         end if;
+
+         pragma Loop_Invariant (This.Position = This.Position'Loop_Entry + Index (J) + 1);
+         pragma Loop_Invariant (This.Highest_Write_Pos = Index'Max (This.Highest_Write_Pos'Loop_Entry, This.Position));
+
+         --  no Content before the newly updated part has been changed
+         pragma Loop_Invariant
+           (for all K in 0 .. This.Position'Loop_Entry - 1 =>
+              This.Content (K) = This.Content'Loop_Entry (K));
+
+         --  all Content updated so far matches component values in From
+         pragma Loop_Invariant
+           (for all K in This.Position'Loop_Entry .. This.Position'Loop_Entry + Index (J) =>
+              This.Content (K) = Character'Pos (From (From'First + Natural (K - This.Position'Loop_Entry))));
+
+         --  no Content after the currently updated part, if any exists, is changed
+         pragma Loop_Invariant
+           (for all K in This.Position .. This.Highest_Write_Pos - 1 =>
+              This.Content (K) = This.Content'Loop_Entry (K));
+
+         --  all written Content is initialized
+         pragma Loop_Invariant
+           (for all K in 0 .. This.Highest_Write_Pos - 1 =>
+              This.Content (K)'Initialized);
+      end loop;
+   end Copy_String_To_Buffer;
+
+   --------------------------
+   -- Copy_Bytes_To_Buffer --
+   --------------------------
+
+   procedure Copy_Bytes_To_Buffer
+     (This : in out ByteBuffer;
+      From : Byte_Array)
+   is
+   begin
+      This.Content (This.Position .. This.Position + From'Length - 1) := Byte_Data (From);
+      This.Position := This.Position + From'Length;
+      if This.Position > This.Highest_Write_Pos then
+         This.Highest_Write_Pos := This.Position;
+      end if;
+   end Copy_Bytes_To_Buffer;
+
+end AVTAS.LMCP.ByteBuffers.Copying;

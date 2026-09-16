@@ -1,0 +1,2 @@
+waypoint_plan_manager.adb:42:16: medium: precondition might fail, cannot prove Length (Container) < Container.Capacity
+waypoint_plan_manager.adb:43:16: medium: precondition might fail, cannot prove Length (Container) < Container.Capacity

@@ -1,0 +1,20 @@
+#! /usr/bin/env bash
+#
+# run-proofs wrapper script.
+
+# Script location
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+
+# Load global paths
+source "${SCRIPT_DIR}/../../infrastructure/paths.sh"
+
+# Activate the python venv
+activate_venv
+
+# Ensure that gnat is available.
+ensure_gnat
+
+# Set the build env for uxas-ada, so that the libraries can be resolved by
+# gnatprove
+debug_and_run "eval \"\$( \"${OPENUXAS_ROOT}/anod\" printenv uxas-ada --build-env )\""
+debug_and_run "python3 \"${TESTS_DIR}/proof/run-proofs.py\" $*"

@@ -1,0 +1,63 @@
+project Test_ByteBuffers is
+
+   for Source_Dirs use (".", "lmcp");
+
+   for Main use ("prove_bytebuffers.adb", "test_bytebuffers.adb");
+
+   type Modes is ("debug", "release");
+   Mode : Modes := external ("Build", "debug");
+
+
+   type Copying_Modes is ("proof", "performance");
+   Copying_Mode : Copying_Modes := external ("Copy_Mode", "proof");
+
+
+   for Object_Dir use "objs/" & Mode;
+
+   Unconditional_Compiler_Switches :=
+     ("-gnatyO",    -- check that overriding subprograms are explicitly marked as such
+      "-gnatwJ"    -- suppress warnings on obsolescent features, esp. parentheses in aggregates
+      --  "-gnat2022"   -- enable Ada 2022
+      );
+
+   Debug_Switches := ("-g",
+                      "-gnateA",     -- check subprogram call for aliased actual parameters
+                      "-gnata",      -- enable assertions
+                      "-gnatwa",     -- turn on (almost) all warnings
+                      "-gnatwf",     -- warn on unreferenced formal parameters
+                      "-O0"
+                      );
+
+   Release_Switches := ("-O2",
+                        "-gnatp"   -- disable runtime check generation
+                        );
+
+   package Compiler is
+      case Mode is
+         when "debug" =>
+            for Default_Switches ("ada") use Debug_Switches & Unconditional_Compiler_Switches;
+         when "release" =>
+            for Default_Switches ("ada") use Release_Switches & Unconditional_Compiler_Switches;
+      end case;
+
+      for Switches ("a-strunb.adb") use ("-gnatg", "-O0", "-g", "-gnata");
+   end Compiler;
+
+   package Naming is
+      case Copying_Mode is
+         when "proof" =>
+            for Implementation ("avtas.lmcp.bytebuffers.copying") use "avtas-lmcp-bytebuffers-copying-provable_adb";
+         when "performance" =>
+            for Implementation ("avtas.lmcp.bytebuffers.copying") use "avtas-lmcp-bytebuffers-copying-performant_adb";
+      end case;
+   end Naming;
+
+   package Linker is
+      for Default_Switches ("Ada") use ("-Wl,--stack=0x1000000000");
+   end Linker;
+
+   package Builder is
+      for Switches ("Ada") use ("-g");
+   end Builder;
+
+end Test_ByteBuffers;

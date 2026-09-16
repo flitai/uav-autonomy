@@ -1,0 +1,1 @@
+assignment_tree_branch_bound.adb:1692:08: medium: aspect Always_Terminates on "Run_Calculate_Assignment" could be incorrect, loop might be nonterminating
