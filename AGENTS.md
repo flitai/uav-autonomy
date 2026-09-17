@@ -15,7 +15,7 @@
 3. 新增消息网关，以 CesiumJS 三维 GIS 逐步替换原有态势可视化与操作界面。
 4. 后续为 TorchRL／BenchMARL 训练集成复用协议与仿真控制接口。
 
-截至上述核对日期，G0 已完成；G1 进行中，G1-T01～T04 已完成，G1-T05 可执行但尚未启动。项目内 Temurin JDK 11.0.32.1+1、Ant 1.10.18 已构建生成器、统一消息库和正式 AMASE；七模型已生成 Java／C++／Python 代码，Python 3.14.7 x64 的消息包及跨语言样本通过，AMASE 两种模式的真实内部状态、十一组自动验收、GUI 人工确认和正常退出均已完成。证据见 [Java 验收](docs/g1-java-validation.md)、[T03 消息库验收](docs/g1-lmcp-validation.md)和 [T04 AMASE 验收](docs/g1-amase-validation.md)。Python 的其他项目依赖未验证。尚未编译 C++、验证实际 TCP 消息解析或完成网络联调，也未落地 Cesium 前端、消息网关或训练集成。继续工作时先读 [当前状态](docs/status.md) 与 [任务清单](docs/backlog.md)，并重新检查实际环境，不把历史快照当成永久结论。
+截至上述核对日期，G0、G1 已完成，G1-T01～T05 均已完成；G2 待细化，尚未启动。项目内 Temurin JDK 11.0.32.1+1、Ant 1.10.18 已构建生成器、统一消息库和正式 AMASE；七模型已生成 Java／C++／Python 代码，Python 3.14.7 x64 的跨语言样本通过。T05 的 GUI／无界面真实 TCP 接收、十四组自动验收、GUI 人工确认、同版本受控复验及正常退出均完成；两层封装、分包、中文路径及故障处理已验证。证据见 [Java 验收](docs/g1-java-validation.md)、[T03 消息库验收](docs/g1-lmcp-validation.md)、[T04 AMASE 验收](docs/g1-amase-validation.md)和 [T05 TCP 验收](docs/g1-tcp-validation.md)。尚未编译 C++、完成 UxAS 双向联调或完整重连验证，也未落地 Cesium、消息网关或训练集成；Python 其他项目依赖未验证。继续工作时先读 [当前状态](docs/status.md) 与 [任务清单](docs/backlog.md)，并重新检查实际环境，不把历史快照当成永久结论。
 
 Windows 原生运行是目标；WSL／Linux 可作参考或过渡环境，其验证结果必须单独标注。总体计划已确定首期默认 Windows 11 x64、联网开发与指定场景的基础离线演示，并保留原场景编辑器；实体规模和具体地理资源按任务细化。CMake／MSVC、Python 网关等是当前计划中的候选实现，不是已经验证的工具链。
 
@@ -96,6 +96,19 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\tests\windows\amase.te
 构建入口保留 AMASE 的 source／target 11，通过 `file.reference.lmcplib.jar` 指向新库并显式列出依赖，禁止 lib 通配符混入旧库。候选位于 `out/build/amase/<run-id>/candidate/`；验收入口 Finalize 仅在取得真实人工确认后正常关闭 GUI 并发布 `out/artifacts/amase/`。发布后启动可省略 BuildRunId。具体参数和证据见 [T04 报告](docs/g1-amase-validation.md)。
 
 GUI 默认端口为 5555，实体 400／500 另监听 9400／9500。并行无界面验收使用 `-Mode Headless -Port 5556 -EntityPortOffset 10000`，实体端口为 19400／19500；必须显式配置和核查所有端口，不静默换端口，不结束其他进程。每次运行复制配置、原场景和资源到独立 out/runs 目录；无 DTED 的零高程缺省值不代表真实地形已验证。内部事件验收插件不实现 T05 的 TCP 接收。
+
+实际 TCP 接收与验收由独立的 scripts/validation 和 tests/amase_tcp 实现，不改动上述已验收构建输入。以下入口已通过两种模式的真实接收和十四组自动检查，使用已验证的 Python 3.14.7 x64：
+
+```powershell
+# 连接本次仍在运行的正式 AMASE；不能填写已经退出的历史运行编号。
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\windows\receive-amase.ps1 -AmaseRunId '<AMASE_RUN_ID>' -PythonExecutable $pythonExe
+# 自动编排两种模式并保留 GUI 供本轮人工确认；关闭与收尾按 T05 报告执行 Finalize。
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\tests\windows\amase-tcp.tests.ps1 -PythonExecutable $pythonExe
+```
+
+客户端只接收，不发送控制或订阅消息；绑定本次 PID／监听端口、正式产物和类加载来源。验证 Sentinel 和内部 LMCP 的长度与实际校验和，再调用统一 Python 类解码；不能把 getObject 或零校验和宽松接受当成完整验证。原始字节、完整帧范围、统计及未消费尾部保存在独立 out/runs；int64 标识和时间写成字符串，仿真毫秒不转换成 UTC。实际 AMASE→Python 接收不代表 UxAS 双向或完整重连矩阵通过。
+
+现有 ValidateRun 对整个 GUI 运行采用时间单调检查；人工重置会触发失败，即使应用正常退出。保留这类诊断并以同版本受控复验完成收尾，不修改原记录或来源清单绕过检查；重置和场景切换的分段验收归 G6。
 
 统一消息生成与验收入口已验证，工作目录同样为仓库根目录。Python 参数必须指向已核查的 Python 3.14.7 x64；以下变量赋值适用于本轮已核查的安装布局，可按实际安装位置替换：
 
