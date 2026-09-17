@@ -13,7 +13,9 @@
 package avtas.app;
 
 import java.awt.Dialog;
+import java.awt.GraphicsEnvironment;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JDialog;
 import org.jdesktop.swingx.JXErrorPane;
 import org.jdesktop.swingx.error.ErrorInfo;
@@ -43,6 +45,10 @@ public class UserExceptions {
     }
 
     private static void showNotice(Object source, String text, Throwable ex, Level level) {
+        if (GraphicsEnvironment.isHeadless()) {
+            Logger.getLogger(UserExceptions.class.getName()).log(level, text, ex);
+            return;
+        }
         String levelName = level.getName().toLowerCase();
         levelName = Character.toUpperCase(levelName.charAt(0)) + levelName.substring(1);
         

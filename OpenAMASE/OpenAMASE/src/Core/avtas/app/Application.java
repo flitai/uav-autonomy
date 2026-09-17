@@ -13,6 +13,7 @@
 package avtas.app;
 
 import java.io.File;
+import java.awt.GraphicsEnvironment;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -113,7 +114,9 @@ public class Application {
             context.addObject(AppEventManager.getDefaultEventManager());
             
             
-            SplashUpdater updater = new SplashUpdater();
+            if (!GraphicsEnvironment.isHeadless()) {
+                new SplashUpdater();
+            }
             
             Element pluginEl = SettingsManager.getAsXml("Plugins.xml");
             if (pluginEl != null) {
@@ -237,6 +240,7 @@ public class Application {
          UncaughtExceptionHandler() {
          public void uncaughtException(Thread t, Throwable e) {
             System.out.println(t + " throws exception: " + e);
+            e.printStackTrace(System.err);
             System.exit(1);
          }});
                     

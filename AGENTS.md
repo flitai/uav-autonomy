@@ -15,7 +15,7 @@
 3. 新增消息网关，以 CesiumJS 三维 GIS 逐步替换原有态势可视化与操作界面。
 4. 后续为 TorchRL／BenchMARL 训练集成复用协议与仿真控制接口。
 
-截至上述核对日期，G0 已完成；G1 进行中，G1-T01～T03 已完成，下一任务 G1-T04 可执行但尚未启动。项目内 Temurin JDK 11.0.32.1+1、Ant 1.10.18 已完成生成器及 Java 消息库构建；七个模型已统一生成 Java／C++／Python 代码，Python 3.14.7 x64 的消息包导入及 Java／Python 双向样本通过，见 [Java 环境与生成器验收](docs/g1-java-validation.md)和 [T03 消息库验收](docs/g1-lmcp-validation.md)。Python 的其他项目依赖未验证。尚未编译 C++、构建 AMASE 或完成网络联调，也未落地完整 Windows 构建链、Cesium 前端、消息网关或训练集成。继续工作时先读 [当前状态](docs/status.md) 与 [任务清单](docs/backlog.md)，并重新检查实际环境，不把历史快照当成永久结论。
+截至上述核对日期，G0 已完成；G1 进行中，G1-T01～T04 已完成，G1-T05 可执行但尚未启动。项目内 Temurin JDK 11.0.32.1+1、Ant 1.10.18 已构建生成器、统一消息库和正式 AMASE；七模型已生成 Java／C++／Python 代码，Python 3.14.7 x64 的消息包及跨语言样本通过，AMASE 两种模式的真实内部状态、十一组自动验收、GUI 人工确认和正常退出均已完成。证据见 [Java 验收](docs/g1-java-validation.md)、[T03 消息库验收](docs/g1-lmcp-validation.md)和 [T04 AMASE 验收](docs/g1-amase-validation.md)。Python 的其他项目依赖未验证。尚未编译 C++、验证实际 TCP 消息解析或完成网络联调，也未落地 Cesium 前端、消息网关或训练集成。继续工作时先读 [当前状态](docs/status.md) 与 [任务清单](docs/backlog.md)，并重新检查实际环境，不把历史快照当成永久结论。
 
 Windows 原生运行是目标；WSL／Linux 可作参考或过渡环境，其验证结果必须单独标注。总体计划已确定首期默认 Windows 11 x64、联网开发与指定场景的基础离线演示，并保留原场景编辑器；实体规模和具体地理资源按任务细化。CMake／MSVC、Python 网关等是当前计划中的候选实现，不是已经验证的工具链。
 
@@ -37,7 +37,7 @@ Windows 原生运行是目标；WSL／Linux 可作参考或过渡环境，其验
 | `OpenUxAS/tests/` | C++ 测试及 SPARK 证明检查 | 检查测试入口的平台与依赖要求 |
 | `OpenUxAS/resources/` | 辅助服务与资源 | 含参与 C++ 构建的 AutomationDiagramDataService |
 
-改造初期保留三个现有源码目录的位置。`scripts/windows/` 已有 Java 工具准备、启用、LmcpGen 构建和统一消息生成入口；`scripts/lmcp/` 是消息生成入口的标准库实现，`tests/lmcp/` 保存文件／内存消息探针。工具与模型清单分别见 `config/windows-java-toolchain.json`、`config/lmcp-models.json`，工具位于被忽略的 `.tools/`。计划中的 `src/sim_bridge/`、`apps/gis_gateway/`、`apps/cesium_viewer/`、根级 CMake 等，需要在对应任务中实际创建；引用前先确认存在。
+改造初期保留三个现有源码目录的位置。`scripts/windows/` 已有 Java 工具、LmcpGen、统一消息生成和 AMASE 构建／运行入口；`scripts/lmcp/`、`scripts/amase/` 是标准库编排实现，`tests/lmcp/`、`tests/amase/` 保存消息及仿真验收探针。工具与模型清单分别见 `config/windows-java-toolchain.json`、`config/lmcp-models.json`，工具位于被忽略的 `.tools/`。计划中的 `src/sim_bridge/`、`apps/gis_gateway/`、`apps/cesium_viewer/`、根级 CMake 等，需要在对应任务中实际创建；引用前先确认存在。
 
 ## 3. 开始任务时
 
@@ -83,14 +83,19 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\tests\windows\lmcpgen-
 
 构建使用独立的 `out/build/lmcpgen/<run-id>/`，验证通过后发布 `out/artifacts/lmcpgen/LmcpGen.jar` 与 `build-info.json`；原始记录在 `out/runs/<run-id>/`。失败时检查本次 result.json，不把保留的旧产物当成本次成功。来源清单包括实际输入哈希、工具版本、Git 基线及 CLI 结果。`-checkMDM` 可能在出错时仍退出 0，必须检查输入存在和诊断输出；T02 的检查范围仅为 CMASI 读取入口，七模型统一生成及跨语言验证已由下述 T03 入口完成。
 
-以下 AMASE 命令仍是 T04 参考模板，**尚未执行验证**；先启用上述工具，再使用显式输出属性：
+AMASE 的构建和自动验收入口已实际运行。构建只产生候选批次；正式发布要求自动验收、GUI 人工确认及正常退出全部完成：
 
 ```powershell
-$projectRoot = (Get-Location).Path
-ant -f .\OpenAMASE\OpenAMASE\build.xml "-Dbuild.dir=$projectRoot/out/build/amase" "-Ddist.dir=$projectRoot/out/artifacts/amase" "-Ddist.jar=$projectRoot/out/artifacts/amase/OpenAMASE.jar" jar
+$pythonExe = Join-Path $env:LOCALAPPDATA 'Python/pythoncore-3.14-64/python.exe'
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\windows\build-amase.ps1 -PythonExecutable $pythonExe
+# 以实际构建编号替换占位符。GUI 自动运行至少 20 秒后暂停并保留。
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\windows\run-amase.ps1 -Mode Gui -BuildRunId '<BUILD_RUN_ID>' -ValidateRun -PythonExecutable $pythonExe
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\tests\windows\amase.tests.ps1 -BuildRunId '<BUILD_RUN_ID>' -GuiRunId '<GUI_RUN_ID>' -PythonExecutable $pythonExe
 ```
 
-AMASE 按上述属性预期产物为 `out/artifacts/amase/OpenAMASE.jar`；未覆盖属性时上游仍默认写入各自 build／dist。上面的 AMASE 模板尚未指定消息库，T04 执行前必须追加 `-Dfile.reference.lmcplib.jar=<项目根目录>/out/artifacts/lmcp/java/lmcplib.jar`，并检查没有同时加载旧库。该接入尚未实际构建验证。
+构建入口保留 AMASE 的 source／target 11，通过 `file.reference.lmcplib.jar` 指向新库并显式列出依赖，禁止 lib 通配符混入旧库。候选位于 `out/build/amase/<run-id>/candidate/`；验收入口 Finalize 仅在取得真实人工确认后正常关闭 GUI 并发布 `out/artifacts/amase/`。发布后启动可省略 BuildRunId。具体参数和证据见 [T04 报告](docs/g1-amase-validation.md)。
+
+GUI 默认端口为 5555，实体 400／500 另监听 9400／9500。并行无界面验收使用 `-Mode Headless -Port 5556 -EntityPortOffset 10000`，实体端口为 19400／19500；必须显式配置和核查所有端口，不静默换端口，不结束其他进程。每次运行复制配置、原场景和资源到独立 out/runs 目录；无 DTED 的零高程缺省值不代表真实地形已验证。内部事件验收插件不实现 T05 的 TCP 接收。
 
 统一消息生成与验收入口已验证，工作目录同样为仓库根目录。Python 参数必须指向已核查的 Python 3.14.7 x64；以下变量赋值适用于本轮已核查的安装布局，可按实际安装位置替换：
 
@@ -101,7 +106,7 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\windows\genera
 powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\tests\windows\lmcp-generation.tests.ps1 -PythonExecutable $pythonExe
 ```
 
-三种语言的代码已位于 `out/generated/lmcp/{java,cpp,py}/`，Java 库为 `out/artifacts/lmcp/java/lmcplib.jar`。使用前核对生成目录 generation-info.json 与产物目录 build-info.json 的运行编号和哈希，禁止混用不同批次或故障副本；失败不会发布部分结果。Python 验证仅导入消息包，示例 LMCPClient.py 在导入时会连接网络，不能当普通模块批量导入。C++ 当前仅生成，AMASE 输出隔离及接入仍待 T04 验证。
+三种语言的代码已位于 `out/generated/lmcp/{java,cpp,py}/`，Java 库为 `out/artifacts/lmcp/java/lmcplib.jar`。使用前核对生成目录 generation-info.json 与产物目录 build-info.json 的运行编号和哈希，禁止混用不同批次或故障副本；失败不会发布部分结果。Python 验证仅导入消息包，示例 LMCPClient.py 在导入时会连接网络，不能当普通模块批量导入。C++ 当前仅生成；AMASE 已实际构建并验证新库的类加载来源，全部任务状态以 status 为准。
 
 ### Linux／WSL：现有 UxAS 参考流程
 
@@ -137,7 +142,7 @@ C++ 测试入口为 `OpenUxAS/tests/cpp/run-tests`，在其所在目录执行 `.
 
 - Java／C++／Python 消息库来自同一份 MDM 和生成器基线。修改消息或生成行为时，改 MDM／模板／生成器并重新生成，不仅修补生成文件。
 - T03 已确认当前 Java 模板与 AMASE 随库 Java 库的 `packMessage(..., true)` 输出 Sentinel／属性封装，`getMessageBytes` 解析该外层；AMASE TcpServer 调用了这些方法。Python 工厂输出原始 LMCP，不能把两者直接等同。文件／内存样本已验证，实际 TCP 双向兼容、分包、过滤与来源仍归后续联调；不得沿用 G0 的“AMASE TCP 仅原始 LMCP”判断。
-- 统一消息库的 UXTASK 为版本 8，旧随库库为版本 7；RendezvousTask 部分旧接口被当前模型移除，不能宣称完全向后兼容。T04 显式接入新库且排除旧同名类，完整构建和运行尚未验证。
+- 统一消息库的 UXTASK 为版本 8，旧随库库为版本 7；RendezvousTask 部分旧接口被当前模型移除，不能宣称完全向后兼容。AMASE 完整构建及 WaterwaySearch 已使用新库运行；其他场景、动态调用和实际网络仍按后续任务验证。
 - WaterwaySearch 的 `5555` 为 AMASE TCP；UxAS `5560` 为 PUB、`5561` 为 PULL，`9999` 为另一 TCP 出口。这是示例端口，不应硬编码为所有实例的全局常量。
 - UxAS PUB 桥对来源 EntityID 有过滤；不能假定订阅后自然取得所有 AMASE 状态。
 - TCP 需要增量分包、长度与校验检查、断线清理；不要把一次 `recv` 当成一条完整 LMCP 消息。
