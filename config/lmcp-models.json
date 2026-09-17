@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "source": "OpenUxAS/mdms",
+  "baseline": "G0 local content baseline; upstream commit unknown",
+  "models": [
+    {"file": "CMASI.xml", "series": "CMASI", "namespace": "afrl/cmasi", "version": 3, "sha256": "EBF4D93CD57F798CF9D4CCC5464C4BED23FD113277F7956543885897C29BF360"},
+    {"file": "IMPACT.xml", "series": "IMPACT", "namespace": "afrl/impact", "version": 14, "sha256": "EF125CDCFEAAE2053FEB43216613A95A71EEE6C6CB5CCBA1FD0897A824815803"},
+    {"file": "PERCEIVE.xml", "series": "PERCEIVE", "namespace": "afrl/cmasi/perceive", "version": 1, "sha256": "01F26999456EF1363FE039E1FAB6E40C9C7ACB82287C3E31A2B2B635F6D033A8"},
+    {"file": "ROUTE.xml", "series": "ROUTE", "namespace": "uxas/messages/route", "version": 4, "sha256": "95BE850F0FC0ED3975B1543DA768D223479210C7E6E1C493F97555DB6C245597"},
+    {"file": "UXNATIVE.xml", "series": "UXNATIVE", "namespace": "uxas/messages/uxnative", "version": 9, "sha256": "1A69CC6D9767F480F20AD585BCB7F31BA42755C3590400A548DF999643A83C79"},
+    {"file": "UXTASK.xml", "series": "UXTASK", "namespace": "uxas/messages/task", "version": 8, "sha256": "227E32424E25789084B6811DAD109425812EE1EF4188D2A88FC5CE557654F707"},
+    {"file": "VEHICLES.xml", "series": "VEHICLES", "namespace": "afrl/vehicles", "version": 1, "sha256": "CEFA5EDEA969A46633F2F06144BD44D602B2C3E041BD415E558A32DD8D750A85"}
+  ]
+}

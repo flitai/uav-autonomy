@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "platform": "windows-x64",
+  "tools": [
+    {
+      "id": "jdk",
+      "version": "11.0.32.1+1",
+      "archive": "OpenJDK11U-jdk_x64_windows_hotspot_11.0.32.1_1.zip",
+      "url": "https://github.com/adoptium/temurin11-binaries/releases/download/jdk-11.0.32.1%2B1/OpenJDK11U-jdk_x64_windows_hotspot_11.0.32.1_1.zip",
+      "hashAlgorithm": "SHA256",
+      "hash": "d5008f02174c1ad21c10407cbf104815cb390ec4c263d53946e8d0507d7a77f9",
+      "installDirectory": "jdk-11.0.32.1+1",
+      "source": "https://github.com/adoptium/temurin11-binaries/releases/tag/jdk-11.0.32.1%2B1",
+      "checksumSource": "https://github.com/adoptium/temurin11-binaries/releases/download/jdk-11.0.32.1%2B1/OpenJDK11U-jdk_x64_windows_hotspot_11.0.32.1_1.zip.sha256.txt",
+      "licenseFiles": [
+        "legal/java.base/LICENSE",
+        "legal/java.base/ADDITIONAL_LICENSE_INFO",
+        "legal/java.base/ASSEMBLY_EXCEPTION"
+      ],
+      "verifyFiles": [
+        "bin/java.exe",
+        "bin/javac.exe",
+        "bin/server/jvm.dll",
+        "lib/modules",
+        "release"
+      ]
+    },
+    {
+      "id": "ant",
+      "version": "1.10.18",
+      "archive": "apache-ant-1.10.18-bin.zip",
+      "url": "https://downloads.apache.org/ant/binaries/apache-ant-1.10.18-bin.zip",
+      "hashAlgorithm": "SHA512",
+      "hash": "f86d7b263bc7c6903a91532943f1c8ecccc17dd999851a796617e79795908d7a666cbe999b9ecf06735cc7e830f50dca9f49b37bb5f6f02a0a3803cd22b558b0",
+      "installDirectory": "apache-ant-1.10.18",
+      "source": "https://ant.apache.org/bindownload.cgi",
+      "checksumSource": "https://downloads.apache.org/ant/binaries/apache-ant-1.10.18-bin.zip.sha512",
+      "licenseFiles": [
+        "LICENSE",
+        "NOTICE"
+      ],
+      "verifyFiles": [
+        "bin/ant.bat",
+        "lib/ant.jar",
+        "lib/ant-launcher.jar"
+      ]
+    }
+  ]
+}
