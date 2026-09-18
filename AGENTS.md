@@ -15,7 +15,7 @@
 3. 新增消息网关，以 CesiumJS 三维 GIS 逐步替换原有态势可视化与操作界面。
 4. 后续为 TorchRL／BenchMARL 训练集成复用协议与仿真控制接口。
 
-截至上述核对日期，G0、G1 已完成，G1-T01～T05 均已完成；G2-T01 已完成，原生工具链十组验收及 VS／Ninja 在两类路径下的 C/C++ 探针通过；T02 已完成固定依赖的源码重建、11 组验收与迁移发布，T03 可执行、尚未启动，见 [T01 记录](docs/g2-cpp-toolchain-validation.md)与 [T02 记录](docs/g2-dependencies-validation.md)。完整方案及七张任务卡见 [G2 实施方案](docs/g2-windows-uxas-plan.md)和 [任务清单](docs/backlog.md#4-g2-顺序与任务卡)。项目内 Temurin JDK 11.0.32.1+1、Ant 1.10.18 已构建生成器、统一消息库和正式 AMASE；七模型已生成 Java／C++／Python 代码，Python 3.14.7 x64 的跨语言样本通过。T05 的 GUI／无界面真实 TCP 接收、十四组自动验收、GUI 人工确认、同版本受控复验及正常退出均完成；两层封装、分包、中文路径及故障处理已验证。证据见 [Java 验收](docs/g1-java-validation.md)、[T03 消息库验收](docs/g1-lmcp-validation.md)、[T04 AMASE 验收](docs/g1-amase-validation.md)和 [T05 TCP 验收](docs/g1-tcp-validation.md)。尚未编译 LMCP／UxAS、完成 UxAS 双向联调或完整重连验证，也未落地 Cesium、消息网关或训练集成；Python 其他项目依赖未验证。继续工作时先读 [当前状态](docs/status.md) 与 [任务清单](docs/backlog.md)，并重新检查实际环境，不把历史快照当成永久结论。
+截至上述核对日期，G0、G1 已完成，G1-T01～T05 均已完成；G2-T01 已完成，原生工具链十组验收及 VS／Ninja 在两类路径下的 C/C++ 探针通过；T02 已完成固定依赖的源码重建、11 组验收与迁移发布；T03 已完成七模型 C++ 库、164 类型及三语言双向样本验收和发布，T04 可执行、尚未启动，见 [T01 记录](docs/g2-cpp-toolchain-validation.md)、[T02 记录](docs/g2-dependencies-validation.md)和 [T03 记录](docs/g2-lmcp-cpp-validation.md)。完整方案及七张任务卡见 [G2 实施方案](docs/g2-windows-uxas-plan.md)和 [任务清单](docs/backlog.md#4-g2-顺序与任务卡)。项目内 Temurin JDK 11.0.32.1+1、Ant 1.10.18 已构建生成器、统一消息库和正式 AMASE；七模型已生成 Java／C++／Python 代码，Python 3.14.7 x64 的跨语言样本通过。T05 的 GUI／无界面真实 TCP 接收、十四组自动验收、GUI 人工确认、同版本受控复验及正常退出均完成；两层封装、分包、中文路径及故障处理已验证。证据见 [Java 验收](docs/g1-java-validation.md)、[T03 消息库验收](docs/g1-lmcp-validation.md)、[T04 AMASE 验收](docs/g1-amase-validation.md)和 [T05 TCP 验收](docs/g1-tcp-validation.md)。尚未编译 UxAS、完成 UxAS 双向联调或完整重连验证，也未落地 Cesium、消息网关或训练集成；Python 其他项目依赖未验证。继续工作时先读 [当前状态](docs/status.md) 与 [任务清单](docs/backlog.md)，并重新检查实际环境，不把历史快照当成永久结论。
 
 Windows 原生运行是目标；WSL／Linux 可作参考或过渡环境，其验证结果必须单独标注。总体计划已确定首期默认 Windows 11 x64、联网开发与指定场景的基础离线演示，并保留原场景编辑器；实体规模和具体地理资源按任务细化。G2 已选定 MSVC v143／CMake 3.31、Release x64／动态 CRT 和 vcpkg manifest；Zyre／串口默认关闭，TCP 所需 CZMQ 保留。T01 已验证 MSVC／SDK／CMake／Ninja／vcpkg，固定业务依赖组合已由 T02 验证；Python 网关仍为后续候选实现。
 
@@ -37,7 +37,7 @@ Windows 原生运行是目标；WSL／Linux 可作参考或过渡环境，其验
 | `OpenUxAS/tests/` | C++ 测试及 SPARK 证明检查 | 检查测试入口的平台与依赖要求 |
 | `OpenUxAS/resources/` | 辅助服务与资源 | 含参与 C++ 构建的 AutomationDiagramDataService |
 
-改造初期保留三个现有源码目录的位置。`scripts/windows/` 已有通过完整验收的 C++ 工具准备／环境入口和独立 C/C++ 探针，以及 Java 工具、LmcpGen、统一消息生成和 AMASE 构建／运行入口；`scripts/lmcp/`、`scripts/amase/` 是标准库编排实现，`tests/lmcp/`、`tests/amase/` 保存消息及仿真验收探针。工具与模型清单分别见 `config/windows-java-toolchain.json`、`config/windows-cpp-toolchain.json`、`config/lmcp-models.json`；便携工具位于被忽略的 `.tools/`，MSVC／SDK 使用微软系统默认目录。计划中的 `src/sim_bridge/`、`apps/gis_gateway/`、`apps/cesium_viewer/`、根级 CMake 等，需要在对应任务中实际创建；引用前先确认存在。
+改造初期保留三个现有源码目录的位置。`scripts/windows/` 已有通过完整验收的 C++ 工具准备／环境入口和独立 C/C++ 探针，以及 Java 工具、LmcpGen、统一消息生成和 AMASE 构建／运行入口；`scripts/lmcp/`、`scripts/amase/` 是标准库编排实现，`tests/lmcp/`、`tests/amase/` 保存消息及仿真验收探针。工具与模型清单分别见 `config/windows-java-toolchain.json`、`config/windows-cpp-toolchain.json`、`config/lmcp-models.json`；便携工具位于被忽略的 `.tools/`，MSVC／SDK 使用微软系统默认目录。根级 CMake 和 `cmake/` 已提供 LMCP 构建／包接口，`scripts/lmcp_cpp/`、`tests/lmcp_cpp/` 保存编排与验收；UxAS 目标待 T04 接入。计划中的 `src/sim_bridge/`、`apps/gis_gateway/`、`apps/cesium_viewer/` 等，需要在对应任务中实际创建；引用前先确认存在。
 
 ## 3. 开始任务时
 
@@ -120,7 +120,7 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\windows\genera
 powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\tests\windows\lmcp-generation.tests.ps1 -PythonExecutable $pythonExe
 ```
 
-三种语言的代码已位于 `out/generated/lmcp/{java,cpp,py}/`，Java 库为 `out/artifacts/lmcp/java/lmcplib.jar`。使用前核对生成目录 generation-info.json 与产物目录 build-info.json 的运行编号和哈希，禁止混用不同批次或故障副本；失败不会发布部分结果。Python 验证仅导入消息包，示例 LMCPClient.py 在导入时会连接网络，不能当普通模块批量导入。C++ 当前仅生成；AMASE 已实际构建并验证新库的类加载来源，全部任务状态以 status 为准。
+三种语言的代码已位于 `out/generated/lmcp/{java,cpp,py}/`，Java 库为 `out/artifacts/lmcp/java/lmcplib.jar`。使用前核对生成目录 generation-info.json 与产物目录 build-info.json 的运行编号和哈希，禁止混用不同批次或故障副本；失败不会发布部分结果。Python 验证仅导入消息包，示例 LMCPClient.py 在导入时会连接网络，不能当普通模块批量导入。C++ 已在 G2-T03 编译并验证三语言样本，消费入口见下节；AMASE 已实际构建并验证新库的类加载来源，全部任务状态以 status 为准。
 
 ### Windows：C++ 工具准备
 
@@ -137,7 +137,7 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -NoExit -File .\scripts\window
 
 Build Tools 17.14.41／v143、SDK 发布 10.0.26100.7705、CMake 3.31.12、Ninja 1.13.2 和固定 vcpkg 已通过来源与真实编译验收。工具目录、编译器文件及实际加载 CRT 的版本分别记录；不要通过猜测目录名判断版本。来源校验不符时停止，不用新的下载哈希自行替换信任值；T01 的目录摘要更正有独立的微软原生签名验证和篡改拒绝证据。
 
-准备／验收入口恢复自己的进程环境，`use-cpp.ps1` 在当前进程启用 Host／Target x64；后续脚本自行启用并恢复，不依赖已退出的子进程。vcpkg 强制使用已验证的 CMake／Ninja，未执行全局集成或持久 PATH 修改。十组验收覆盖 VS／Ninja、Release x64／动态 CRT、普通／中文空格路径、不同工作目录和隔离故障；此为 T01 工具链证据；T02 业务依赖另经下述入口验收，LMCP／UxAS 仍待后续。
+准备／验收入口恢复自己的进程环境，`use-cpp.ps1` 在当前进程启用 Host／Target x64；后续脚本自行启用并恢复，不依赖已退出的子进程。vcpkg 强制使用已验证的 CMake／Ninja，未执行全局集成或持久 PATH 修改。十组验收覆盖 VS／Ninja、Release x64／动态 CRT、普通／中文空格路径、不同工作目录和隔离故障；此为 T01 工具链证据；T02 业务依赖及 T03 LMCP 另经下述入口验收，UxAS 仍待后续。
 
 ### Windows：固定第三方依赖
 
@@ -150,7 +150,23 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\tests\windows\deps.tes
 
 构建只生成候选；验收包含 VS／Ninja、真实帧／数据库／XML／Boost 功能、CRT、中文空格路径、故障和迁移。成功后原子更新 `out/artifacts/deps/current.json`，保留旧批次和指针备份。后续脚本点入 `deps-common.ps1`，用 `Resolve-DepsPackage` 核对构建／验收身份及全部输入／安装哈希，再消费 `UxasDependencies`／`UxasDeps::*`；CMake 配置不隐式安装依赖。无 `-Rebuild` 时可复用匹配 ABI 的二进制缓存，不能将缓存恢复计作本次源码编译。
 
-依赖包只验收 Release x64／动态 CRT。CZMQ 旧 `snprintf` 宏和 CMake 3.31／Ninja 的中文响应文件处理见 T02 报告，实际 UxAS 编译问题留给 T05。T03 可执行、尚未启动，G2 尚未完成。
+依赖包只验收 Release x64／动态 CRT。CZMQ 旧 `snprintf` 宏和 CMake 3.31／Ninja 的中文响应文件处理见 T02 报告，实际 UxAS 编译问题留给 T05。T03 已完成，T04 可执行、尚未启动，G2 尚未完成。
+
+### Windows：统一 C++ LMCP 库
+
+T03 从 G1 同批生成代码编译全部七模型，根级 CMake 目前只提供 LMCP 库与文件探针。入口自行核对工具、T02 合格依赖、G1 生成输入及全部生成文件，禁止手改生成输出或来源清单。
+
+```powershell
+$pythonExe = Join-Path $env:LOCALAPPDATA 'Python/pythoncore-3.14-64/python.exe'
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\windows\build-lmcp-cpp.ps1 -PythonExecutable $pythonExe
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\tests\windows\lmcp-cpp.tests.ps1 -PythonExecutable $pythonExe -BuildRunId '<BUILD_RUN_ID>'
+. .\scripts\windows\lmcp-cpp-common.ps1
+$lmcpPrefix = Resolve-LmcpCppPackage -PythonExecutable $pythonExe
+```
+
+构建创建独立候选，验收通过后发布 `out/artifacts/lmcp/cpp/<build-run-id>/<validation-run-id>/` 并原子更新 current.json，保留旧批次。CMake 包 `UxasLmcp` 提供 `Uxas::lmcp`；后续先解析合格包再配置，不隐式安装依赖。根 CMake 或已登记输入变化时重新构建／验收，不改写旧清单。独立 C++ 来源记录关联 G1 父级，不能覆盖 Java 或 AMASE 的历史清单。
+
+183 个源文件、382 个头文件、164 类型及六个双向样本已验证，详情见 [T03 报告](docs/g2-lmcp-cpp-validation.md)。帧长与校验防线属于文件探针；生成工厂允许零校验和，并未在此完成网络输入防护。T03 不代表 UxAS 构建或双向协议通过，主工程仍验收 Release x64／v143／C++14／MD。
 
 ### Linux／WSL：现有 UxAS 参考流程
 

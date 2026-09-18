@@ -735,3 +735,33 @@ T02 可执行、尚未启动，下一项为固定业务依赖、baseline／overl
 遗留事项与下一步：T03 可执行、尚未启动，开始时重新核对合格依赖及 G1 七模型生成来源。CZMQ 宏、更多 UxAS include／平台问题由 T05 按真实编译处理；Ninja 的更长命令／任意工程布局尚未验证，主工程仍用 VS 2022。没有 LMCP／UxAS 编译、HelloWorld、双向协议或仿真运行结果，不宣称 G2 通过。按持续授权，完成 UTF-8、Markdown／链接、来源一致性及提交范围检查后自动提交、普通推送并核对远程；不进入下一任务。
 
 归档结果：53 个交付文件经显式暂存、`git diff --cached --check` 和无未暂存改动检查后，创建提交 `a13f6981868c7aedcc9d6ed5b3d1417288cee5c6`（`feat: build and validate pinned Windows native dependencies`）。`git push origin main` 退出 0；14:12:31 的 `git ls-remote --exit-code origin refs/heads/main` 返回相同完整标识，工作区干净，收据为 `out/tmp/g2-t02-push.json`。随后仅补齐本条实际结果与 status，独立归档收尾文档；不改写已发布实现提交，不进入 T03。
+
+
+## WL-20260918-007｜G2-T03：Windows C++ LMCP 库与三语言验收
+
+时间／时区：2026-09-18，Asia/Shanghai（UTC+08:00）。
+
+关联任务与状态：G2-T03 已完成；G2-T04 可执行、尚未启动，G2 阶段尚未完成。
+
+背景、目标与范围：用户要求“继续 G2-T03”。起点 main／`1af7a91449b2159b672f094b343f72052bb00caf`，工作区干净。仅实施七模型 C++ LMCP 库、Windows 构建／验收入口、来源追溯和文件级跨语言探针；沿用用户持续授权，在验证完成后提交推送。未修改模型、模板、生成目录或第三方依赖，未进入 UxAS 构建、HelloWorld、AMASE 或双向网络联调。
+
+工作过程：先读状态、任务卡、G1／T02 报告和最近日志，核对实际生成目录及工厂接口。重新验证 T01 原生工具、T02 合格指针及完整安装来源，核对 G1 生成器输入、父级清单、Java JAR、七模型和全部 1,013 个生成文件；其中 C++ 相关文件 588 个。根级 CMake 以来源清单选择 183 个库源文件，包括全部 164 结构类、14 个系列 Factory／XMLReader 和 5 个运行库实现；三个生成测试程序不编入库。复制原生成代码到独立中文空格目录，保持内容哈希，不修补输出文件。
+
+新增 C++ 探针复用 G1 固定字段，检查全部 164 类型注册及默认对象往返，验证 Java／Python→C++ 和 C++→Java／Python 的字段与原始字节。C++ 输出还与 G1 留存样本逐项核对，六帧全部一致。Java Sentinel 外层由原方法取出；探针独立检查标记、长度及校验，明确区分零校验和与计算校验和。消息精度和版本未变，没有把文件测试当成真实网络通过。
+
+成果与修改文件：新增 [根 CMake](CMakeLists.txt)、`cmake/LmcpSources.cmake`、`cmake/UxasLmcpConfig.cmake`、`scripts/windows/build-lmcp-cpp.ps1`、`scripts/windows/lmcp-cpp-common.ps1`、`scripts/lmcp_cpp/manage.py`、`tests/windows/lmcp-cpp.tests.ps1`、`tests/lmcp_cpp/` 和 [T03 验收报告](docs/g2-lmcp-cpp-validation.md)。同步 status、backlog、总体计划、G2 方案和 AGENTS。正式包含 lmcp.lib、382 个头文件、3 个 CMake 包文件，共 386 个安装文件；独立 build-info.json 关联 G1 父级及 T02，不覆盖历史 Java／AMASE 清单。包提供 `UxasLmcp`／`Uxas::lmcp`，后续先通过 `Resolve-LmcpCppPackage` 校验。
+
+验证（入口工作目录为仓库根目录，所有构建／功能子进程显式在其他工作目录调用）：
+
+- `powershell.exe -NoProfile -ExecutionPolicy Bypass -File scripts/windows/build-lmcp-cpp.ps1 -PythonExecutable <已验证解释器>`：最终构建 `g2-t03-build-20260918-143841-186`，Python 编排 14:38:56～14:39:13，退出 0；全新输出、VS 2022、Release x64／v143、C++14／MD。库架构、编译选项、CRT 指令与探针依赖核对通过。
+- `powershell.exe -NoProfile -ExecutionPolicy Bypass -File tests/windows/lmcp-cpp.tests.ps1 -PythonExecutable <已验证解释器> -BuildRunId g2-t03-build-20260918-143841-186`：最终验收 `g2-t03-test-20260918-143927-259`，Python 编排 14:39:42～14:39:53，退出 0，六组全部通过。basic／wide AirVehicleState 和 UXTASK 8 TaskActive 的两种校验模式共六帧；大于 2⁵³ 的 ID／关联任务、时间、浮点字段及列表保持一致。
+- VS 安装包与 Ninja 迁移包均在中文空格构建目录消费、重复运行；实际头文件和链接库来自对应 prefix。Ninja 用依赖数据库核对被其吸收的 include 输出；禁止 Debug／静态 CRT，未发现意外第三方 DLL。
+- 六类坏帧均返回 2 并给出明确诊断；六类隔离来源故障均拒绝，包括缺失／损坏库、错误生成批次、输入变化、真实 CMake 拒绝过期生成源码及模型目录新增未登记文件。最终故障检查期间已有合格指针，其哈希未变；迁移消费成功后才原子更新，旧包及指针备份保留。
+- 从 `C:/Windows/Temp` 调用隔离复查脚本，14:30:33 复查中间批次、14:41:08 复查最终批次，均确认 `Resolve-LmcpCppPackage` 返回单个有效路径、父进程环境不变，退出 0；最终证据为 `out/tmp/g2-t03-resolve.json`。正式构建和验收的 entry-result.json 均确认进程环境恢复、用户／系统 PATH 未变。
+- 新 PowerShell 入口语法解析、Python AST、UTF-8、Markdown 围栏、仓库相对链接和忽略规则检查通过；源码／缓存／产物留在 out／.tools，worklog 保持跟踪，上游源码及 G1 实现没有差异。`git fetch origin` 退出 0，提交前本地／远程差异计数为 `0 0`。
+
+问题与解决办法：首次构建 `g2-t03-build-20260918-142514-375` 的库已编译，但新探针误把生成库的非 const getter 当作 const 调用，发生 C2662；只修正探针的对象访问，未修改模板或生成源。修正批次 `g2-t03-build-20260918-142636-015` 及首次验收 `g2-t03-test-20260918-142720-052` 通过。收尾检查又补齐实际头文件／链接来源、G1 留存样本比较，修正 PowerShell 解析函数可能混入 Python stdout 的返回值；中间批次 `g2-t03-build-20260918-142827-601`／`g2-t03-test-20260918-142915-326` 通过。提交前来源审查进一步补齐 MDM 文件集合检查，并显式限定 LMCP 构建目标及安装组件，以便 T04 新增目标后继续独立复验；随后用上述最终新批次重建及复验，没有回写旧来源清单。上游未使用参数和长度窄化警告保留，当前没有阻塞。
+
+重要决定与影响：LMCP 使用自己的生成运行库和标准库，不额外链接不需要的第三方业务库；T02 仍作为工程工具／依赖前置核对。严格帧验证只属于验收探针，原生成工厂允许零校验和，不宣称已完成通用不可信数据防护。T04 若修改已登记的根 CMake 等输入，需要重新构建／验收 LMCP，禁止手改旧清单使其通过。主库仍按 VS 2022 验收，Ninja 只验证当前消费布局。
+
+遗留事项与下一步：T04 接入 Makefile 的完整 UxAS 源码、服务注册和可选桥开关；T05 处理真实平台编译问题，T06／T07 验收 HelloWorld。G3 继续负责双向协议、来源过滤与真实规划命令闭环。本次完成后按持续授权提交、普通推送并核对远程，不自动进入 T04。

@@ -1,12 +1,12 @@
 # G2 实施方案：Windows 原生 UxAS
 
-日期：2026-09-18，Asia/Shanghai。**G2-T01、T02 已完成，T03 可执行、尚未启动。** 原生工具链和固定依赖的源码重建、功能、路径、来源及故障检查通过，详见 [T01 记录](g2-cpp-toolchain-validation.md)与 [T02 记录](g2-dependencies-validation.md)。本文是实施方案，不是 UxAS 构建或运行验收报告；完整任务卡见 [backlog](backlog.md#4-g2-顺序与任务卡)，当前进度见 [status](status.md)，过程见 [worklog](../worklog.md)。
+日期：2026-09-18，Asia/Shanghai。**G2-T01～T03 已完成，T04 可执行、尚未启动。** 原生工具链和固定依赖的源码重建、功能、路径、来源及故障检查通过，七模型 C++ LMCP 及三语言双向文件样本也已通过，详见 [T01 记录](g2-cpp-toolchain-validation.md)、[T02 记录](g2-dependencies-validation.md)和 [T03 记录](g2-lmcp-cpp-validation.md)。本文是实施方案，不是 UxAS 构建或运行验收报告；完整任务卡见 [backlog](backlog.md#4-g2-顺序与任务卡)，当前进度见 [status](status.md)，过程见 [worklog](../worklog.md)。
 
 ## 1. 目标、输入与边界
 
 G2 的通过条件是：从干净输出目录构建 Windows 原生 `uxas.exe`，HelloWorld 两个服务通过实际内部消息总线收发 `KeyValuePair`，并正常退出。七张任务卡按 T01 → T07 顺序推进，一次一个主要实现任务。
 
-本方案编制时只落地文档，未安装、构建或运行；该历史边界不代替后续任务授权。T01、T02 已按用户授权完成原生工具和第三方依赖验收；LMCP 与 UxAS 构建仍待后续任务。AMASE↔UxAS 的 WaterwaySearch 双向闭环归 G3；网关、Cesium、Ada、实机接入、训练集成与完整重连不纳入 G2。
+本方案编制时只落地文档，未安装、构建或运行；该历史边界不代替后续任务授权。T01～T03 已按用户授权完成原生工具、第三方依赖及 C++ LMCP 验收；UxAS 构建仍待后续任务。AMASE↔UxAS 的 WaterwaySearch 双向闭环归 G3；网关、Cesium、Ada、实机接入、训练集成与完整重连不纳入 G2。
 
 2026-09-18 方案细化时的只读复核结果（工具安装前的历史快照）：
 
@@ -72,7 +72,7 @@ G2 的通过条件是：从干净输出目录构建 Windows 原生 `uxas.exe`，
 - 根级 vcpkg 清单及配置描述 baseline、overrides、overlay ports／triplet；具体锁定值在 T01／T02 的有限验证后写入。工具和依赖实际使用的 CMake／Ninja 也要核对，不允许隐式下载另一版本后仍记录为 T01 版本。
 - Windows 工具准备、依赖构建、LMCP 构建、UxAS 构建、运行和验收入口按任务创建；路径以脚本自身位置为基准，显式工作目录并传播失败退出码。入口名称和可复制命令在实际验证后加入使用说明。
 - 输入关联 G1 统一生成目录及 generation-info.json，过期或哈希不符时阻断并走统一生成入口。需要修改生成器／模板时统一重新生成三种语言并复验受影响的 G1 链路，不混用不同批次产物或改写历史验收记录。
-- 构建及候选位于 `out/build/<component>/<run-id>/`，每次配置、日志、样本和结果位于 `out/runs/<run-id>/`。验收合格的 C++ 库拟发布到 `out/artifacts/lmcp/cpp/`，与 G1 的父级来源清单通过批次关联而不覆盖；UxAS 正式产物拟发布到 `out/artifacts/uxas/`，T07 验收前仅作为候选。
+- 构建及候选位于 `out/build/<component>/<run-id>/`，每次配置、日志、样本和结果位于 `out/runs/<run-id>/`。验收合格的 C++ 库已按批次发布到 `out/artifacts/lmcp/cpp/`，与 G1 的父级来源清单通过批次关联而不覆盖；UxAS 正式产物拟发布到 `out/artifacts/uxas/`，T07 验收前仅作为候选。
 - 新增接口限定为构建、环境、启动、验收及可选桥选项。LMCP／MDM 消息契约、AMASE 网络接口和任务算法保持原语义。
 
 ## 4. 验收与证据
@@ -97,4 +97,4 @@ HelloWorld 以原 `RunDuration_s` 完成运行，验收入口设置 30 秒进程
 - 保留原上游目录、示例、旧库和失败证据。回退只处理本任务修改、归属清晰的输出与进程；不自动卸载共享工具、不清空用户缓存、不以宽泛进程名结束其他实例。
 - 每张任务卡收尾先验证，再追加 worklog、同步 status／backlog；T01～T07 全部通过才登记 G2 完成。文档细化完成不计作任何 G2 实现卡完成。
 - G3 接收合格 UxAS、同批 LMCP 和既有 AMASE、必要服务／桥清单及启动配置约定；继续验证 Sentinel／属性封装、来源过滤、启动顺序、实时状态和真实规划命令执行。
-- 完整任务边界和状态以 [七张任务卡](backlog.md#4-g2-顺序与任务卡)为准；Zyre／串口启用支持进入延期事项，G3～G8 保留轮廓。本次不自动提交或推送。
+- 完整任务边界和状态以 [七张任务卡](backlog.md#4-g2-顺序与任务卡)为准；Zyre／串口启用支持进入延期事项，G3～G8 保留轮廓。规划时未自动提交推送；后续按用户持续授权，在阶段性工作验收后自动提交推送。
