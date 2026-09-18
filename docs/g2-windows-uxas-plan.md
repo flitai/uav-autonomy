@@ -1,12 +1,12 @@
 # G2 实施方案：Windows 原生 UxAS
 
-日期：2026-09-18，Asia/Shanghai。**G2-T01～T05 已完成，T06 可执行、尚未启动。** 原生工具链和固定依赖的源码重建、功能、路径、来源及故障检查通过，七模型 C++ LMCP 及三语言双向文件样本也已通过，详见 [T01 记录](g2-cpp-toolchain-validation.md)、[T02 记录](g2-dependencies-validation.md)和 [T03 记录](g2-lmcp-cpp-validation.md)。T04 构建图与独立探针见 [T04 记录](g2-uxas-cmake-validation.md)。T05 候选构建与平台验收见 [T05 记录](g2-uxas-build-validation.md)。本文是实施方案，运行仍待 T06；完整任务卡见 [backlog](backlog.md#4-g2-顺序与任务卡)，当前进度见 [status](status.md)，过程见 [worklog](../worklog.md)。
+日期：2026-09-18，Asia/Shanghai。**G2-T01～T06 已完成，T07 可执行、尚未启动。** 原生工具链和固定依赖的源码重建、功能、路径、来源及故障检查通过，七模型 C++ LMCP 及三语言双向文件样本也已通过，详见 [T01 记录](g2-cpp-toolchain-validation.md)、[T02 记录](g2-dependencies-validation.md)和 [T03 记录](g2-lmcp-cpp-validation.md)。T04 构建图与独立探针见 [T04 记录](g2-uxas-cmake-validation.md)。T05 候选构建与平台验收见 [T05 记录](g2-uxas-build-validation.md)。HelloWorld 运行及最新前置批次见 [T06 记录](g2-uxas-helloworld-validation.md)。本文是实施方案，正式发布仍待 T07；完整任务卡见 [backlog](backlog.md#4-g2-顺序与任务卡)，当前进度见 [status](status.md)，过程见 [worklog](../worklog.md)。
 
 ## 1. 目标、输入与边界
 
 G2 的通过条件是：从干净输出目录构建 Windows 原生 `uxas.exe`，HelloWorld 两个服务通过实际内部消息总线收发 `KeyValuePair`，并正常退出。七张任务卡按 T01 → T07 顺序推进，一次一个主要实现任务。
 
-本方案编制时只落地文档，未安装、构建或运行；该历史边界不代替后续任务授权。T01～T05 已按用户授权完成工具、依赖、C++ LMCP、UxAS 构建图、独立桥探针和完整候选构建验收；HelloWorld 仍待 T06。AMASE↔UxAS 的 WaterwaySearch 双向闭环归 G3；网关、Cesium、Ada、实机接入、训练集成与完整重连不纳入 G2。
+本方案编制时只落地文档，未安装、构建或运行；该历史边界不代替后续任务授权。T01～T06 已按用户授权完成工具、依赖、C++ LMCP、UxAS 构建图、独立桥探针、完整候选和 HelloWorld 验收；T07 尚未启动。AMASE↔UxAS 的 WaterwaySearch 双向闭环归 G3；网关、Cesium、Ada、实机接入、训练集成与完整重连不纳入 G2。
 
 2026-09-18 方案细化时的只读复核结果（工具安装前的历史快照）：
 
@@ -51,7 +51,7 @@ G2 的通过条件是：从干净输出目录构建 Windows 原生 `uxas.exe`，
 - 对照原 Makefile 显式整理源码集合，包含任务服务、规划代码和 [AutomationDiagramDataService](../OpenUxAS/resources/AutomationDiagramDataService)。服务注册对象必须进入最终可执行文件，不能因拆成静态库后被链接器省略。
 - TCP、PUB/PULL、SUB/PUSH 等现有通信保留；[TCP 收发实现](../OpenUxAS/src/cpp/Communications/ZeroMqAddressedAttributedMessageTcpReceiverSender.cpp)使用 CZMQ，必须保留其构建及链接。
 - Windows CMake 提供 `UXAS_ENABLE_ZYRE`、`UXAS_ENABLE_SERIAL`，默认 OFF；同时处理源文件、头文件、包装工具及 [桥管理器](../OpenUxAS/src/cpp/Communications/LmcpObjectNetworkBridgeManager.cpp)的实例化分支。原源码保留，原 Makefile 默认行为不随本轮选项改变。
-- 配置请求未编入的桥时明确报错并返回失败，不静默跳过后继续宣称启动成功。T04 实现共享能力检查并以独立 C++ 探针验证拒绝路径，T06／T07 用真实可执行文件验证。
+- 配置请求未编入的桥时明确报错并返回失败，不静默跳过后继续宣称启动成功。T04 实现共享能力检查并以独立 C++ 探针验证拒绝路径；T06 已用真实候选验证串口／Zyre 分别返回 300，T07 完整矩阵仍待执行。
 - Zyre／串口的启用构建和运行验收另列延期事项；本轮不宣称 ON 组合可用。Windows 默认配置应无需获取这两项可选依赖。
 
 ## 3. 任务顺序与拟建接口
@@ -66,7 +66,7 @@ G2 的通过条件是：从干净输出目录构建 Windows 原生 `uxas.exe`，
 | G2-T06 | HelloWorld 运行入口与真实证据 | 双向收发、原时长运行、正常退出和日志归属通过 |
 | G2-T07 | 复验、正式产物与 G3 交接 | 路径／故障矩阵及连续三次正常启停通过，证据齐全 |
 
-以下是拟建接口和输出约定，本次未创建实现，不属于当前标准命令：
+以下保留分阶段接口和输出约定；T01～T06 已落地的标准命令以对应专题报告为准，T07 正式发布仍待实施：
 
 - 根级 CMake／presets 描述 LMCP、UxAS 和必要验证目标；C++ LMCP 目标在 T03 建立，UxAS 目标在 T04 接入，避免两个任务重复建设互不一致的构建入口。
 - 根级 vcpkg 清单及配置描述 baseline、overrides、overlay ports／triplet；具体锁定值在 T01／T02 的有限验证后写入。工具和依赖实际使用的 CMake／Ninja 也要核对，不允许隐式下载另一版本后仍记录为 T01 版本。

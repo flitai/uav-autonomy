@@ -54,7 +54,8 @@ set(_uxas_manifest "${CMAKE_CURRENT_SOURCE_DIR}/OpenUxAS/src/cpp/Includes/uxas.m
 add_executable(uxas ${UXAS_SOURCES} ${UXAS_EMBEDDED_RESOURCES} "${_uxas_manifest}")
 set_source_files_properties(${UXAS_EMBEDDED_RESOURCES} PROPERTIES HEADER_FILE_ONLY ON)
 target_include_directories(uxas PRIVATE ${UXAS_INCLUDE_DIRS})
-target_compile_definitions(uxas PRIVATE DPSS_STATIC NOMINMAX UXAS_ENABLE_ZYRE=0 UXAS_ENABLE_SERIAL=0
+# Preserve configuration, service identity and shutdown evidence for native runs.
+target_compile_definitions(uxas PRIVATE DPSS_STATIC NOMINMAX UXAS_INFO_LOGGING_ENABLED UXAS_ENABLE_ZYRE=0 UXAS_ENABLE_SERIAL=0
     BOOST_ALLOW_DEPRECATED_HEADERS BOOST_GEOMETRY_DISABLE_DEPRECATED_03_WARNING)
 target_compile_options(uxas PRIVATE /W3 /utf-8 /MP8 /EHsc)
 target_link_options(uxas PRIVATE "/MAP:${CMAKE_CURRENT_BINARY_DIR}/uxas.map" /VERBOSE:LIB)
