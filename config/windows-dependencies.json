@@ -1,0 +1,545 @@
+{
+  "schemaVersion": 1,
+  "baseline": "9e593bb18ea69cc5095e012465dcd675a822ed0d",
+  "triplet": "x64-windows-uxas",
+  "directDependencies": [
+    "zeromq",
+    "cppzmq",
+    "czmq",
+    "pugixml",
+    "sqlite3",
+    "sqlitecpp",
+    "boost-filesystem",
+    "boost-system",
+    "boost-regex",
+    "boost-date-time",
+    "boost-geometry",
+    "boost-graph",
+    "boost-dynamic-bitset"
+  ],
+  "historicalBoostPorts": {
+    "boost-filesystem": {
+      "git-tree": "106d3d34b44ee36cc05c1727672aa0a45725ef0c",
+      "version-string": "1.74.0",
+      "port-version": 0
+    },
+    "boost-system": {
+      "git-tree": "ef09e0f830b84cce404229bacbbad7bfb58ee46f",
+      "version-string": "1.74.0",
+      "port-version": 0
+    },
+    "boost-regex": {
+      "git-tree": "f9b464cfd360625b5d29a7ae731c36354af05cd5",
+      "version-string": "1.74.0",
+      "port-version": 0
+    },
+    "boost-date-time": {
+      "git-tree": "e4e3b8362f29d3b7d2894f6fd3258afddab13341",
+      "version-string": "1.74.0",
+      "port-version": 0
+    },
+    "boost-geometry": {
+      "git-tree": "aca46b177a6183db2102b947df5778cec4f8d46d",
+      "version-string": "1.74.0",
+      "port-version": 0
+    },
+    "boost-graph": {
+      "git-tree": "e8845637669efa4cc70ecff5f03f33f5d16e5639",
+      "version-string": "1.74.0",
+      "port-version": 0
+    },
+    "boost-dynamic-bitset": {
+      "git-tree": "5015e482cdc4c54bb956a55234f350ef6486ee1f",
+      "version-string": "1.74.0",
+      "port-version": 0
+    },
+    "boost-assert": {
+      "git-tree": "c52a60adb19dab70d7a42243d0039e675636b320",
+      "version-string": "1.74.0",
+      "port-version": 0
+    },
+    "boost-build": {
+      "git-tree": "727c3400fff7c138685446c6f376211b4f5eca27",
+      "version-string": "1.74.0",
+      "port-version": 0
+    },
+    "boost-config": {
+      "git-tree": "99ed244677f790e4e37c64183e4eb9de6055bce2",
+      "version-string": "1.74.0",
+      "port-version": 0
+    },
+    "boost-core": {
+      "git-tree": "febbc9ecc144ae2979ca1f6f12e9a3dbc7d6bd71",
+      "version-string": "1.74.0",
+      "port-version": 0
+    },
+    "boost-detail": {
+      "git-tree": "2bca20aa3e58b25201b4aaf6810561bd76365f1b",
+      "version-string": "1.74.0",
+      "port-version": 0
+    },
+    "boost-functional": {
+      "git-tree": "48a83df9fabe3740fd776de03952b9e682e8804a",
+      "version-string": "1.74.0",
+      "port-version": 0
+    },
+    "boost-integer": {
+      "git-tree": "96ca1fb123e6d59d2f26b4fa2201fb71ebf86e2d",
+      "version-string": "1.74.0",
+      "port-version": 0
+    },
+    "boost-io": {
+      "git-tree": "f732621c8b9c2bc455d848fa08345e987fb8178e",
+      "version-string": "1.74.0",
+      "port-version": 0
+    },
+    "boost-iterator": {
+      "git-tree": "7e6906049be8b43bc404dec8bff8a4e315f41d3d",
+      "version-string": "1.74.0",
+      "port-version": 0
+    },
+    "boost-modular-build-helper": {
+      "git-tree": "d404ce9e23e6c5aba490c76a96e9d97e44a89e5d",
+      "version-string": "1.74.0",
+      "port-version": 2
+    },
+    "boost-predef": {
+      "git-tree": "93c1d220a8aad92e3ea944241b6c012a100135e0",
+      "version-string": "1.74.0",
+      "port-version": 0
+    },
+    "boost-smart-ptr": {
+      "git-tree": "64ae2e6142d5c91d57f9937bdfbfcec148ac6013",
+      "version-string": "1.74.0",
+      "port-version": 0
+    },
+    "boost-type-traits": {
+      "git-tree": "e1d488b4b26c28e7ea1e260c96848efa91440c61",
+      "version-string": "1.74.0",
+      "port-version": 0
+    },
+    "boost-vcpkg-helpers": {
+      "git-tree": "749173195871ff15190b29ea87cabef8ca064501",
+      "version-string": "7",
+      "port-version": 1
+    },
+    "boost-winapi": {
+      "git-tree": "62117b89dedc1807c7de0bfce139141aedeb8bd7",
+      "version-string": "1.74.0",
+      "port-version": 0
+    },
+    "boost-compatibility": {
+      "git-tree": "a7812edda8e2159ecd422f18eaad6d2f0cb30346",
+      "version-string": "1.74.0",
+      "port-version": 0
+    },
+    "boost-concept-check": {
+      "git-tree": "1e2aa4a271954658330692be62864abcb2758583",
+      "version-string": "1.74.0",
+      "port-version": 0
+    },
+    "boost-container-hash": {
+      "git-tree": "4d149c5e8ef36c49a6d1c46484f18747e3481e5d",
+      "version-string": "1.74.0",
+      "port-version": 0
+    },
+    "boost-mpl": {
+      "git-tree": "5058b7a6caf7e35dc719433daed180a2c85b0bb9",
+      "version-string": "1.74.0",
+      "port-version": 0
+    },
+    "boost-static-assert": {
+      "git-tree": "871d4013cd853e5e440fe61fbd468a8b96f41c14",
+      "version-string": "1.74.0",
+      "port-version": 0
+    },
+    "boost-throw-exception": {
+      "git-tree": "1f89573490e0b85c91e0b0e26da69287d02eff91",
+      "version-string": "1.74.0",
+      "port-version": 0
+    },
+    "boost-utility": {
+      "git-tree": "ccd0b9f9a2038cb05ab5d1f0191e8339835acdcb",
+      "version-string": "1.74.0",
+      "port-version": 0
+    },
+    "boost-algorithm": {
+      "git-tree": "d89bcd64693c86a2721ac96a7184d06c0ea2e720",
+      "version-string": "1.74.0",
+      "port-version": 0
+    },
+    "boost-lexical-cast": {
+      "git-tree": "dc020ba4e0f6338668c6db25c0dd323e96add037",
+      "version-string": "1.74.0",
+      "port-version": 0
+    },
+    "boost-math": {
+      "git-tree": "fbe16002a415cd53a730c4046df48381ac7a399c",
+      "version-string": "1.74.0",
+      "port-version": 0
+    },
+    "boost-numeric-conversion": {
+      "git-tree": "4f206a22dbbf0283bb5c2a21840fa464da51878d",
+      "version-string": "1.74.0",
+      "port-version": 0
+    },
+    "boost-range": {
+      "git-tree": "e72c575bac8ae7881b8cf97ef205568b73c25584",
+      "version-string": "1.74.0",
+      "port-version": 0
+    },
+    "boost-tokenizer": {
+      "git-tree": "d890c67cc38ddce8342e4aa562a9616e0c6a0867",
+      "version-string": "1.74.0",
+      "port-version": 0
+    },
+    "boost-array": {
+      "git-tree": "bd44c0793f910cfd8421c6689284084782426640",
+      "version-string": "1.74.0",
+      "port-version": 0
+    },
+    "boost-container": {
+      "git-tree": "afb906ffc02b952298fbcab8dbd1517d355360d8",
+      "version-string": "1.74.0",
+      "port-version": 0
+    },
+    "boost-function-types": {
+      "git-tree": "a2369833ecdf43bd825f433945510a992bcee989",
+      "version-string": "1.74.0",
+      "port-version": 0
+    },
+    "boost-fusion": {
+      "git-tree": "d299aa16799fc91a5d902e54dbe12eb234756293",
+      "version-string": "1.74.0",
+      "port-version": 0
+    },
+    "boost-move": {
+      "git-tree": "701d9ebb086a0dae796087101c5a3afc75d8dc11",
+      "version-string": "1.74.0",
+      "port-version": 0
+    },
+    "boost-multiprecision": {
+      "git-tree": "1469cb24a4869538139a0bd626700152ba4c81e9",
+      "version-string": "1.74.0",
+      "port-version": 0
+    },
+    "boost-polygon": {
+      "git-tree": "3027fec8cf1e3ee70b118ef8e8252a7248a96b1e",
+      "version-string": "1.74.0",
+      "port-version": 0
+    },
+    "boost-qvm": {
+      "git-tree": "bf878abd4682e1ade2169d87639d5aabb66571bf",
+      "version-string": "1.74.0",
+      "port-version": 0
+    },
+    "boost-rational": {
+      "git-tree": "8de4e22e52ba7019b8731d4a5cd3e9f86eca4461",
+      "version-string": "1.74.0",
+      "port-version": 0
+    },
+    "boost-serialization": {
+      "git-tree": "df6523833c2d6808dbd43791234cf067a94fbb12",
+      "version-string": "1.74.0",
+      "port-version": 0
+    },
+    "boost-thread": {
+      "git-tree": "12e8de872c0b45b884db604ece353585ac66bf45",
+      "version-string": "1.74.0",
+      "port-version": 0
+    },
+    "boost-tuple": {
+      "git-tree": "562f2fee1c2129626c5b8421174ff84736151973",
+      "version-string": "1.74.0",
+      "port-version": 0
+    },
+    "boost-variant": {
+      "git-tree": "20a957c6b26ab6e198703dbba3798e0284512c86",
+      "version-string": "1.74.0",
+      "port-version": 0
+    },
+    "boost-any": {
+      "git-tree": "8f13f67a837750f79e1b782e1ac3e35e26973f9e",
+      "version-string": "1.74.0",
+      "port-version": 0
+    },
+    "boost-bimap": {
+      "git-tree": "070dcbecc7424d9777c9c94397e22975c7af9319",
+      "version-string": "1.74.0",
+      "port-version": 0
+    },
+    "boost-bind": {
+      "git-tree": "5a9391097dd5644a6b902c54d86a394719dbfb37",
+      "version-string": "1.74.0",
+      "port-version": 0
+    },
+    "boost-conversion": {
+      "git-tree": "66b5da5909c47b08b613f4127e57ae02b24fade3",
+      "version-string": "1.74.0",
+      "port-version": 0
+    },
+    "boost-foreach": {
+      "git-tree": "40f12c44a787b514d99916450bed7738e1e63123",
+      "version-string": "1.74.0",
+      "port-version": 0
+    },
+    "boost-function": {
+      "git-tree": "2587658b7f554ae2f511f5b6f60eacd7ef9445ae",
+      "version-string": "1.74.0",
+      "port-version": 0
+    },
+    "boost-multi-index": {
+      "git-tree": "44b1753c8c1bf0e4daa3820acfe891fb93becfe9",
+      "version-string": "1.74.0",
+      "port-version": 0
+    },
+    "boost-optional": {
+      "git-tree": "be71f26ed429ad7401d2d49ae5bb8b5f021a6036",
+      "version-string": "1.74.0",
+      "port-version": 0
+    },
+    "boost-parameter": {
+      "git-tree": "a8a05117ff17b78c9e25d5edc7b934ec2bd97de5",
+      "version-string": "1.74.0",
+      "port-version": 0
+    },
+    "boost-preprocessor": {
+      "git-tree": "df5e8b789fb8ba8db75ea28bab8572d51abd571b",
+      "version-string": "1.74.0",
+      "port-version": 0
+    },
+    "boost-property-map": {
+      "git-tree": "b7956347c484064bffa998c333c98131578b64fe",
+      "version-string": "1.74.0",
+      "port-version": 0
+    },
+    "boost-property-tree": {
+      "git-tree": "c05b856dedef9d5309b6f9012d887c7dce28d243",
+      "version-string": "1.74.0",
+      "port-version": 0
+    },
+    "boost-random": {
+      "git-tree": "e68a19bdf537ff1a19b5bba7d1766636adced790",
+      "version-string": "1.74.0",
+      "port-version": 0
+    },
+    "boost-spirit": {
+      "git-tree": "c5f1b643139d3ced0325e49d58322066037b2114",
+      "version-string": "1.74.0",
+      "port-version": 0
+    },
+    "boost-test": {
+      "git-tree": "04265aa4f689d56685b42bf28f2e26765bbdce64",
+      "version-string": "1.74.0",
+      "port-version": 0
+    },
+    "boost-tti": {
+      "git-tree": "501d5e8c95bc65e2981961705ffb3a9439a82215",
+      "version-string": "1.74.0",
+      "port-version": 0
+    },
+    "boost-typeof": {
+      "git-tree": "c977ae832df8c880d62cae1434b836f93d93360f",
+      "version-string": "1.74.0",
+      "port-version": 0
+    },
+    "boost-unordered": {
+      "git-tree": "417509630e50c5acc581f6de0de0d9df2ddbd039",
+      "version-string": "1.74.0",
+      "port-version": 0
+    },
+    "boost-xpressive": {
+      "git-tree": "b41f4f06dc05791936ed8f82f934847224e28e60",
+      "version-string": "1.74.0",
+      "port-version": 0
+    },
+    "boost-uninstall": {
+      "git-tree": "bbd9f511923b04506c7bdedc3b1b89eff6939075",
+      "version-string": "1.74.0",
+      "port-version": 0
+    },
+    "boost-exception": {
+      "git-tree": "139a608c9d4f1303c1ed2dac7aa80e1be3b38036",
+      "version-string": "1.74.0",
+      "port-version": 0
+    },
+    "boost-atomic": {
+      "git-tree": "b5d964f865b163273f26f176b55b2fe9681f50b4",
+      "version-string": "1.74.0",
+      "port-version": 0
+    },
+    "boost-lambda": {
+      "git-tree": "ecd59c68772feb74919ebdf44c167cc4861d96c5",
+      "version-string": "1.74.0",
+      "port-version": 0
+    },
+    "boost-mp11": {
+      "git-tree": "4003de72c8eb8f7e4bb101b0d21a8e4a9432c312",
+      "version-string": "1.74.0",
+      "port-version": 0
+    },
+    "boost-intrusive": {
+      "git-tree": "0ed5eabbc8b4060255baa26ca7749c47fce0b5ac",
+      "version-string": "1.74.0",
+      "port-version": 0
+    },
+    "boost-chrono": {
+      "git-tree": "4db91fd0fd0ac86a6ad9bed143d319715b4625d8",
+      "version-string": "1.74.0",
+      "port-version": 0
+    },
+    "boost-type-index": {
+      "git-tree": "6b914d083750c72bb4c7d06fb7e7deef60143938",
+      "version-string": "1.74.0",
+      "port-version": 0
+    },
+    "boost-format": {
+      "git-tree": "f93be0e11dda65c103fb5a4d99b3e65f0d6522ed",
+      "version-string": "1.74.0",
+      "port-version": 0
+    },
+    "boost-endian": {
+      "git-tree": "ea0817d7159425bfe788f061fff16f2d3578830d",
+      "version-string": "1.74.0",
+      "port-version": 0
+    },
+    "boost-phoenix": {
+      "git-tree": "d19c6271f74420af372b2452ec699e4caab07ea1",
+      "version-string": "1.74.0",
+      "port-version": 0
+    },
+    "boost-pool": {
+      "git-tree": "29785b25e33658943f0234f3e741472d66413a80",
+      "version-string": "1.74.0",
+      "port-version": 0
+    },
+    "boost-proto": {
+      "git-tree": "2aaaf7930b6b5b3a29d4008604768a0943ff929a",
+      "version-string": "1.74.0",
+      "port-version": 0
+    },
+    "boost-ratio": {
+      "git-tree": "338c5b178e5e2723ac77d1fe0085dd3845980f79",
+      "version-string": "1.74.0",
+      "port-version": 0
+    }
+  },
+  "sources": {
+    "zeromq": {
+      "version": "4.3.1",
+      "url": "https://codeload.github.com/zeromq/libzmq/tar.gz/refs/tags/v4.3.1",
+      "archive": "zeromq-4.3.1.tar.gz",
+      "sha512": "64855a73331a194c43b01aa86a985a149eba4ed32b9f6483d2a7415cfd8bba557aab5b7b33d160cd177141de02360b73c20e4696a19c2cd798eb5f82eeb72840",
+      "sha256": "e1dec061725b55d791e0c6952b8c220846c8cd901c09d1283a6e902898205b9d"
+    },
+    "cppzmq": {
+      "version": "4.2.2",
+      "url": "https://codeload.github.com/zeromq/cppzmq/tar.gz/refs/tags/v4.2.2",
+      "archive": "cppzmq-4.2.2.tar.gz",
+      "sha512": "5f61ea4a16987c1363c3029cf46b3e83ddd86d65e8d639b0332d691f8fdb5cee121b5d72a9b8c89221daf52ea5892219e0bc4ea4e761bb1e7deb1659011dd3c9",
+      "sha256": "3ef50070ac5877c06c6bb25091028465020e181bbfd08f110294ed6bc419737d"
+    },
+    "czmq": {
+      "version": "4.0.2",
+      "url": "https://codeload.github.com/zeromq/czmq/tar.gz/refs/tags/v4.0.2",
+      "archive": "czmq-4.0.2.tar.gz",
+      "sha512": "8fb4ce059b9ded2f148be4d9602e2d734573e0b6a31936ee72fab2c51116906fefaef1f9c0f8673f3428c84f438cfad26a1120b79d702b54a71c65798f99e8d6",
+      "sha256": "794f80af7392ec8d361ad69646fc20aaa284d23fef92951334009771a732c810"
+    },
+    "pugixml": {
+      "version": "1.12.1",
+      "url": "https://codeload.github.com/zeux/pugixml/tar.gz/refs/tags/v1.12.1",
+      "archive": "pugixml-1.12.1.tar.gz",
+      "sha512": "c1a80518e8d7b21f2a15b2023b77e87484f5b7581e68ff508785a60cab53d1689b5508f5a652d6f0d4fbcc91f66d59246fdfe499fd6b0e188c7914ed5919980b",
+      "sha256": "1e28ab24b6e04e013d96f45d25e9f2d04c921dc68c613fd010ecaaad3892c14d"
+    },
+    "sqlite3": {
+      "version": "3.39.4",
+      "url": "https://sqlite.org/2022/sqlite-autoconf-3390400.tar.gz",
+      "archive": "sqlite3-3.39.4.tar.gz",
+      "sha512": "cc1de214e69ef677cac3f6dd2000ccfcf4b672ab464a115d96f24707009a408630e762c3cda89741b728ab34c4d9f5b8f8b12e9b11448e8364642b4421c3393d",
+      "sha256": "f31d445b48e67e284cf206717cc170ab63cbe4fd7f79a82793b772285e78fdbb"
+    },
+    "sqlitecpp": {
+      "version": "1.3.1",
+      "url": "https://codeload.github.com/SRombauts/SQLiteCpp/tar.gz/refs/tags/1.3.1",
+      "archive": "sqlitecpp-1.3.1.tar.gz",
+      "sha512": "5ce60bb255393b8e9572f73ea02fd91b723057a7e73838c89f3c2696654da38e148f147a60b207fe13f9e66dc5df577cc0f4655c95576866b850ae8627224d75",
+      "sha256": "edca85bedcdc8c539795c0741d76cfb2143cc6cba585fe830e402b3b241df6dc"
+    }
+  },
+  "hostTools": [
+    {
+      "name": "powershell-core",
+      "os": "windows",
+      "arch": "x64",
+      "version": "7.6.3",
+      "executable": "pwsh.exe",
+      "url": "https://github.com/PowerShell/PowerShell/releases/download/v7.6.3/PowerShell-7.6.3-win-x64.zip",
+      "sha512": "497136c7955e0bec5430799a0befae07d0bab54703046f80a5bc5ddfdd852f24b3a9e36743dfc5da9e44658aa9b8a62794349db5a5e0b2cc229c6413273b399d",
+      "archive": "PowerShell-7.6.3-win-x64.zip",
+      "files": [
+        {
+          "path": "pwsh.exe",
+          "sha256": "8737aa78bdbe2941083c2c3674da3a9c3ab4cabd2cac040d39d1d0c19f9fc20d"
+        },
+        {
+          "path": "System.Management.Automation.dll",
+          "sha256": "89185941a6323832689779222f2232366b6c1056a67f0a0e7428af765299d84d"
+        },
+        {
+          "path": "coreclr.dll",
+          "sha256": "331c37f79cce19b37e74ee1adf8a78d741484f8adc1ce46c45cd6ad94d8022b4"
+        },
+        {
+          "path": "hostfxr.dll",
+          "sha256": "b41af3ca044a75a77f3bf7883ec586a63e8bd25e74106b21d08131488141581b"
+        }
+      ]
+    },
+    {
+      "name": "7zip",
+      "os": "windows",
+      "arch": "amd64",
+      "version": "26.02",
+      "executable": "7z.exe",
+      "url": "https://github.com/ip7z/7zip/releases/download/26.02/7z2602-x64.exe",
+      "sha512": "85389eaef377aa9fef3155d2e3375c1fff77fc10e39d9312cab229f202f3aff78f6e807460cf6b04bc2a32f72f7853afbf475cf0dce6232a40c0a6f8ddcbe4da",
+      "archive": "7z2602-x64.7z.exe",
+      "files": [
+        {
+          "path": "7z.exe",
+          "sha256": "83967f1b02b43c4efeda302795722c809e0e81b8307de73558d10484d5676a7d"
+        },
+        {
+          "path": "7z.dll",
+          "sha256": "69fd4df057985c40e510e2fac182881c7f85e90aa13ec703f763a8fdb2ce61f8"
+        }
+      ]
+    }
+  ],
+  "supportDownloads": [
+    {
+      "url": "https://mirror.msys2.org/msys/x86_64/msys2-runtime-3.6.5-1-x86_64.pkg.tar.zst",
+      "sha512": "974dbe29e35b04a4a4f5ffbfed1327702c5eb34cfbfafd45e00df3553e66ca3a4a92cf8b69dbb42b8e3c2ef034281ea73888c03c271ad28ce12fee32ce1bbf3d",
+      "archive": "msys2-msys2-runtime-3.6.5-1-x86_64.pkg.tar.zst",
+      "recipe": "scripts/cmake/vcpkg_acquire_msys.cmake"
+    },
+    {
+      "url": "https://mirror.msys2.org/mingw/mingw64/mingw-w64-x86_64-pkgconf-1~2.5.1-1-any.pkg.tar.zst",
+      "sha512": "2e604ccb004e2afa151e870112c95cab7106e43ee3cdfe67ac8815f3ec6754ccbc25211732eec8ac9ffe491071c63c9af18c8fa2bbfd6521a1b467bb11b1da03",
+      "archive": "msys2-mingw-w64-x86_64-pkgconf-1~2.5.1-1-any.pkg.tar.zst",
+      "recipe": "scripts/cmake/vcpkg_find_acquire_program(PKGCONFIG).cmake"
+    },
+    {
+      "url": "https://github.com/ip7z/7zip/releases/download/26.02/7zr.exe",
+      "sha512": "dfdcf16edb65baddd43181c9481a2c9453b0c678a6825108c2ab4cb30de34497c5fda5639721b3ced9cb4b98744fb6dab7314bd49685385c365425b721b19279",
+      "archive": "dfdcf16e-7zr.exe",
+      "recipe": "scripts/vcpkg-tools.json"
+    }
+  ],
+  "historicalOverlayReferences": {
+    "cppzmq": "c95be3f1cd3205c897f4f9ed4af464624de3ce4d",
+    "pugixml": "0af6c22cb58a218893ca193a5f5d29d7d1753355"
+  }
+}

@@ -1,0 +1,24 @@
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -21,10 +21,6 @@
+     # disable Visual Studio warnings for fopen() used in the example
+     add_definitions(-D_CRT_SECURE_NO_WARNINGS)
+     # Flags for linking with multithread static C++ runtime
+-    set(CMAKE_C_FLAGS_RELEASE   "${CMAKE_C_FLAGS_RELEASE} /MT")
+-    set(CMAKE_C_FLAGS_DEBUG     "${CMAKE_C_FLAGS_DEBUG} /MTd")
+-    set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /MT")
+-    set(CMAKE_CXX_FLAGS_DEBUG   "${CMAKE_CXX_FLAGS_DEBUG} /MTd")
+ else (MSVC)
+     set(CPPLINT_ARG_OUTPUT      "--output=eclipse")
+     set(CPPCHECK_ARG_TEMPLATE   "--template=gcc")
+@@ -249,3 +245,10 @@
+     message(STATUS "SQLITECPP_BUILD_TESTS OFF")
+ endif (SQLITECPP_BUILD_TESTS)
+ 
++
++find_path(UAV_SQLITE_INCLUDE sqlite3.h REQUIRED)
++find_library(UAV_SQLITE_LIBRARY sqlite3 REQUIRED)
++target_include_directories(SQLiteCpp PRIVATE "${UAV_SQLITE_INCLUDE}")
++target_link_libraries(SQLiteCpp PUBLIC "${UAV_SQLITE_LIBRARY}")
++install(TARGETS SQLiteCpp ARCHIVE DESTINATION lib)
++install(DIRECTORY include/SQLiteCpp DESTINATION include)

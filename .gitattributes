@@ -1,1 +1,5 @@
 *.pdf binary
+
+# Unified diff context and copied historical recipe formatting are intentional.
+config/vcpkg/ports/*/*.patch -whitespace
+config/vcpkg/ports/boost-modular-build-helper/boost-modular-build.cmake whitespace=-blank-at-eol,-blank-at-eof

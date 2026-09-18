@@ -1,12 +1,12 @@
 # G2 实施方案：Windows 原生 UxAS
 
-日期：2026-09-18，Asia/Shanghai。**G2-T01 已完成，T02 可执行、尚未启动。** 原生工具链十组检查及 VS／Ninja、普通／中文空格路径的 C/C++ 编译运行通过，详见 [T01 记录](g2-cpp-toolchain-validation.md)。本文是实施方案，不是 UxAS 构建或运行验收报告；完整任务卡见 [backlog](backlog.md#4-g2-顺序与任务卡)，当前进度见 [status](status.md)，过程见 [worklog](../worklog.md)。
+日期：2026-09-18，Asia/Shanghai。**G2-T01、T02 已完成，T03 可执行、尚未启动。** 原生工具链和固定依赖的源码重建、功能、路径、来源及故障检查通过，详见 [T01 记录](g2-cpp-toolchain-validation.md)与 [T02 记录](g2-dependencies-validation.md)。本文是实施方案，不是 UxAS 构建或运行验收报告；完整任务卡见 [backlog](backlog.md#4-g2-顺序与任务卡)，当前进度见 [status](status.md)，过程见 [worklog](../worklog.md)。
 
 ## 1. 目标、输入与边界
 
 G2 的通过条件是：从干净输出目录构建 Windows 原生 `uxas.exe`，HelloWorld 两个服务通过实际内部消息总线收发 `KeyValuePair`，并正常退出。七张任务卡按 T01 → T07 顺序推进，一次一个主要实现任务。
 
-本方案编制时只落地文档，未安装、构建或运行；该历史边界不代替后续任务授权。T01 已按用户授权完成原生工具安装和最小 C/C++ 探针；第三方依赖、LMCP 与 UxAS 构建仍待后续任务。AMASE↔UxAS 的 WaterwaySearch 双向闭环归 G3；网关、Cesium、Ada、实机接入、训练集成与完整重连不纳入 G2。
+本方案编制时只落地文档，未安装、构建或运行；该历史边界不代替后续任务授权。T01、T02 已按用户授权完成原生工具和第三方依赖验收；LMCP 与 UxAS 构建仍待后续任务。AMASE↔UxAS 的 WaterwaySearch 双向闭环归 G3；网关、Cesium、Ada、实机接入、训练集成与完整重连不纳入 G2。
 
 2026-09-18 方案细化时的只读复核结果（工具安装前的历史快照）：
 
@@ -44,7 +44,7 @@ G2 的通过条件是：从干净输出目录构建 Windows 原生 `uxas.exe`，
 | SQLite | 3.39.4 | `SQLITE_ENABLE_COLUMN_METADATA`，版本与实际库一致 |
 | SQLiteCpp | 1.3.1 | 使用上述外部 SQLite，关闭原配方的 Python 2 cpplint 要求 |
 
-这些版本来自 [repositories.yaml](../OpenUxAS/infrastructure/specs/config/repositories.yaml)、[Boost 配方](../OpenUxAS/infrastructure/specs/boost.anod)、[SQLite 配方](../OpenUxAS/infrastructure/specs/sqlite.anod)与 [SQLiteCpp 配方](../OpenUxAS/infrastructure/specs/sqlitecpp.anod)，尚未验证该组合在 MSVC 下可用。T02 优先修复构建兼容性；需要改变主要依赖版本时，提交最小复现、已尝试方案和影响说明后调整任务，不顺带整体升级。
+这些版本来自 [repositories.yaml](../OpenUxAS/infrastructure/specs/config/repositories.yaml)、[Boost 配方](../OpenUxAS/infrastructure/specs/boost.anod)、[SQLite 配方](../OpenUxAS/infrastructure/specs/sqlite.anod)与 [SQLiteCpp 配方](../OpenUxAS/infrastructure/specs/sqlitecpp.anod)。T02 已在 MSVC 下完成该组合的构建与功能验收，Boost 保留历史模块 ports，必要兼容修复见 [报告](g2-dependencies-validation.md)。后续需要改变主要依赖版本时，提交最小复现、已尝试方案和影响说明后调整任务，不顺带整体升级。
 
 ### UxAS 源码与可选桥
 

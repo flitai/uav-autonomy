@@ -1,0 +1,50 @@
+--- a/src/pugixml.hpp
++++ b/src/pugixml.hpp
+@@ -13,6 +13,8 @@
+ 
+ // Define version macro; evaluates to major * 1000 + minor * 10 + patch so that it's safe to use in less-than comparisons
+ // Note: pugixml used major * 100 + minor * 10 + patch format up until 1.9 (which had version identifier 190); starting from pugixml 1.10, the minor version number is two digits
++#include <cstdint>
++
+ #ifndef PUGIXML_VERSION
+ #	define PUGIXML_VERSION 1120 // 1.12
+ #endif
+@@ -403,6 +405,7 @@
+ 		// Get attribute value as a number, or the default value if conversion did not succeed or attribute is empty
+ 		int as_int(int def = 0) const;
+ 		unsigned int as_uint(unsigned int def = 0) const;
++		int64_t as_int64(int64_t def = 0) const;
+ 		double as_double(double def = 0) const;
+ 		float as_float(float def = 0) const;
+ 
+--- a/src/pugixml.cpp
++++ b/src/pugixml.cpp
+@@ -4589,6 +4589,16 @@
+ 		return string_to_integer<unsigned int>(value, 0, UINT_MAX);
+ 	}
+ 
++	PUGI__FN int64_t get_value_int64(const char_t* value, int64_t def)
++	{
++		if (!value) return def;
++	#ifdef PUGIXML_WCHAR_MODE
++		return static_cast<unsigned int>(wcstoull(value, 0, 10));
++	#else
++		return static_cast<int64_t>(strtoull(value, 0, 10));
++	#endif
++	}
++
+ 	PUGI__FN double get_value_double(const char_t* value)
+ 	{
+ 	#ifdef PUGIXML_WCHAR_MODE
+@@ -5206,6 +5216,11 @@
+ 	PUGI__FN unsigned int xml_attribute::as_uint(unsigned int def) const
+ 	{
+ 		return (_attr && _attr->value) ? impl::get_value_uint(_attr->value) : def;
++	}
++
++	PUGI__FN int64_t xml_attribute::as_int64(int64_t def) const
++	{
++		return impl::get_value_int64(_attr ? _attr->value : 0, def);
+ 	}
+ 
+ 	PUGI__FN double xml_attribute::as_double(double def) const

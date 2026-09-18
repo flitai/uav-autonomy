@@ -1,0 +1,10 @@
+{
+  "name": "cppzmq",
+  "version": "4.2.2",
+  "port-version": 1,
+  "description": "Pinned UxAS Windows dependency; provenance in config/windows-dependencies.json",
+  "supports": "windows & x64 & !uwp",
+  "dependencies": [
+    "zeromq"
+  ]
+}

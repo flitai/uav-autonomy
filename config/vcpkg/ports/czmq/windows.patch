@@ -1,0 +1,165 @@
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -14,7 +14,7 @@
+ set(SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}")
+ set(CMAKE_EXPORT_COMPILE_COMMANDS 1)
+ # Select flags
+-SET(CMAKE_C_FLAGS_RELEASE "-O3")
++# Release flags come from the pinned toolchain.
+ 
+ # Will be used to add flags to pkg-config useful when apps want to statically link
+ set(pkg_config_libs_private "")
+@@ -93,7 +93,9 @@
+ ########################################################################
+ # LIBZMQ dependency
+ ########################################################################
+-find_package(libzmq REQUIRED)
++find_package(ZeroMQ CONFIG REQUIRED)
++set(LIBZMQ_FOUND TRUE)
++set(LIBZMQ_LIBRARIES libzmq-static)
+ IF (LIBZMQ_FOUND)
+     include_directories(${LIBZMQ_INCLUDE_DIRS})
+     list(APPEND MORE_LIBRARIES ${LIBZMQ_LIBRARIES})
+@@ -105,7 +107,7 @@
+ ########################################################################
+ # UUID dependency
+ ########################################################################
+-find_package(uuid)
++set(UUID_FOUND FALSE)
+ IF (UUID_FOUND)
+     include_directories(${UUID_INCLUDE_DIRS})
+     list(APPEND MORE_LIBRARIES ${UUID_LIBRARIES})
+@@ -117,7 +119,7 @@
+ ########################################################################
+ # SYSTEMD dependency
+ ########################################################################
+-find_package(systemd)
++set(SYSTEMD_FOUND FALSE)
+ IF (SYSTEMD_FOUND)
+     include_directories(${SYSTEMD_INCLUDE_DIRS})
+     list(APPEND MORE_LIBRARIES ${SYSTEMD_LIBRARIES})
+@@ -235,7 +237,8 @@
+ if (NOT DEFINED BUILD_SHARED_LIBS)
+     SET(BUILD_SHARED_LIBS ON)
+ endif()
+-add_library(czmq ${czmq_sources})
++add_library(czmq STATIC ${czmq_sources})
++target_compile_definitions(czmq PUBLIC CZMQ_STATIC ZMQ_STATIC)
+ set_target_properties(czmq
+     PROPERTIES DEFINE_SYMBOL "CZMQ_EXPORTS"
+ )
+@@ -283,101 +286,8 @@
+ ########################################################################
+ # executables
+ ########################################################################
+-add_executable(
+-    zmakecert
+-    "${SOURCE_DIR}/src/zmakecert.c"
+-)
+-target_link_libraries(
+-    zmakecert
+-    czmq
+-    ${LIBZMQ_LIBRARIES}
+-    ${OPTIONAL_LIBRARIES}
+-)
+-set_target_properties(
+-    zmakecert
+-    PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${SOURCE_DIR}/src"
+-)
+-add_executable(
+-    czmq_selftest
+-    "${SOURCE_DIR}/src/czmq_selftest.c"
+-)
+-target_link_libraries(
+-    czmq_selftest
+-    czmq
+-    ${LIBZMQ_LIBRARIES}
+-    ${OPTIONAL_LIBRARIES}
+-)
+-set_target_properties(
+-    czmq_selftest
+-    PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${SOURCE_DIR}/src"
+-)
+-
+-########################################################################
+-# tests
+-########################################################################
+-set(CLASSTEST_TIMEOUT 60 CACHE STRING "Timeout of the selftest of a class")
+-set(TOTAL_TIMEOUT 600 CACHE STRING "Timout of the total testsuite")
+-
+-if(UNIX)
+-    find_program(MEMORYCHECK_COMMAND valgrind)
+-    set(MEMORYCHECK_COMMAND_OPTIONS "--leak-check=full --show-reachable=yes
+-                                     --error-exitcode=1
+-                                     --suppressions=src/.valgrind.supp")
+-endif()
+-
+-set(TEST_CLASSES
+-    zactor
+-    zarmour
+-    zcert
+-    zcertstore
+-    zchunk
+-    zclock
+-    zconfig
+-    zdigest
+-    zdir
+-    zdir_patch
+-    zfile
+-    zframe
+-    zhash
+-    zhashx
+-    ziflist
+-    zlist
+-    zlistx
+-    zloop
+-    zmsg
+-    zpoller
+-    zsock
+-    zstr
+-    zuuid
+-    zauth
+-    zbeacon
+-    zgossip
+-    zmonitor
+-    zproxy
+-    zrex
+-    zsys
+-)
+-
+-IF (ENABLE_DRAFTS)
+-    list (APPEND TEST_CLASSES
+-    zproc
+-    ztimerset
+-    ztrie
+-    )
+-ENDIF (ENABLE_DRAFTS)
+-
+-foreach(TEST_CLASS ${TEST_CLASSES})
+-    add_test(
+-        NAME ${TEST_CLASS}
+-        COMMAND czmq_selftest --continue --verbose --test ${TEST_CLASS}
+-    )
+-    set_tests_properties(
+-        ${TEST_CLASS}
+-        PROPERTIES TIMEOUT ${CLASSTEST_TIMEOUT}
+-    )
+-endforeach(TEST_CLASS)
+-
+-include(CTest)
++# Tools and upstream selftests are not part of this library package.
++
+ 
+ ########################################################################
+ # cleanup
+--- a/src/CMakeLists-local.txt
++++ b/src/CMakeLists-local.txt
+@@ -8,5 +8,7 @@
+ endif()
+ 
+ # at least C99 is required for zdir which uses ‘for’ loop initial declarations
+-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=gnu99")
++if(NOT MSVC)
++  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=gnu99")
++endif()
+ 

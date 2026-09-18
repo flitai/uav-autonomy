@@ -15,9 +15,9 @@
 3. 新增消息网关，以 CesiumJS 三维 GIS 逐步替换原有态势可视化与操作界面。
 4. 后续为 TorchRL／BenchMARL 训练集成复用协议与仿真控制接口。
 
-截至上述核对日期，G0、G1 已完成，G1-T01～T05 均已完成；G2-T01 已完成，原生工具链十组验收及 VS／Ninja 在两类路径下的 C/C++ 探针通过；T02 可执行、尚未启动，见 [T01 记录](docs/g2-cpp-toolchain-validation.md)。完整方案及七张任务卡见 [G2 实施方案](docs/g2-windows-uxas-plan.md)和 [任务清单](docs/backlog.md#4-g2-顺序与任务卡)。项目内 Temurin JDK 11.0.32.1+1、Ant 1.10.18 已构建生成器、统一消息库和正式 AMASE；七模型已生成 Java／C++／Python 代码，Python 3.14.7 x64 的跨语言样本通过。T05 的 GUI／无界面真实 TCP 接收、十四组自动验收、GUI 人工确认、同版本受控复验及正常退出均完成；两层封装、分包、中文路径及故障处理已验证。证据见 [Java 验收](docs/g1-java-validation.md)、[T03 消息库验收](docs/g1-lmcp-validation.md)、[T04 AMASE 验收](docs/g1-amase-validation.md)和 [T05 TCP 验收](docs/g1-tcp-validation.md)。尚未编译 LMCP／UxAS、完成 UxAS 双向联调或完整重连验证，也未落地 Cesium、消息网关或训练集成；Python 其他项目依赖未验证。继续工作时先读 [当前状态](docs/status.md) 与 [任务清单](docs/backlog.md)，并重新检查实际环境，不把历史快照当成永久结论。
+截至上述核对日期，G0、G1 已完成，G1-T01～T05 均已完成；G2-T01 已完成，原生工具链十组验收及 VS／Ninja 在两类路径下的 C/C++ 探针通过；T02 已完成固定依赖的源码重建、11 组验收与迁移发布，T03 可执行、尚未启动，见 [T01 记录](docs/g2-cpp-toolchain-validation.md)与 [T02 记录](docs/g2-dependencies-validation.md)。完整方案及七张任务卡见 [G2 实施方案](docs/g2-windows-uxas-plan.md)和 [任务清单](docs/backlog.md#4-g2-顺序与任务卡)。项目内 Temurin JDK 11.0.32.1+1、Ant 1.10.18 已构建生成器、统一消息库和正式 AMASE；七模型已生成 Java／C++／Python 代码，Python 3.14.7 x64 的跨语言样本通过。T05 的 GUI／无界面真实 TCP 接收、十四组自动验收、GUI 人工确认、同版本受控复验及正常退出均完成；两层封装、分包、中文路径及故障处理已验证。证据见 [Java 验收](docs/g1-java-validation.md)、[T03 消息库验收](docs/g1-lmcp-validation.md)、[T04 AMASE 验收](docs/g1-amase-validation.md)和 [T05 TCP 验收](docs/g1-tcp-validation.md)。尚未编译 LMCP／UxAS、完成 UxAS 双向联调或完整重连验证，也未落地 Cesium、消息网关或训练集成；Python 其他项目依赖未验证。继续工作时先读 [当前状态](docs/status.md) 与 [任务清单](docs/backlog.md)，并重新检查实际环境，不把历史快照当成永久结论。
 
-Windows 原生运行是目标；WSL／Linux 可作参考或过渡环境，其验证结果必须单独标注。总体计划已确定首期默认 Windows 11 x64、联网开发与指定场景的基础离线演示，并保留原场景编辑器；实体规模和具体地理资源按任务细化。G2 已选定 MSVC v143／CMake 3.31、Release x64／动态 CRT 和 vcpkg manifest；Zyre／串口默认关闭，TCP 所需 CZMQ 保留。T01 已验证 MSVC／SDK／CMake／Ninja／vcpkg，业务依赖组合仍须经 T02 验证；Python 网关仍为后续候选实现。
+Windows 原生运行是目标；WSL／Linux 可作参考或过渡环境，其验证结果必须单独标注。总体计划已确定首期默认 Windows 11 x64、联网开发与指定场景的基础离线演示，并保留原场景编辑器；实体规模和具体地理资源按任务细化。G2 已选定 MSVC v143／CMake 3.31、Release x64／动态 CRT 和 vcpkg manifest；Zyre／串口默认关闭，TCP 所需 CZMQ 保留。T01 已验证 MSVC／SDK／CMake／Ninja／vcpkg，固定业务依赖组合已由 T02 验证；Python 网关仍为后续候选实现。
 
 ## 2. 目录与职责
 
@@ -137,7 +137,20 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -NoExit -File .\scripts\window
 
 Build Tools 17.14.41／v143、SDK 发布 10.0.26100.7705、CMake 3.31.12、Ninja 1.13.2 和固定 vcpkg 已通过来源与真实编译验收。工具目录、编译器文件及实际加载 CRT 的版本分别记录；不要通过猜测目录名判断版本。来源校验不符时停止，不用新的下载哈希自行替换信任值；T01 的目录摘要更正有独立的微软原生签名验证和篡改拒绝证据。
 
-准备／验收入口恢复自己的进程环境，`use-cpp.ps1` 在当前进程启用 Host／Target x64；后续脚本自行启用并恢复，不依赖已退出的子进程。vcpkg 强制使用已验证的 CMake／Ninja，未执行全局集成或持久 PATH 修改。十组验收覆盖 VS／Ninja、Release x64／动态 CRT、普通／中文空格路径、不同工作目录和隔离故障；仅证明最小工具链，不代表业务依赖、LMCP 或 UxAS 通过。T02 可执行、尚未启动。
+准备／验收入口恢复自己的进程环境，`use-cpp.ps1` 在当前进程启用 Host／Target x64；后续脚本自行启用并恢复，不依赖已退出的子进程。vcpkg 强制使用已验证的 CMake／Ninja，未执行全局集成或持久 PATH 修改。十组验收覆盖 VS／Ninja、Release x64／动态 CRT、普通／中文空格路径、不同工作目录和隔离故障；此为 T01 工具链证据；T02 业务依赖另经下述入口验收，LMCP／UxAS 仍待后续。
+
+### Windows：固定第三方依赖
+
+T02 已验证 89 个 ports（含 81 个 Boost 历史模块／辅助 ports），业务版本、来源及兼容限制见 [T02 记录](docs/g2-dependencies-validation.md)。根级 `vcpkg.json`、`vcpkg-configuration.json`、`config/windows-dependencies.json` 和 `config/vcpkg/` 为实际清单／配方。主机辅助工具留在 `.tools/`，不永久修改 PATH。
+
+```powershell
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\windows\build-deps.ps1 -Rebuild
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\tests\windows\deps.tests.ps1 -BuildRunId '<BUILD_RUN_ID>'
+```
+
+构建只生成候选；验收包含 VS／Ninja、真实帧／数据库／XML／Boost 功能、CRT、中文空格路径、故障和迁移。成功后原子更新 `out/artifacts/deps/current.json`，保留旧批次和指针备份。后续脚本点入 `deps-common.ps1`，用 `Resolve-DepsPackage` 核对构建／验收身份及全部输入／安装哈希，再消费 `UxasDependencies`／`UxasDeps::*`；CMake 配置不隐式安装依赖。无 `-Rebuild` 时可复用匹配 ABI 的二进制缓存，不能将缓存恢复计作本次源码编译。
+
+依赖包只验收 Release x64／动态 CRT。CZMQ 旧 `snprintf` 宏和 CMake 3.31／Ninja 的中文响应文件处理见 T02 报告，实际 UxAS 编译问题留给 T05。T03 可执行、尚未启动，G2 尚未完成。
 
 ### Linux／WSL：现有 UxAS 参考流程
 

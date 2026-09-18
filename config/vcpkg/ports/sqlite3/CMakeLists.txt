@@ -1,0 +1,6 @@
+cmake_minimum_required(VERSION 3.15)
+project(sqlite3 C)
+add_library(sqlite3 STATIC sqlite3.c)
+target_compile_definitions(sqlite3 PUBLIC SQLITE_ENABLE_COLUMN_METADATA PRIVATE SQLITE_THREADSAFE=1)
+install(TARGETS sqlite3 ARCHIVE DESTINATION lib)
+install(FILES sqlite3.h sqlite3ext.h DESTINATION include)

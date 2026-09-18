@@ -695,3 +695,41 @@ T02 可执行、尚未启动，下一项为固定业务依赖、baseline／overl
 问题与处理：没有远程分叉、冲突或推送失败；沿用现有 Git 身份。工具／下载缓存、生成物、原始日志和本机绝对路径受忽略规则覆盖，未进入提交；既有日志截至 WL-20260918-004 保持原文。
 
 遗留事项与下一步：G2-T02 尚未启动。以后阶段性工作确认完成后按新约定自动提交推送，受阻或部分完成时记录真实状态；此持续授权不自动开展下一任务。
+
+## WL-20260918-006｜G2-T02 固定第三方依赖、原生构建与验收
+
+时间／时区：2026-09-18，Asia/Shanghai（UTC+08:00）。实际依赖构建记录自 13:21 起；最终源码重建 13:54:26～13:56:10，首次完整验收 13:59:07～14:00:25，最终重复验收 14:03:20～14:04:37；随后进行文档与 Git 归档检查。
+
+关联任务与状态：G2-T02 已完成；T03 可执行、尚未启动。G2 阶段尚未完成。本次仅构建第三方依赖和独立消费探针，没有编译 LMCP／UxAS 或运行仿真。
+
+背景、目标与范围：按用户确认方案采用 vcpkg manifest／固定 baseline／overrides／overlay，保留原依赖版本、静态第三方库及动态 CRT。用户明确选择 Boost 历史模块 ports 加完整传递锁定和必要辅助修复，不采用整包配方。开始时 main／`4c132e25fdadfd6fb7a807653fd438abcbb5a318` 工作区干净；T01 固定工具完整性、版本及 CMake／Ninja 实际解析再次通过。
+
+### 工作过程与问题处理
+
+1. 对照原 Anod 配方、版本库和补丁建立清单。锁定 vcpkg checkout／registry baseline `9e593bb18ea69cc5095e012465dcd675a822ed0d`；递归历史图为 81 个 Boost 模块／辅助 ports，加六项非 Boost 依赖及两个 vcpkg CMake 辅助 ports，共 89 个。Boost 库保持 1.74.0 及固定历史 port-version，辅助基线 build 1.74.0#0、modular-build-helper 1.74.0#2、vcpkg-helpers 7#1；修改的前两者分别使用 overlay #1／#3。直接和传递依赖均登记，默认图不含 Zyre／serial。
+2. libzmq 4.3.1、CZMQ 4.0.2、SQLite 3.39.4 新增固定源码配方；cppzmq 4.2.2、pugixml 1.12.1 和 SQLiteCpp 1.3.1 处理旧辅助调用、安装布局、静态传递链接及外部 SQLite。pugixml 原 `as_int64` 补丁只转换格式、固定窄字符，空／非法文本仍返回 0。SQLite 开启列元数据和线程安全；源码核查确认 SQLiteCpp 会追加 `/MT`，补丁移除后统一 `/MD`。保留 libzmq TCP／STREAM／TweetNaCl CURVE 与完整稳定 CZMQ，未升级主要依赖。
+3. 初次运行发现固定 vcpkg 还需 PowerShell 主机工具，且子进程会清理便携 Ninja 的 PATH。补齐固定 PowerShell 7.6.3、7-Zip／7zr 26.02 及来源检查，triplet 传递受控 PATH；pkgconf 2.5.1-1／MSYS2 runtime 3.6.5-1 仅作构建辅助并登记固定来源。最终不复用系统 7-Zip。仅获取指定主机工具时切换下载设置，之后恢复并复核 CMake 3.31.12／Ninja 1.13.2。
+4. 固定 vcpkg 的 SPDX 函数使用 CMake 4.x `STRING_ENCODE`，与锁定 3.31 不相容。增加项目 triplet 加载的等价 JSON 编码实现，保留源码资源／校验字段，未修改 vcpkg checkout；独立 JSON 往返覆盖中文、引号、反斜线、分号及控制字符。libzmq 已编译后因错误引用 LICENSE 安装失败，按真实源码改为 COPYING／COPYING.LESSER；失败记录保留。
+5. Boost.Build 旧辅助代码先不识别 v143，随后中文路径中的系统编码与 UTF-8 混用使准备文件／响应文件失效，库名仍假设 vc140。增加真实 v143 分支、固定 cl 路径与 vc143 名称；拆分 include 参数，为 b2 嵌入进程 UTF-8 manifest，并在最终响应文件写入时只加一个 BOM。曾在 Jam 表达式加 BOM 导致每个对象前重复标记，按真实链接错误改到写入层。没有伪装 v142、修改机器代码页或删除传递模块。
+6. 所有 ports 安装后，PowerShell 5.1 将 `Get-Content -Raw` 的 provider 属性深度序列化，导致记录进程异常耗时；核对 PID／命令行后只停止本次记录进程，批次 `133855-877` 登记 failed，保留安装结果，记录文本改用 `File.ReadAllText`。允许图直接／传递名称未去重造成 `134551-953` 计数拒绝，修正后重新执行。`135216-386` 在运行期间公共辅助输入变化，结束时哈希校验如实拒绝；以稳定输入重新完整构建，不更改旧收据冒充成功。
+7. 消费探针修正了旧版 API 假设：pugixml 1.12.1 的公开宏实际为 1120；SQLiteCpp 使用 `SQLITE_OPEN_*`／`getText()`。探针取消 CZMQ 暴露的旧 `snprintf` 宏以免污染 Boost 头，没有修改 CZMQ 解析或消息行为。Ninja 长链接行的无 BOM 响应文件误读中文库路径，验收 CMake 将库参数移到 Unicode 命令行；此限定与后续 UxAS 适配边界写入报告。Ninja 会吸收头文件输出且将路径相对化，改从真实 `ninja -t deps` 数据库解析绝对来源后核对。
+8. 短进程曾返回 null 退出码，虽然 CTest 文本显示通过，整套仍判失败；保留 native handle 后取得真实退出码。首次发布通过后，重复验收发现 `.NET File.Replace` 的空备份路径在 PowerShell 5.1 下无效，批次 `140053-860` 退出 1且保留旧指针／旧包；改用唯一真实备份路径后，`140320-336` 全部通过并原子更新指针。
+
+### 成果与实际验证
+
+新增根级 `vcpkg.json`／`vcpkg-configuration.json`、[固定来源清单](config/windows-dependencies.json)、`config/vcpkg/` 的 triplet／配方／补丁和许可说明；新增 `scripts/windows/build-deps.ps1`／`deps-common.ps1`、`tests/windows/deps.tests.ps1`、`tests/dependencies/` 及 [T02 专题报告](docs/g2-dependencies-validation.md)。`UxasDependencies` 提供七个 `UxasDeps::*` 消费目标，`Resolve-DepsPackage` 验证合格身份、来源和完整安装清单。同步 status、backlog、G2 方案、总体计划、目录分析进度与 AGENTS；上游源码和 G1／T01 实现不变。`.gitattributes` 仅保留统一 diff 上下文及历史辅助配方的空白格式；未统一全库行尾。
+
+以下命令工作目录为仓库根目录，入口均使用 `powershell.exe -NoProfile -ExecutionPolicy Bypass -File`；消费配置、构建和 CTest 从临时工作目录调用。
+
+- `scripts/windows/build-deps.ps1 -Rebuild`：最终 `g2-t02-build-20260918-135426-199` 退出 0、candidate；全新中文空格目录，两个阶段读取二进制缓存均为 0，89 个 ports 成功，27 个静态库、10,602 个安装文件纳入 SHA-256 清单。保留工具版本、输入哈希、SPDX 来源、命令／退出码和完整安装状态。
+- `tests/windows/deps.tests.ps1 -BuildRunId g2-t02-build-20260918-135426-199`：首次 `135907-382` 和最终 `140320-336` 均退出 0、11 组通过。每次 VS／Ninja × 候选／迁移正式包共四个新工程，16 次 CTest 和 16 次直接运行全部通过；覆盖其他工作目录、中文空格路径、重复功能运行及正常清理。
+- ZeroMQ／CZMQ 验证二进制／空帧／多帧双向互操作、本机 TCP STREAM 的身份帧、空连接通知和数据收发、CURVE 能力；XML 验证超过 2⁵³、正负 int64 边界、缺省及原空／非法行为；Boost 验证四模块及 geometry、graph 最短路径、DynamicBitset；SQLiteCpp 验证数据库持久读写、事务提交／回退、64 位整数、UTF-8、二进制、列元数据与外部 SQLite 3.39.4。
+- `scripts/windows/build-deps.ps1`：缓存复建 `g2-t02-build-20260918-135828-266` 退出 0，两个阶段恢复 8／81 个包；输入与源码重建一致，全部 10,602 个安装文件 SHA-256 一致。对照收据 `out/tmp/g2-t02-cache-comparison.json` 为 passed；缓存恢复未冒充新的源码编译。
+- 编译参数和静态断言为 x64／C++14／Release `/MD`；27 个库指令、实际头文件／链接库来源及 PE 依赖核对通过，没有 Debug／静态 CRT 或第三方业务 DLL。实际 VC DLL 为 14.50.35719.0、UCRT 10.0.26100.9444，来源为系统目录，与编译器版本分别记录。
+- 隔离缺失／损坏库、源码哈希不符、配方／工具清单变化、元数据错误和超时全部明确失败；只结束本次超时 PID。副本故障不改写旧合格指针；真实发布替换失败也保留旧包，最终发布保留旧指针备份。用户／系统 PATH 前后不变，进程环境恢复，无全局集成。
+- `out/tmp/check-deps-resolution.ps1` 调用实际 `Resolve-DepsPackage`，退出 0；当前指向源码重建 `135426-199` 与最终验收 `140320-336`，来源／输入／文件核对通过，收据为 `out/tmp/g2-t02-resolve.json`。
+- 14:11:46 交付检查退出 0，收据 `out/runs/g2-t02-docs-20260918-141146/result.json`：53 个交付文件、213 处本地链接／锚点、40 个表格、UTF-8／代码块及状态一致，46 个构建／验收输入哈希与最终证据一致；PowerShell 语法、忽略范围及暂存差异检查通过。原日志字节前缀和 G0／G1 backlog 历史保持，未改动上游源码或 T01 输入。`git fetch origin` 退出 0，提交前 `HEAD...origin/main` 为 `0 0`；`.gitattributes` 保留原 PDF 规则，并为补丁上下文／历史配方格式限定空白检查例外。
+
+重要决定与影响：保留已选历史依赖和完整 Boost 模块图；兼容修复止于构建、安装和链接层。主机工具与业务库的来源分别记录；库包、运行记录、候选和正式指针分离。CMake 配置不隐式安装依赖，失败不使用旧程序假报成功；所有失败证据留在忽略目录，不提交原始日志、缓存或本机路径。
+
+遗留事项与下一步：T03 可执行、尚未启动，开始时重新核对合格依赖及 G1 七模型生成来源。CZMQ 宏、更多 UxAS include／平台问题由 T05 按真实编译处理；Ninja 的更长命令／任意工程布局尚未验证，主工程仍用 VS 2022。没有 LMCP／UxAS 编译、HelloWorld、双向协议或仿真运行结果，不宣称 G2 通过。按持续授权，完成 UTF-8、Markdown／链接、来源一致性及提交范围检查后自动提交、普通推送并核对远程；不进入下一任务。
