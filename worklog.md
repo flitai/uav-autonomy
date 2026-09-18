@@ -733,3 +733,5 @@ T02 可执行、尚未启动，下一项为固定业务依赖、baseline／overl
 重要决定与影响：保留已选历史依赖和完整 Boost 模块图；兼容修复止于构建、安装和链接层。主机工具与业务库的来源分别记录；库包、运行记录、候选和正式指针分离。CMake 配置不隐式安装依赖，失败不使用旧程序假报成功；所有失败证据留在忽略目录，不提交原始日志、缓存或本机路径。
 
 遗留事项与下一步：T03 可执行、尚未启动，开始时重新核对合格依赖及 G1 七模型生成来源。CZMQ 宏、更多 UxAS include／平台问题由 T05 按真实编译处理；Ninja 的更长命令／任意工程布局尚未验证，主工程仍用 VS 2022。没有 LMCP／UxAS 编译、HelloWorld、双向协议或仿真运行结果，不宣称 G2 通过。按持续授权，完成 UTF-8、Markdown／链接、来源一致性及提交范围检查后自动提交、普通推送并核对远程；不进入下一任务。
+
+归档结果：53 个交付文件经显式暂存、`git diff --cached --check` 和无未暂存改动检查后，创建提交 `a13f6981868c7aedcc9d6ed5b3d1417288cee5c6`（`feat: build and validate pinned Windows native dependencies`）。`git push origin main` 退出 0；14:12:31 的 `git ls-remote --exit-code origin refs/heads/main` 返回相同完整标识，工作区干净，收据为 `out/tmp/g2-t02-push.json`。随后仅补齐本条实际结果与 status，独立归档收尾文档；不改写已发布实现提交，不进入 T03。
