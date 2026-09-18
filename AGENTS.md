@@ -1,6 +1,6 @@
 # uav-autonomy：AI 开发协作说明
 
-适用范围：本仓库及其子目录。最后核对日期：2026-09-17。
+适用范围：本仓库及其子目录。最后核对日期：2026-09-18。
 
 这是项目级工作约定。遵循当前会话中更高优先级的指令和用户明确要求；修改子目录前检查是否还有适用于该目录的说明。源码、构建配置和实际运行结果用于判断工程事实，规划文档不代表功能已实现。
 
@@ -15,9 +15,9 @@
 3. 新增消息网关，以 CesiumJS 三维 GIS 逐步替换原有态势可视化与操作界面。
 4. 后续为 TorchRL／BenchMARL 训练集成复用协议与仿真控制接口。
 
-截至上述核对日期，G0、G1 已完成，G1-T01～T05 均已完成；G2 待细化，尚未启动。项目内 Temurin JDK 11.0.32.1+1、Ant 1.10.18 已构建生成器、统一消息库和正式 AMASE；七模型已生成 Java／C++／Python 代码，Python 3.14.7 x64 的跨语言样本通过。T05 的 GUI／无界面真实 TCP 接收、十四组自动验收、GUI 人工确认、同版本受控复验及正常退出均完成；两层封装、分包、中文路径及故障处理已验证。证据见 [Java 验收](docs/g1-java-validation.md)、[T03 消息库验收](docs/g1-lmcp-validation.md)、[T04 AMASE 验收](docs/g1-amase-validation.md)和 [T05 TCP 验收](docs/g1-tcp-validation.md)。尚未编译 C++、完成 UxAS 双向联调或完整重连验证，也未落地 Cesium、消息网关或训练集成；Python 其他项目依赖未验证。继续工作时先读 [当前状态](docs/status.md) 与 [任务清单](docs/backlog.md)，并重新检查实际环境，不把历史快照当成永久结论。
+截至上述核对日期，G0、G1 已完成，G1-T01～T05 均已完成；G2 已细化，实施尚未启动。G2-T01 可执行、尚未启动，完整方案及七张任务卡见 [G2 实施方案](docs/g2-windows-uxas-plan.md)和 [任务清单](docs/backlog.md#4-g2-顺序与任务卡)。项目内 Temurin JDK 11.0.32.1+1、Ant 1.10.18 已构建生成器、统一消息库和正式 AMASE；七模型已生成 Java／C++／Python 代码，Python 3.14.7 x64 的跨语言样本通过。T05 的 GUI／无界面真实 TCP 接收、十四组自动验收、GUI 人工确认、同版本受控复验及正常退出均完成；两层封装、分包、中文路径及故障处理已验证。证据见 [Java 验收](docs/g1-java-validation.md)、[T03 消息库验收](docs/g1-lmcp-validation.md)、[T04 AMASE 验收](docs/g1-amase-validation.md)和 [T05 TCP 验收](docs/g1-tcp-validation.md)。尚未编译 C++、完成 UxAS 双向联调或完整重连验证，也未落地 Cesium、消息网关或训练集成；Python 其他项目依赖未验证。继续工作时先读 [当前状态](docs/status.md) 与 [任务清单](docs/backlog.md)，并重新检查实际环境，不把历史快照当成永久结论。
 
-Windows 原生运行是目标；WSL／Linux 可作参考或过渡环境，其验证结果必须单独标注。总体计划已确定首期默认 Windows 11 x64、联网开发与指定场景的基础离线演示，并保留原场景编辑器；实体规模和具体地理资源按任务细化。CMake／MSVC、Python 网关等是当前计划中的候选实现，不是已经验证的工具链。
+Windows 原生运行是目标；WSL／Linux 可作参考或过渡环境，其验证结果必须单独标注。总体计划已确定首期默认 Windows 11 x64、联网开发与指定场景的基础离线演示，并保留原场景编辑器；实体规模和具体地理资源按任务细化。G2 已选定 MSVC v143／CMake 3.31、Release x64／动态 CRT 和 vcpkg manifest；Zyre／串口默认关闭，TCP 所需 CZMQ 保留。此为待实施方案，具体工具和依赖锁定值须经 T01／T02 验证；Python 网关仍为后续候选实现。
 
 ## 2. 目录与职责
 
@@ -46,6 +46,7 @@ Windows 原生运行是目标；WSL／Linux 可作参考或过渡环境，其验
 3. 检查适用的目录说明，阅读目标组件 README、实际构建配置及相关源码；优先用 `rg` 定位。
 4. 根据任务按需阅读项目文档，不必每次加载全部长文：
    - [当前状态](docs/status.md)、[任务清单](docs/backlog.md)：当前关卡、缺口、下一任务及验收条件；历史基线见 [G0 报告](docs/g0-baseline.md)。
+   - [G2 实施方案](docs/g2-windows-uxas-plan.md)：Windows 原生工具链、vcpkg 依赖、C++ 消息库、可选桥及 HelloWorld 的当前任务边界；规划入口不视为已实现命令。
    - [工作日志](worklog.md)：先读最近记录及当前任务关联的问题、尝试和决定，避免重复排查；新记录按第 10 节要求追加。
    - [总体实施计划与阶段验收](04.项目总体实施计划与阶段验收.md)：按用户主导、AI 逐项实施的方式推进，G0～G8 为任务细化与验收依据；首期采用联网开发、基础离线演示。
    - [目录分析与 Windows／Cesium 改造计划](03.项目目录分析与Windows_Cesium改造计划.md)：目录、技术方案及改造风险的参考。
