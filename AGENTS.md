@@ -15,7 +15,7 @@
 3. 新增消息网关，以 CesiumJS 三维 GIS 逐步替换原有态势可视化与操作界面。
 4. 后续为 TorchRL／BenchMARL 训练集成复用协议与仿真控制接口。
 
-截至上述核对日期，G0、G1 已完成，G1-T01～T05 均已完成；G2-T01 已完成，原生工具链十组验收及 VS／Ninja 在两类路径下的 C/C++ 探针通过；T02 已完成固定依赖的源码重建、11 组验收与迁移发布；T03 已完成七模型 C++ 库、164 类型及三语言双向样本验收和发布，T04 已完成 UxAS 构建图与独立桥配置探针，T05 可执行、尚未启动，见 [T01 记录](docs/g2-cpp-toolchain-validation.md)、[T02 记录](docs/g2-dependencies-validation.md)、[T03 记录](docs/g2-lmcp-cpp-validation.md)和 [T04 记录](docs/g2-uxas-cmake-validation.md)。完整方案及七张任务卡见 [G2 实施方案](docs/g2-windows-uxas-plan.md)和 [任务清单](docs/backlog.md#4-g2-顺序与任务卡)。项目内 Temurin JDK 11.0.32.1+1、Ant 1.10.18 已构建生成器、统一消息库和正式 AMASE；七模型已生成 Java／C++／Python 代码，Python 3.14.7 x64 的跨语言样本通过。T05 的 GUI／无界面真实 TCP 接收、十四组自动验收、GUI 人工确认、同版本受控复验及正常退出均完成；两层封装、分包、中文路径及故障处理已验证。证据见 [Java 验收](docs/g1-java-validation.md)、[T03 消息库验收](docs/g1-lmcp-validation.md)、[T04 AMASE 验收](docs/g1-amase-validation.md)和 [T05 TCP 验收](docs/g1-tcp-validation.md)。尚未编译 UxAS、完成 UxAS 双向联调或完整重连验证，也未落地 Cesium、消息网关或训练集成；Python 其他项目依赖未验证。继续工作时先读 [当前状态](docs/status.md) 与 [任务清单](docs/backlog.md)，并重新检查实际环境，不把历史快照当成永久结论。
+截至上述核对日期，G0、G1 已完成，G1-T01～T05 均已完成；G2-T01 已完成，原生工具链十组验收及 VS／Ninja 在两类路径下的 C/C++ 探针通过；T02 已完成固定依赖的源码重建、11 组验收与迁移发布；T03 已完成七模型 C++ 库、164 类型及三语言双向样本验收和发布，T04 已完成 UxAS 构建图与独立桥配置探针，T05 已完成两类路径的候选构建及平台／来源验收，T06 可执行、尚未启动，见 [T05 记录](docs/g2-uxas-build-validation.md)、[T01 记录](docs/g2-cpp-toolchain-validation.md)、[T02 记录](docs/g2-dependencies-validation.md)、[T03 记录](docs/g2-lmcp-cpp-validation.md)和 [T04 记录](docs/g2-uxas-cmake-validation.md)。完整方案及七张任务卡见 [G2 实施方案](docs/g2-windows-uxas-plan.md)和 [任务清单](docs/backlog.md#4-g2-顺序与任务卡)。项目内 Temurin JDK 11.0.32.1+1、Ant 1.10.18 已构建生成器、统一消息库和正式 AMASE；七模型已生成 Java／C++／Python 代码，Python 3.14.7 x64 的跨语言样本通过。T05 的 GUI／无界面真实 TCP 接收、十四组自动验收、GUI 人工确认、同版本受控复验及正常退出均完成；两层封装、分包、中文路径及故障处理已验证。证据见 [Java 验收](docs/g1-java-validation.md)、[T03 消息库验收](docs/g1-lmcp-validation.md)、[T04 AMASE 验收](docs/g1-amase-validation.md)和 [T05 TCP 验收](docs/g1-tcp-validation.md)。尚未完成 HelloWorld、UxAS 双向联调或完整重连验证，也未落地 Cesium、消息网关或训练集成；Python 其他项目依赖未验证。继续工作时先读 [当前状态](docs/status.md) 与 [任务清单](docs/backlog.md)，并重新检查实际环境，不把历史快照当成永久结论。
 
 Windows 原生运行是目标；WSL／Linux 可作参考或过渡环境，其验证结果必须单独标注。总体计划已确定首期默认 Windows 11 x64、联网开发与指定场景的基础离线演示，并保留原场景编辑器；实体规模和具体地理资源按任务细化。G2 已选定 MSVC v143／CMake 3.31、Release x64／动态 CRT 和 vcpkg manifest；Zyre／串口默认关闭，TCP 所需 CZMQ 保留。T01 已验证 MSVC／SDK／CMake／Ninja／vcpkg，固定业务依赖组合已由 T02 验证；Python 网关仍为后续候选实现。
 
@@ -150,7 +150,7 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\tests\windows\deps.tes
 
 构建只生成候选；验收包含 VS／Ninja、真实帧／数据库／XML／Boost 功能、CRT、中文空格路径、故障和迁移。成功后原子更新 `out/artifacts/deps/current.json`，保留旧批次和指针备份。后续脚本点入 `deps-common.ps1`，用 `Resolve-DepsPackage` 核对构建／验收身份及全部输入／安装哈希，再消费 `UxasDependencies`／`UxasDeps::*`；CMake 配置不隐式安装依赖。无 `-Rebuild` 时可复用匹配 ABI 的二进制缓存，不能将缓存恢复计作本次源码编译。
 
-依赖包只验收 Release x64／动态 CRT。CZMQ 旧 `snprintf` 宏和 CMake 3.31／Ninja 的中文响应文件处理见 T02 报告，实际 UxAS 编译问题留给 T05。T04 已完成，T05 可执行、尚未启动，G2 尚未完成。
+依赖包只验收 Release x64／动态 CRT。CZMQ 旧 `snprintf` 宏和 CMake 3.31／Ninja 的中文响应文件处理见 T02 报告，固定依赖已通过 T05 的 UxAS 完整编译与候选验收。T05 已完成，T06 可执行、尚未启动，G2 尚未完成。
 
 ### Windows：统一 C++ LMCP 库
 
@@ -178,6 +178,19 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\tests\windows\uxas-cma
 ```
 
 结果与 File API 证据位于 `out/build/uxas/`、`out/runs/`。配置入口只登记 configured，不构建 uxas.exe；验收只构建两个独立桥能力探针，完整编译与 HelloWorld 分别归 T05／T06。直接使用 `windows-uxas-release` 预设仍需合格来源上下文。默认关闭 Zyre／串口，当前请求 ON 会明确失败；CZMQ、TCP 与其余必需服务保留。修改根 CMake／cmake 输入后必须按 T03 入口重新构建并验收消息库。详见 [T04 报告](docs/g2-uxas-cmake-validation.md)。
+
+### Windows：UxAS 候选构建与验收
+
+T05 已验证两类路径的干净 Release x64 构建、平台与来源检查。入口使用已验证的 Python 3.14.7 x64，环境仅在本次进程内启用并恢复：
+
+```powershell
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\windows\build-uxas.ps1 -PythonExecutable $pythonExe
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\tests\windows\uxas-build.tests.ps1 -PythonExecutable $pythonExe -BuildRunId '<BUILD_RUN_ID>'
+```
+
+候选位于 `out/build/uxas/<build-run-id>/candidate/`；独立验收收据位于 `out/runs/<validation-run-id>/acceptance.json`。T06 必须使用 `Resolve-UxasCandidate` 同时绑定两个编号并复查来源，接口及本轮编号见 [T05 报告](docs/g2-uxas-build-validation.md)。失败不发布或覆盖旧包；没有正式 UxAS 指针，也没有捆绑 CRT。程序通过清单启用进程 UTF-8，Boost.Filesystem 使用独立 UTF-8／UTF-16 facet，不修改全局 locale。
+
+T05 的未知参数冒烟在服务启动前返回原有 `-1`，不代表 HelloWorld 运行通过；不要用现有 `-version` 当作会立即退出的探针。真实服务启停、消息证据与主程序关闭桥拒绝由 T06／T07 验证。
 
 ### Linux／WSL：现有 UxAS 参考流程
 

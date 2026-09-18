@@ -22,6 +22,7 @@
 #include "UxAS_StringUtil.h"
 #include "stdUniquePtr.h"
 #include "FileSystemUtilities.h"
+#include "UxAS_WindowsEnvironment.h"
 
 #include "afrl/cmasi/AirVehicleState.h"
 #include "afrl/impact/AreaOfInterest.h"
@@ -62,6 +63,7 @@ void signalHandler( int signum ) {
 int
 main(int argc, char** argv)
 {
+    uxas::common::initializeWindowsPaths();
     // override locale with US locale settings
     /*
     std::locale loc;

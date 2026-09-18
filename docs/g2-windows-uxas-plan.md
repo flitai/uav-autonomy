@@ -1,12 +1,12 @@
 # G2 实施方案：Windows 原生 UxAS
 
-日期：2026-09-18，Asia/Shanghai。**G2-T01～T04 已完成，T05 可执行、尚未启动。** 原生工具链和固定依赖的源码重建、功能、路径、来源及故障检查通过，七模型 C++ LMCP 及三语言双向文件样本也已通过，详见 [T01 记录](g2-cpp-toolchain-validation.md)、[T02 记录](g2-dependencies-validation.md)和 [T03 记录](g2-lmcp-cpp-validation.md)。T04 构建图与独立探针见 [T04 记录](g2-uxas-cmake-validation.md)。本文是实施方案，不是 UxAS 完整构建或运行验收报告；完整任务卡见 [backlog](backlog.md#4-g2-顺序与任务卡)，当前进度见 [status](status.md)，过程见 [worklog](../worklog.md)。
+日期：2026-09-18，Asia/Shanghai。**G2-T01～T05 已完成，T06 可执行、尚未启动。** 原生工具链和固定依赖的源码重建、功能、路径、来源及故障检查通过，七模型 C++ LMCP 及三语言双向文件样本也已通过，详见 [T01 记录](g2-cpp-toolchain-validation.md)、[T02 记录](g2-dependencies-validation.md)和 [T03 记录](g2-lmcp-cpp-validation.md)。T04 构建图与独立探针见 [T04 记录](g2-uxas-cmake-validation.md)。T05 候选构建与平台验收见 [T05 记录](g2-uxas-build-validation.md)。本文是实施方案，运行仍待 T06；完整任务卡见 [backlog](backlog.md#4-g2-顺序与任务卡)，当前进度见 [status](status.md)，过程见 [worklog](../worklog.md)。
 
 ## 1. 目标、输入与边界
 
 G2 的通过条件是：从干净输出目录构建 Windows 原生 `uxas.exe`，HelloWorld 两个服务通过实际内部消息总线收发 `KeyValuePair`，并正常退出。七张任务卡按 T01 → T07 顺序推进，一次一个主要实现任务。
 
-本方案编制时只落地文档，未安装、构建或运行；该历史边界不代替后续任务授权。T01～T04 已按用户授权完成工具、依赖、C++ LMCP、UxAS 构建图与独立桥探针验收；UxAS 完整编译仍待 T05。AMASE↔UxAS 的 WaterwaySearch 双向闭环归 G3；网关、Cesium、Ada、实机接入、训练集成与完整重连不纳入 G2。
+本方案编制时只落地文档，未安装、构建或运行；该历史边界不代替后续任务授权。T01～T05 已按用户授权完成工具、依赖、C++ LMCP、UxAS 构建图、独立桥探针和完整候选构建验收；HelloWorld 仍待 T06。AMASE↔UxAS 的 WaterwaySearch 双向闭环归 G3；网关、Cesium、Ada、实机接入、训练集成与完整重连不纳入 G2。
 
 2026-09-18 方案细化时的只读复核结果（工具安装前的历史快照）：
 

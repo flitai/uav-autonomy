@@ -37,14 +37,27 @@ foreach(_tool CMAKE_COMMAND CMAKE_CXX_COMPILER CMAKE_LINKER)
         message(FATAL_ERROR "${_tool} differs from the qualified tool source")
     endif()
 endforeach()
-find_package(UxasDependencies CONFIG REQUIRED NO_DEFAULT_PATH PATHS "${UXAS_DEPENDENCIES_PREFIX}/share/UxasDependencies")
-find_package(UxasLmcp CONFIG REQUIRED NO_DEFAULT_PATH PATHS "${UXAS_LMCP_PREFIX}/share/UxasLmcp")
-add_executable(uxas ${UXAS_SOURCES} ${UXAS_EMBEDDED_RESOURCES})
+foreach(_package UxasDependencies UxasLmcp)
+    if(_package STREQUAL "UxasDependencies")
+        set(_prefix "${UXAS_DEPENDENCIES_PREFIX}")
+    else()
+        set(_prefix "${UXAS_LMCP_PREFIX}")
+    endif()
+    set(_qualified_dir "${_prefix}/share/${_package}")
+    if(DEFINED ${_package}_DIR AND NOT "${${_package}_DIR}" STREQUAL "${_qualified_dir}")
+        message(FATAL_ERROR "${_package}_DIR differs from the qualified package source")
+    endif()
+    set(${_package}_DIR "${_qualified_dir}")
+    find_package(${_package} CONFIG REQUIRED NO_DEFAULT_PATH PATHS "${_qualified_dir}")
+endforeach()
+set(_uxas_manifest "${CMAKE_CURRENT_SOURCE_DIR}/OpenUxAS/src/cpp/Includes/uxas.manifest")
+add_executable(uxas ${UXAS_SOURCES} ${UXAS_EMBEDDED_RESOURCES} "${_uxas_manifest}")
 set_source_files_properties(${UXAS_EMBEDDED_RESOURCES} PROPERTIES HEADER_FILE_ONLY ON)
 target_include_directories(uxas PRIVATE ${UXAS_INCLUDE_DIRS})
-target_compile_definitions(uxas PRIVATE UXAS_ENABLE_ZYRE=0 UXAS_ENABLE_SERIAL=0
+target_compile_definitions(uxas PRIVATE DPSS_STATIC NOMINMAX UXAS_ENABLE_ZYRE=0 UXAS_ENABLE_SERIAL=0
     BOOST_ALLOW_DEPRECATED_HEADERS BOOST_GEOMETRY_DISABLE_DEPRECATED_03_WARNING)
-target_compile_options(uxas PRIVATE /W3 /utf-8 /MP8)
+target_compile_options(uxas PRIVATE /W3 /utf-8 /MP8 /EHsc)
+target_link_options(uxas PRIVATE "/MAP:${CMAKE_CURRENT_BINARY_DIR}/uxas.map" /VERBOSE:LIB)
 target_link_libraries(uxas PRIVATE Uxas::lmcp UxasDeps::zeromq UxasDeps::cppzmq
     UxasDeps::czmq UxasDeps::pugixml UxasDeps::sqlite3 UxasDeps::sqlitecpp UxasDeps::boost)
 # These targets exercise production policy without compiling or starting UxAS.
@@ -55,3 +68,21 @@ foreach(_probe bridge_configuration_probe bridge_legacy_defaults_probe)
     target_compile_options(${_probe} PRIVATE /W4 /utf-8)
 endforeach()
 target_compile_definitions(bridge_configuration_probe PRIVATE UXAS_ENABLE_ZYRE=0 UXAS_ENABLE_SERIAL=0)
+
+# Reuse real utility implementations and their logger/configuration closure.
+# This is a separate, file-only entry point; it never starts the UxAS services.
+add_executable(uxas_platform_probe EXCLUDE_FROM_ALL tests/uxas_build/platform_probe.cpp "${_uxas_manifest}"
+    OpenUxAS/src/cpp/Utilities/FileSystemUtilities.cpp
+    OpenUxAS/src/cpp/Utilities/TimeUtilities.cpp
+    OpenUxAS/src/cpp/Utilities/UxAS_Time.cpp
+    OpenUxAS/src/cpp/Utilities/UxAS_FileLogger.cpp
+    OpenUxAS/src/cpp/Utilities/UxAS_LogManager.cpp
+    OpenUxAS/src/cpp/Utilities/UxAS_ConsoleLogger.cpp
+    OpenUxAS/src/cpp/Utilities/UxAS_DatabaseLogger.cpp
+    OpenUxAS/src/cpp/Utilities/UxAS_DatabaseLoggerHelper.cpp
+    OpenUxAS/src/cpp/Utilities/UxAS_HeadLogDataDatabaseLogger.cpp
+    OpenUxAS/src/cpp/Utilities/UxAS_ConfigurationManager.cpp)
+target_include_directories(uxas_platform_probe PRIVATE ${UXAS_INCLUDE_DIRS})
+target_compile_definitions(uxas_platform_probe PRIVATE DPSS_STATIC NOMINMAX UXAS_ENABLE_ZYRE=0 UXAS_ENABLE_SERIAL=0)
+target_compile_options(uxas_platform_probe PRIVATE /W3 /utf-8 /EHsc)
+target_link_libraries(uxas_platform_probe PRIVATE Uxas::lmcp UxasDeps::pugixml UxasDeps::sqlitecpp UxasDeps::boost)

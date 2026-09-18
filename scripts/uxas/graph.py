@@ -53,8 +53,10 @@ def inputs(root):
     paths = ['CMakeLists.txt', 'CMakePresets.json', 'config/uxas-sources.json', 'OpenUxAS/Makefile',
              'config/windows-cpp-toolchain.json', 'scripts/windows/uxas-cmake-common.ps1',
              'scripts/windows/configure-uxas.ps1', 'tests/windows/uxas-cmake.tests.ps1',
+             'scripts/windows/uxas-build-common.ps1', 'scripts/windows/build-uxas.ps1',
+             'tests/windows/uxas-build.tests.ps1',
              'OpenUxAS/examples/01_HelloWorld/cfg_HelloWorld.xml']
-    for directory in ('cmake', 'scripts/uxas', 'tests/uxas_cmake', 'OpenUxAS/src/cpp',
+    for directory in ('cmake', 'scripts/uxas', 'tests/uxas_cmake', 'tests/uxas_build', 'OpenUxAS/src/cpp',
                       'OpenUxAS/resources/AutomationDiagramDataService'):
         paths.extend(p.relative_to(root).as_posix() for p in (root / directory).rglob('*') if p.is_file())
     return [dict(path=p, sha256=sha(root / p)) for p in sorted(paths)]

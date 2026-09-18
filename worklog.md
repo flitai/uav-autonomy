@@ -804,3 +804,48 @@ T02 可执行、尚未启动，下一项为固定业务依赖、baseline／overl
 收尾检查：15:23:09 的 `out/tmp/check_t04_delivery.py` 退出 0，收据 `out/runs/g2-t04-docs-20260918-152309/result.json`：29 个变更文件、213 处本地链接、28 个表格、712 条构建／验收输入哈希、阶段状态和忽略规则通过；原日志字节前缀、G0／G1 backlog 历史保持。首次文档检查误把保留的 G1-T04 历史状态当成当前 G2 状态，仅修正检查范围为 G2 章节，未回写历史文档。PowerShell 5.1 语法解析、Python AST、`git diff --check` 及最终实时来源复查通过。`git fetch origin` 退出 0，提交前本地／origin/main 差异为 `0 0`；未发现无关改动，原始日志、输出、工具和本机路径不提交。补齐本项结果后再进行同入口收尾核查。
 
 归档结果：15:24:15 的收尾复查通过（补充 T03 批次交接链接后共 214 处本地链接）；29 个文件显式暂存、`git diff --cached --check` 和无未暂存改动检查通过，创建提交 `b8ccf726cbf2dc128b6984ca5a226095d7bcd436`（`feat: configure Windows UxAS build graph and bridge capabilities`）。`git push origin main` 退出 0；15:24:48 的 `git ls-remote --exit-code origin refs/heads/main` 返回相同完整标识，工作区干净，收据 `out/tmp/g2-t04-push.json`。随后仅补齐本条实际结果与 status，独立归档收尾文档；不修改已验收实现，不进入 T05。
+
+
+## WL-20260918-009｜G2-T05 Windows 平台适配与 UxAS 候选交付
+
+时间／时区：2026-09-18，Asia/Shanghai（UTC+08:00）；本条写入时间：2026-09-18T17:34:14+08:00。规划诊断依据本机保留的 15:54 后记录一并记入，未将忽略目录内的试验当作此前已交付成果。
+
+关联任务与状态：G2-T05 已完成；T06 可执行、尚未启动；G2 阶段尚未完成。
+
+背景、目标与范围：用户批准 T05 方案，持续授权阶段完成后自动提交推送。起点 `68ed420df4208305c99d7f25a6d0c45d652909ce`，工作区干净。本轮从干净目录生成 Windows 原生候选，验证平台、来源与运行库；没有安装依赖、运行 HelloWorld／AMASE／WaterwaySearch、发布正式 UxAS 或进入 T06。
+
+工作过程：读取状态、任务卡、近期日志和实际源码；先核对规划诊断。默认编译失败于 DPSS API 定义被声明为 dllimport；原 DpssDefs.h 已有 DPSS_STATIC 分支，正式修复在目标上定义 DPSS_STATIC／NOMINMAX，并保留 /EHsc、C++14、Release x64 和 /MD。规划中一次直接覆盖 CMAKE_CXX_FLAGS 的尝试丢失 /EHsc，导致 C4530 及两个 Boost throw_exception 未解析符号；恢复原异常选项后 122 个编译单元链接成功。该错误属于诊断参数，不是新增工程问题；没有添加异常处理空实现。原日志在 `out/runs/g2-t04-configure-20260918-155439-846/planning-*.log`。
+
+按用户选择嵌入 activeCodePage=UTF-8 清单，并在 main 的文件、日志和线程使用前安装 Boost.Filesystem 自己的 UTF-8／UTF-16 路径 facet。没有修改全局 locale、系统代码页、系统时间、持久 PATH 或执行策略。保留 122 个源码、40 项服务及五个嵌入资源；CZMQ／TCP 保留，Zyre／串口关闭，任务算法和消息语义未变。
+
+新增独立构建、验收和候选解析入口，逐次使用新输出目录；CMake 显式绑定合格包路径，拒绝缓存覆盖。审查 File API、MSBuild 实际对象／参数／读取文件、链接映射和运行库；构建前后重新核对输入。候选只含 exe 与 build-info，验收收据绑定构建／验收编号和哈希；没有更新正式 UxAS 指针或捆绑 CRT。
+
+实现期间先后产生 `g2-t03-build-20260918-170609-490`／`g2-t03-test-20260918-170731-570`、`g2-t03-build-20260918-171200-282`／`g2-t03-test-20260918-171304-210`，均通过原 T03 验收；补齐真实日志依赖及改进构建参数后输入变化，重新生成最终合格批次，没有改写旧来源清单。T04 中间配置、复验记录也全部保留。
+
+第一次候选 `g2-t05-build-20260918-171558-917` 完整编译成功；`g2-t05-diagnostic-20260918-171915` 的两种时区平台探针和启动前冒烟通过。发现 /showIncludes 与 /MP 冲突导致 D9030 和串行编译，移除冗余 /showIncludes，改用 MSBuild 跟踪日志保留真实头文件来源。新增探针使用 Windows API 读取 TZ，避免自身引入 getenv 弃用警告；进一步核对 CRT 时区偏移实际生效。稳定输入后按 T03 → T04 → T05 顺序重新完成验收。
+
+成果与修改文件：[CMake 目标](cmake/Uxas.cmake)、[Windows 路径初始化](OpenUxAS/src/cpp/Includes/UxAS_WindowsEnvironment.h)、[程序清单](OpenUxAS/src/cpp/Includes/uxas.manifest)、[main](OpenUxAS/src/cpp/UxAS_Main.cpp)、[构建入口](scripts/windows/build-uxas.ps1)、[验收入口](tests/windows/uxas-build.tests.ps1)、`scripts/windows/uxas-build-common.ps1`、`scripts/uxas/build.py`、`scripts/uxas/loader.py`、扩展的 `scripts/uxas/graph.py`、[平台探针](tests/uxas_build/platform_probe.cpp)。[T05 报告](docs/g2-uxas-build-validation.md)保存完整证据索引；同步 status、backlog、总体计划、G2 方案及 AGENTS。原 Makefile、00_ServiceList.h、模型、模板、生成代码、依赖配方及历史报告未修改。
+
+验证（PowerShell 5.1，Python 3.14.7 x64）：
+
+- 最终 LMCP 构建 `g2-t03-build-20260918-172012-706` 和完整验收 `g2-t03-test-20260918-172109-035`，原 build-lmcp-cpp.ps1／lmcp-cpp.tests.ps1 入口从仓库根执行，均退出 0。七模型 183 个库源文件、164 类型、三语言双向原始字节、错误拒绝和 VS／Ninja 迁移消费通过；来源清单 SHA-256 为 `DF81299DA715F78744AE67FBAB074615F184C3EB29EA16CE7FB2D5E8F44A0B33`。G1 没有重新生成，Java／AMASE 父级来源不变。
+- 最终 T04 配置 `g2-t04-configure-20260918-173529-088`、验收 `g2-t04-test-20260918-173618-796`，用原 configure-uxas.ps1／uxas-cmake.tests.ps1 从系统临时目录调用，均退出 0。构建图、十个独立桥探针和十五项隔离故障通过，没有编译主程序来冒充配置验收。
+- T05 构建 `g2-t05-build-20260918-173741-000`：从系统临时目录调用 build-uxas.ps1 -PythonExecutable，退出 0；候选位于 `out/build/uxas/<编号>/candidate/`。实际 122 个对象、40 个服务符号、五个资源、44 个链接输入库及来源通过；PE32+ x64，实际 /MD／C++14／异常支持及 UTF-8 清单通过。exe SHA-256 为 `67118CCB9A2A63C2A5FF4516D4C0FDE35D56C0529A160653F550BC641A40F096`，build-info 为 `323504DDC34D5E335849C209832FE31729B990CD514D14C4104E3C3ACBF5CE44`。
+- T05 验收 `g2-t05-test-20260918-173955-149`：从系统临时目录调用 uxas-build.tests.ps1 -PythonExecutable -BuildRunId 上述编号，退出 0。中文空格输出目录再次从空目录完整编译；两类路径各运行 UTC0／PST8PDT 两个平台探针，共四次，验证 ACP 65001、UTF-8 参数与路径、XML／真实文件日志、组合值／溢出异常、UTC 与周毫秒换算；CRT 时区偏移分别确认为 0／28800 秒，全局 locale 不变。
+- 普通候选、中文输出程序和重复候选三次未知参数冒烟均按原 CLI 返回 DWORD 4294967295（-1），保留中文诊断，在服务初始化前退出。Windows 调试事件观察器记录实际模块路径和哈希：VC CRT 14.50.35719.0、UCRT 10.0.26100.9444 从本机 System32 加载；与编译器版本分开记录，无 Debug CRT、静态 CRT 或意外第三方 DLL。实际版本清单在验收目录 crt-versions.json；没有安装或打包运行库。
+- 十一项隔离故障通过：缺失／损坏 exe、候选元数据不匹配、依赖／LMCP 来源不符、工具变化、项目输入过期、模型输入哈希不符、两个 CMake 包路径缓存覆盖、受控超时。前十项明确返回 1；超时作为预期失败保留 timedOut，结束本次拥有的睡眠子进程，不将强制终止记为应用通过。故障只修改 out 副本，旧候选、依赖／LMCP 合格包及原始记录保留；入口记录进程环境、工作目录、编码恢复和用户／系统 PATH 不变。
+
+问题与解决办法：本轮没有需要更改算法、协议或升级依赖的阻塞。规划诊断中的 /EHsc 覆盖和实现阶段的 /showIncludes 参数冲突已按上述方式修正并重新验证。既有 C4244／C4267 转换、C4018 符号性、C4101 未用局部量、C4554 运算优先级提示和 C4996 弃用警告分类保留，没有整体屏蔽；MSBuild 汇总重复计数不能当成唯一问题数。收尾第一次在默认受限 PowerShell 直接 dot-source 解析接口，被执行策略拒绝，函数没有执行；随后改用既有 -ExecutionPolicy Bypass 子进程入口复查，不修改持久策略。
+
+更正 WL-20260918-008 和 T04 报告中的库数量文字：T02 包共 27 个 .lib，但其中两个 Boost monitor 库位于 manual-link；CMake 实际链接顶层 25 个依赖库和一个 LMCP 库，原自动检查也一直按顶层 glob 核对。T05 的 link.read 跟踪再次确认该集合，另有 MSVC／SDK 系统输入合计 44 个库；不存在靠删除必需库绕过构建的情况。旧专题报告不回写。
+
+重要决定与影响：目标级宏和程序级编码设置保持原接口；Boost 路径转换只作用于其独立 locale。完整候选通过并不等于 HelloWorld 或 G2 完成。后续必须用 BuildRunId 与 ValidationRunId 解析并重新核对候选，不能直接消费旧 exe 或修改来源收据。
+
+遗留事项与下一步：T06 负责原 HelloWorld 两服务真实收发、10 秒运行及退出 0；T06／T07 验证完整主程序配置失败和关闭桥拒绝；T07 复验后才发布正式 UxAS。G3 负责 AMASE↔UxAS／WaterwaySearch 双向闭环。本轮收尾继续完成 UTF-8、链接、Markdown、忽略规则、输入哈希、提交范围及候选解析接口检查，再按持续授权提交、普通推送并核对远程，不进入 T06。
+
+
+收尾复验：首轮正式候选 `g2-t05-build-20260918-172544-419`／验收 `g2-t05-test-20260918-172715-104` 已通过；审查发现独立平台探针还需要单独绑定二进制哈希。为 build-info 加入探针 SHA-256，验收前比对，运行前后再核对并保存证据。该修正没有改变程序源码、CMake 或 LMCP 输入，因此保留已合格的最终 T03 批次；重新完成 T04 配置／完整复验及上述最终 T05 的两类干净构建和全部验收。没有改写旧候选或旧收据。此前 `g2-t05-resolve-20260918-173028-065` 已通过首次接口验证，最终批次继续按同一接口复查。
+
+文档过程：一次忽略目录中的文档辅助脚本因 Python 字符串的 Windows 反斜杠转义而在语法解析时失败，没有写入项目文档；改用原始字符串后成功。17:34:15 的初次交付检查通过 18 个变更文件、226 处本地链接、28 个表格和 1422 条输入哈希；随后针对探针哈希修正更新最终批次并再次核查。工作日志历史字节前缀、G0／G1 backlog 和旧专题报告保持。PowerShell 5.1 语法解析已通过；提交前 git fetch origin 成功，本地与远程差异为 0 0。
+
+最终交接检查：`g2-t05-resolve-20260918-174200-479` 从其他工作目录通过原 PowerShell 子进程入口执行，退出 0，返回单一候选目录字符串；工具、T02／T03／G1、候选及双编号验收收据实时复查和环境恢复全部通过。17:42:00 的交付检查再次通过 18 个文件、226 处链接、28 个表格及 1422 条构建／验收输入哈希；随后把解析批次也纳入最终输入核对。Python AST、PowerShell 5.1 语法和 git diff --check 通过；无遗留 UxAS 进程，out/artifacts/uxas 尚不存在。剩余为本次授权的提交、普通推送和远程核对；不修改已通过的实现，不进入 T06。
