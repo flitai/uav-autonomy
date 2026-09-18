@@ -884,3 +884,6 @@ T02 可执行、尚未启动，下一项为固定业务依赖、baseline／overl
 收尾检查：20:07:55 的交付检查通过 14 个变更文件、238 处本地链接、29 个表格和 1476 条输入／证据哈希，收据 `out/runs/g2-t06-docs-20260918-200755/result.json`。工作日志原字节前缀、G0／G1 任务记录和三个旧专题报告保留；最新候选、T06 消息／用例收据及八个前置／运行批次来源有效。PowerShell 5.1 语法、Python AST 已通过；无残留 UxAS 进程，没有正式 UxAS 目录；git fetch origin 成功，本地／origin/main 差异 0 0。
 
 文档检查过程：初次检查发现 backlog 页首仍遗留 T04 前的当前状态，已同步到 T06 完成，仅更新当前摘要，G0／G1 历史保持。一次通过 PowerShell 标准输入发送中文替换脚本因默认 us-ascii 编码未匹配原文，改为 UTF-8 文件并断言匹配后完成；辅助检查器的 `.tools` 路径转义警告也已纠正。这些修正不改变已通过的运行实现。补齐本条后再核对交付清单，随后执行本次授权的提交、普通推送和远程核对。
+
+
+归档结果：20:09:20 的最终交付检查再次通过 14 个文件、238 处本地链接、29 个表格及 1476 条输入／证据哈希，收据 `out/runs/g2-t06-docs-20260918-200920/result.json`。14 个文件显式暂存，git diff --cached --check 和无未暂存修改检查通过，创建提交 `a0a898976b01a836df89f929562fed2155f0863a`（`feat: run and validate native Windows HelloWorld`）。git push origin main 退出 0；20:09:35 的 git ls-remote 返回相同完整标识，工作区干净，收据 `out/tmp/g2-t06-push.json`。随后只补齐本条和 status 的实际归档结果，独立提交收尾文档；不修改已验收实现，不进入 T07。
