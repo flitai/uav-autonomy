@@ -802,3 +802,5 @@ T02 可执行、尚未启动，下一项为固定业务依赖、baseline／overl
 遗留事项与下一步：T05 从干净输出构建 UxAS，按实际错误处理必要 Windows 和 CZMQ 等旧依赖兼容问题，不删除服务；T06／T07 负责 HelloWorld 双向消息、完整主程序拒绝与正常退出；G3 负责 WaterwaySearch 双向协议和执行闭环。本轮止于 T04。收尾核查 UTF-8、Markdown／链接、输入哈希、忽略规则及提交范围后，按持续授权自动提交、普通推送并核对远程。
 
 收尾检查：15:23:09 的 `out/tmp/check_t04_delivery.py` 退出 0，收据 `out/runs/g2-t04-docs-20260918-152309/result.json`：29 个变更文件、213 处本地链接、28 个表格、712 条构建／验收输入哈希、阶段状态和忽略规则通过；原日志字节前缀、G0／G1 backlog 历史保持。首次文档检查误把保留的 G1-T04 历史状态当成当前 G2 状态，仅修正检查范围为 G2 章节，未回写历史文档。PowerShell 5.1 语法解析、Python AST、`git diff --check` 及最终实时来源复查通过。`git fetch origin` 退出 0，提交前本地／origin/main 差异为 `0 0`；未发现无关改动，原始日志、输出、工具和本机路径不提交。补齐本项结果后再进行同入口收尾核查。
+
+归档结果：15:24:15 的收尾复查通过（补充 T03 批次交接链接后共 214 处本地链接）；29 个文件显式暂存、`git diff --cached --check` 和无未暂存改动检查通过，创建提交 `b8ccf726cbf2dc128b6984ca5a226095d7bcd436`（`feat: configure Windows UxAS build graph and bridge capabilities`）。`git push origin main` 退出 0；15:24:48 的 `git ls-remote --exit-code origin refs/heads/main` 返回相同完整标识，工作区干净，收据 `out/tmp/g2-t04-push.json`。随后仅补齐本条实际结果与 status，独立归档收尾文档；不修改已验收实现，不进入 T05。
