@@ -15,9 +15,9 @@
 3. 新增消息网关，以 CesiumJS 三维 GIS 逐步替换原有态势可视化与操作界面。
 4. 后续为 TorchRL／BenchMARL 训练集成复用协议与仿真控制接口。
 
-截至上述核对日期，G0、G1 已完成，G1-T01～T05 均已完成；G2 已细化，实施尚未启动。G2-T01 可执行、尚未启动，完整方案及七张任务卡见 [G2 实施方案](docs/g2-windows-uxas-plan.md)和 [任务清单](docs/backlog.md#4-g2-顺序与任务卡)。项目内 Temurin JDK 11.0.32.1+1、Ant 1.10.18 已构建生成器、统一消息库和正式 AMASE；七模型已生成 Java／C++／Python 代码，Python 3.14.7 x64 的跨语言样本通过。T05 的 GUI／无界面真实 TCP 接收、十四组自动验收、GUI 人工确认、同版本受控复验及正常退出均完成；两层封装、分包、中文路径及故障处理已验证。证据见 [Java 验收](docs/g1-java-validation.md)、[T03 消息库验收](docs/g1-lmcp-validation.md)、[T04 AMASE 验收](docs/g1-amase-validation.md)和 [T05 TCP 验收](docs/g1-tcp-validation.md)。尚未编译 C++、完成 UxAS 双向联调或完整重连验证，也未落地 Cesium、消息网关或训练集成；Python 其他项目依赖未验证。继续工作时先读 [当前状态](docs/status.md) 与 [任务清单](docs/backlog.md)，并重新检查实际环境，不把历史快照当成永久结论。
+截至上述核对日期，G0、G1 已完成，G1-T01～T05 均已完成；G2-T01 已完成，原生工具链十组验收及 VS／Ninja 在两类路径下的 C/C++ 探针通过；T02 可执行、尚未启动，见 [T01 记录](docs/g2-cpp-toolchain-validation.md)。完整方案及七张任务卡见 [G2 实施方案](docs/g2-windows-uxas-plan.md)和 [任务清单](docs/backlog.md#4-g2-顺序与任务卡)。项目内 Temurin JDK 11.0.32.1+1、Ant 1.10.18 已构建生成器、统一消息库和正式 AMASE；七模型已生成 Java／C++／Python 代码，Python 3.14.7 x64 的跨语言样本通过。T05 的 GUI／无界面真实 TCP 接收、十四组自动验收、GUI 人工确认、同版本受控复验及正常退出均完成；两层封装、分包、中文路径及故障处理已验证。证据见 [Java 验收](docs/g1-java-validation.md)、[T03 消息库验收](docs/g1-lmcp-validation.md)、[T04 AMASE 验收](docs/g1-amase-validation.md)和 [T05 TCP 验收](docs/g1-tcp-validation.md)。尚未编译 LMCP／UxAS、完成 UxAS 双向联调或完整重连验证，也未落地 Cesium、消息网关或训练集成；Python 其他项目依赖未验证。继续工作时先读 [当前状态](docs/status.md) 与 [任务清单](docs/backlog.md)，并重新检查实际环境，不把历史快照当成永久结论。
 
-Windows 原生运行是目标；WSL／Linux 可作参考或过渡环境，其验证结果必须单独标注。总体计划已确定首期默认 Windows 11 x64、联网开发与指定场景的基础离线演示，并保留原场景编辑器；实体规模和具体地理资源按任务细化。G2 已选定 MSVC v143／CMake 3.31、Release x64／动态 CRT 和 vcpkg manifest；Zyre／串口默认关闭，TCP 所需 CZMQ 保留。此为待实施方案，具体工具和依赖锁定值须经 T01／T02 验证；Python 网关仍为后续候选实现。
+Windows 原生运行是目标；WSL／Linux 可作参考或过渡环境，其验证结果必须单独标注。总体计划已确定首期默认 Windows 11 x64、联网开发与指定场景的基础离线演示，并保留原场景编辑器；实体规模和具体地理资源按任务细化。G2 已选定 MSVC v143／CMake 3.31、Release x64／动态 CRT 和 vcpkg manifest；Zyre／串口默认关闭，TCP 所需 CZMQ 保留。T01 已验证 MSVC／SDK／CMake／Ninja／vcpkg，业务依赖组合仍须经 T02 验证；Python 网关仍为后续候选实现。
 
 ## 2. 目录与职责
 
@@ -37,7 +37,7 @@ Windows 原生运行是目标；WSL／Linux 可作参考或过渡环境，其验
 | `OpenUxAS/tests/` | C++ 测试及 SPARK 证明检查 | 检查测试入口的平台与依赖要求 |
 | `OpenUxAS/resources/` | 辅助服务与资源 | 含参与 C++ 构建的 AutomationDiagramDataService |
 
-改造初期保留三个现有源码目录的位置。`scripts/windows/` 已有 Java 工具、LmcpGen、统一消息生成和 AMASE 构建／运行入口；`scripts/lmcp/`、`scripts/amase/` 是标准库编排实现，`tests/lmcp/`、`tests/amase/` 保存消息及仿真验收探针。工具与模型清单分别见 `config/windows-java-toolchain.json`、`config/lmcp-models.json`，工具位于被忽略的 `.tools/`。计划中的 `src/sim_bridge/`、`apps/gis_gateway/`、`apps/cesium_viewer/`、根级 CMake 等，需要在对应任务中实际创建；引用前先确认存在。
+改造初期保留三个现有源码目录的位置。`scripts/windows/` 已有通过完整验收的 C++ 工具准备／环境入口和独立 C/C++ 探针，以及 Java 工具、LmcpGen、统一消息生成和 AMASE 构建／运行入口；`scripts/lmcp/`、`scripts/amase/` 是标准库编排实现，`tests/lmcp/`、`tests/amase/` 保存消息及仿真验收探针。工具与模型清单分别见 `config/windows-java-toolchain.json`、`config/windows-cpp-toolchain.json`、`config/lmcp-models.json`；便携工具位于被忽略的 `.tools/`，MSVC／SDK 使用微软系统默认目录。计划中的 `src/sim_bridge/`、`apps/gis_gateway/`、`apps/cesium_viewer/`、根级 CMake 等，需要在对应任务中实际创建；引用前先确认存在。
 
 ## 3. 开始任务时
 
@@ -122,6 +122,23 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\tests\windows\lmcp-gen
 
 三种语言的代码已位于 `out/generated/lmcp/{java,cpp,py}/`，Java 库为 `out/artifacts/lmcp/java/lmcplib.jar`。使用前核对生成目录 generation-info.json 与产物目录 build-info.json 的运行编号和哈希，禁止混用不同批次或故障副本；失败不会发布部分结果。Python 验证仅导入消息包，示例 LMCPClient.py 在导入时会连接网络，不能当普通模块批量导入。C++ 当前仅生成；AMASE 已实际构建并验证新库的类加载来源，全部任务状态以 status 为准。
 
+### Windows：C++ 工具准备
+
+固定清单见 `config/windows-cpp-toolchain.json`，来源修复、实际版本与完整验收见 [T01 记录](docs/g2-cpp-toolchain-validation.md)。以下入口已在 PowerShell 5.1 验证：
+
+```powershell
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\windows\setup-cpp.ps1
+# 只检查已有工具，不下载或安装。
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\windows\setup-cpp.ps1 -VerifyOnly
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\tests\windows\cpp-toolchain.tests.ps1
+# 新交互进程启用工具，关闭进程即结束本次启用。
+powershell.exe -NoProfile -ExecutionPolicy Bypass -NoExit -File .\scripts\windows\use-cpp.ps1
+```
+
+Build Tools 17.14.41／v143、SDK 发布 10.0.26100.7705、CMake 3.31.12、Ninja 1.13.2 和固定 vcpkg 已通过来源与真实编译验收。工具目录、编译器文件及实际加载 CRT 的版本分别记录；不要通过猜测目录名判断版本。来源校验不符时停止，不用新的下载哈希自行替换信任值；T01 的目录摘要更正有独立的微软原生签名验证和篡改拒绝证据。
+
+准备／验收入口恢复自己的进程环境，`use-cpp.ps1` 在当前进程启用 Host／Target x64；后续脚本自行启用并恢复，不依赖已退出的子进程。vcpkg 强制使用已验证的 CMake／Ninja，未执行全局集成或持久 PATH 修改。十组验收覆盖 VS／Ninja、Release x64／动态 CRT、普通／中文空格路径、不同工作目录和隔离故障；仅证明最小工具链，不代表业务依赖、LMCP 或 UxAS 通过。T02 可执行、尚未启动。
+
 ### Linux／WSL：现有 UxAS 参考流程
 
 以下使用 Bash，工作目录为 `OpenUxAS/`，不是 Windows 原生命令：
@@ -187,7 +204,7 @@ C++ 测试入口为 `OpenUxAS/tests/cpp/run-tests`，在其所在目录执行 `.
 - Windows 文件操作使用原生 PowerShell 和明确路径。递归清理前确认目标位于预期输出目录，不以宽泛进程名结束其他 Java／Python／UxAS 实例。
 - 默认以 UTF-8 读写文本；不顺手格式化全库或统一全部行尾。Windows 批处理与 Shell 脚本按各自运行要求处理。
 - 不提交生成物、依赖缓存、程序原始运行日志或本机绝对路径；检查实际 `.gitignore`，不假定规则已存在。保留上游有意携带的 JAR 和资源。根级 `worklog.md` 是人工维护的项目文档，应保留在版本管理范围内；是否提交仍遵循用户授权。
-- 不覆盖无关用户修改，不自动提交或推送；用户已明确要求的版本管理操作按其授权执行。
+- 不覆盖无关用户修改。用户已于 2026-09-18 持续授权：确认阶段性工作完成且相关验收通过后，自动提交并推送本次任务改动，无需逐次确认；用户后续明确要求暂不提交或推送时，以该次要求为准。提交前检查范围、敏感信息及忽略规则，不夹带无关修改；使用普通推送，不强推或改写已发布历史。推送受阻时保留本地提交，记录原因和恢复条件，不将失败写成已归档。
 
 ## 8. 验证与完成标准
 
@@ -205,7 +222,7 @@ C++ 测试入口为 `OpenUxAS/tests/cpp/run-tests`，在其所在目录执行 `.
 
 无法执行时准确说明原因、已完成的静态检查及尚缺的验证；不将编译成功等同于联调成功，不将仿真窗口打开等同于任务链路正确。性能数值只有在说明机器、场景、实体数、更新率和测量方式后才作为实测结果报告。
 
-每次阶段性任务收尾，先按第 10 节追加根级 `worklog.md` 并同步相关状态，再给出交付回复；工作日志是任务交付的一部分。回复简要说明：改了什么、主要文件、实际验证结果、剩余限制。重大接口或构建入口改变时同步更新相关说明，避免后续 AI 使用过期信息。
+每次阶段性任务收尾，先按第 10 节追加根级 `worklog.md` 并同步相关状态；确认完成且验收通过后，按第 7 节持续授权提交、推送并核对远程结果，再给出交付回复。工作日志是任务交付的一部分。回复简要说明：改了什么、主要文件、实际验证结果、提交／推送状态及剩余限制。重大接口或构建入口改变时同步更新相关说明，避免后续 AI 使用过期信息。
 
 ## 9. 本说明的维护
 
@@ -217,7 +234,7 @@ C++ 测试入口为 `OpenUxAS/tests/cpp/run-tests`，在其所在目录执行 `.
 
 根目录 [worklog.md](worklog.md) 是固定、持续追加的工作日志。此约定来自用户明确要求，适用于后续分析、规划、实现、修复、验证和文档类阶段性任务，不必等待整个 G 阶段完成，也不需要每次另行询问是否记录。
 
-固定流程：**读取状态、任务卡及相关日志 → 确定本次范围 → 实施并保留证据 → 验证 → 追加工作日志 → 同步状态与待办 → 交付回复**。
+固定流程：**读取状态、任务卡及相关日志 → 确定本次范围 → 实施并保留证据 → 验证 → 追加工作日志 → 同步状态与待办 → 确认完成后提交、推送并核对远程 → 交付回复**。受阻或部分完成时记录真实进展，不触发“完成后自动归档”；用户另有明确授权时按其要求执行。
 
 - 每完成一张任务卡或一项阶段性交付，必须追加日志；同一会话完成多项任务时分别记录。任务受阻、中断或部分完成时也记录真实进展、原因与恢复条件，不写成已完成。
 - 记录日期／时区、关联任务、状态、目标与范围、主要过程、修改文件、成果、验证命令与工作目录／结果、问题与现象、已尝试方法、原因判断、处理办法及效果、重要决定、遗留事项和下一步。无问题或未执行验证时明确说明，不省略状态。
@@ -225,7 +242,7 @@ C++ 测试入口为 `OpenUxAS/tests/cpp/run-tests`，在其所在目录执行 `.
 - 按时间顺序在文件末尾追加，使用唯一编号 `WL-YYYYMMDD-NNN`；同日多次工作递增编号。已结束记录不覆盖或删除；后续更正追加说明并引用原编号。当前未结束记录可更新为最终验证结果。
 - 历史补记明确标注“补记”、补记日期和依据；缺失的时间、命令或结果标为未留存／未核实，不虚构，不把后续状态回写成历史事实。
 - `worklog.md` 保存历史过程；`docs/status.md` 保存当前状态；`docs/backlog.md` 保存任务与依赖；阶段报告保存专题证据。收尾时核对它们的一致性，保留已有验收报告的历史快照。
-- 日志采用中文、UTF-8 和仓库相对链接。日志义务不扩大本次实施范围，不自动授权安装、进入下一阶段或 Git 提交。
+- 日志采用中文、UTF-8 和仓库相对链接。日志义务不扩大本次实施范围，不自动授权安装或进入下一阶段；阶段性工作完成后的 Git 提交与推送按第 7 节用户持续授权执行。
 
 新记录按以下模板展开，内容较多时使用对应的小节：
 

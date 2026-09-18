@@ -1,0 +1,71 @@
+{
+  "schemaVersion": 1,
+  "platform": "windows-x64",
+  "visualStudio": {
+    "version": "17.14.41",
+    "buildVersion": "17.14.37710.0",
+    "archive": "vs_BuildTools-17.14.41.exe",
+    "url": "https://download.visualstudio.microsoft.com/download/pr/bc92e2cb-33de-4a0c-995d-efa817f16b16/37bb0fb429d163ecebd272a865d11a37b906d152bef960da2ddb29c2e2fd6eeb/vs_BuildTools.exe",
+    "sha256": "37bb0fb429d163ecebd272a865d11a37b906d152bef960da2ddb29c2e2fd6eeb",
+    "source": "https://learn.microsoft.com/en-us/visualstudio/releases/2022/release-history",
+    "license": "https://visualstudio.microsoft.com/license-terms/vs2022-ga-diagnosticbuildtools/",
+    "catalog": {
+      "archive": "VisualStudio-17.14.41.vsman",
+      "url": "https://download.visualstudio.microsoft.com/download/pr/bc92e2cb-33de-4a0c-995d-efa817f16b16/6e470016e4324c84c255ffd0beb3767d17ec89cc8561e9409ee3e1f6d29400f5/VisualStudio.vsman",
+      "sha256": "f0a50ea157222c29abd5ea6ff01bfc3c33b04e011c5e45ee2ca38ef0778e5643",
+      "size": 17954732,
+      "channelDeclaredSHA256": "6e470016e4324c84c255ffd0beb3767d17ec89cc8561e9409ee3e1f6d29400f5",
+      "channelDeclaredSize": 30443537,
+      "validation": "Microsoft ManifestVerifier and native layout verification; tampered catalog rejected",
+      "validationEvidence": "docs/g2-cpp-toolchain-validation.md"
+    },
+    "layoutDirectory": "vs-buildtools-17.14.41",
+    "installerPackageSHA256": "b589a5f7874027a881b569466e12a4ef7d25cfe565e85465aa164220b7560453",
+    "installerVersion": "4.10.30.62513",
+    "components": [
+      "Microsoft.VisualStudio.Workload.VCTools",
+      "Microsoft.VisualStudio.Component.VC.Tools.x86.x64",
+      "Microsoft.VisualStudio.Component.Windows11SDK.26100"
+    ],
+    "packages": [
+      {"id": "Microsoft.VisualCpp.Tools.HostX64.TargetX64", "version": "14.44.35229"},
+      {"id": "Win11SDK_10.0.26100", "version": "10.0.26100.15"}
+    ],
+    "sdkRelease": "10.0.26100.7705",
+    "sdkKitVersion": "10.0.26100.0",
+    "toolset": "v143"
+  },
+  "portable": [
+    {
+      "id": "cmake", "version": "3.31.12",
+      "archive": "cmake-3.31.12-windows-x86_64.zip",
+      "url": "https://github.com/Kitware/CMake/releases/download/v3.31.12/cmake-3.31.12-windows-x86_64.zip",
+      "sha256": "0c4baa40f28b3f8225eb3fdf6946c987b4fe901403b4eaf2fbbd9378100aaa0c",
+      "directory": "cmake-3.31.12-windows-x86_64", "archiveRoot": "cmake-3.31.12-windows-x86_64",
+      "executable": "bin/cmake.exe",
+      "source": "https://github.com/Kitware/CMake/releases/tag/v3.31.12",
+      "checksumSource": "https://github.com/Kitware/CMake/releases/download/v3.31.12/cmake-3.31.12-SHA-256.txt",
+      "license": "https://github.com/Kitware/CMake/blob/v3.31.12/Copyright.txt"
+    },
+    {
+      "id": "ninja", "version": "1.13.2", "archive": "ninja-win-1.13.2.zip",
+      "url": "https://github.com/ninja-build/ninja/releases/download/v1.13.2/ninja-win.zip",
+      "sha256": "07fc8261b42b20e71d1720b39068c2e14ffcee6396b76fb7a795fb460b78dc65",
+      "directory": "ninja-1.13.2", "archiveRoot": "", "executable": "ninja.exe",
+      "source": "https://github.com/ninja-build/ninja/releases/tag/v1.13.2",
+      "checksumSource": "https://api.github.com/repos/ninja-build/ninja/releases/tags/v1.13.2",
+      "license": "https://github.com/ninja-build/ninja/blob/v1.13.2/COPYING"
+    }
+  ],
+  "vcpkg": {
+    "version": "2026.07.29", "commit": "9e593bb18ea69cc5095e012465dcd675a822ed0d",
+    "repository": "https://github.com/microsoft/vcpkg.git",
+    "directory": "vcpkg-9e593bb18ea6", "toolVersion": "2026-07-27",
+    "archive": "vcpkg-2026-07-27.exe",
+    "url": "https://github.com/microsoft/vcpkg-tool/releases/download/2026-07-27/vcpkg.exe",
+    "sha256": "13b8175e99a884c5ad34249218754b45541a1a63f216e92603aee57a285ac741",
+    "source": "https://github.com/microsoft/vcpkg/releases/tag/2026.07.29",
+    "checksumSource": "https://api.github.com/repos/microsoft/vcpkg-tool/releases/tags/2026-07-27",
+    "license": "https://github.com/microsoft/vcpkg/blob/9e593bb18ea69cc5095e012465dcd675a822ed0d/LICENSE.txt"
+  }
+}
