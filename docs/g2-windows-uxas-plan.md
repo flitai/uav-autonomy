@@ -1,12 +1,12 @@
 # G2 实施方案：Windows 原生 UxAS
 
-日期：2026-09-18，Asia/Shanghai。**G2-T01～T03 已完成，T04 可执行、尚未启动。** 原生工具链和固定依赖的源码重建、功能、路径、来源及故障检查通过，七模型 C++ LMCP 及三语言双向文件样本也已通过，详见 [T01 记录](g2-cpp-toolchain-validation.md)、[T02 记录](g2-dependencies-validation.md)和 [T03 记录](g2-lmcp-cpp-validation.md)。本文是实施方案，不是 UxAS 构建或运行验收报告；完整任务卡见 [backlog](backlog.md#4-g2-顺序与任务卡)，当前进度见 [status](status.md)，过程见 [worklog](../worklog.md)。
+日期：2026-09-18，Asia/Shanghai。**G2-T01～T04 已完成，T05 可执行、尚未启动。** 原生工具链和固定依赖的源码重建、功能、路径、来源及故障检查通过，七模型 C++ LMCP 及三语言双向文件样本也已通过，详见 [T01 记录](g2-cpp-toolchain-validation.md)、[T02 记录](g2-dependencies-validation.md)和 [T03 记录](g2-lmcp-cpp-validation.md)。T04 构建图与独立探针见 [T04 记录](g2-uxas-cmake-validation.md)。本文是实施方案，不是 UxAS 完整构建或运行验收报告；完整任务卡见 [backlog](backlog.md#4-g2-顺序与任务卡)，当前进度见 [status](status.md)，过程见 [worklog](../worklog.md)。
 
 ## 1. 目标、输入与边界
 
 G2 的通过条件是：从干净输出目录构建 Windows 原生 `uxas.exe`，HelloWorld 两个服务通过实际内部消息总线收发 `KeyValuePair`，并正常退出。七张任务卡按 T01 → T07 顺序推进，一次一个主要实现任务。
 
-本方案编制时只落地文档，未安装、构建或运行；该历史边界不代替后续任务授权。T01～T03 已按用户授权完成原生工具、第三方依赖及 C++ LMCP 验收；UxAS 构建仍待后续任务。AMASE↔UxAS 的 WaterwaySearch 双向闭环归 G3；网关、Cesium、Ada、实机接入、训练集成与完整重连不纳入 G2。
+本方案编制时只落地文档，未安装、构建或运行；该历史边界不代替后续任务授权。T01～T04 已按用户授权完成工具、依赖、C++ LMCP、UxAS 构建图与独立桥探针验收；UxAS 完整编译仍待 T05。AMASE↔UxAS 的 WaterwaySearch 双向闭环归 G3；网关、Cesium、Ada、实机接入、训练集成与完整重连不纳入 G2。
 
 2026-09-18 方案细化时的只读复核结果（工具安装前的历史快照）：
 
@@ -51,7 +51,7 @@ G2 的通过条件是：从干净输出目录构建 Windows 原生 `uxas.exe`，
 - 对照原 Makefile 显式整理源码集合，包含任务服务、规划代码和 [AutomationDiagramDataService](../OpenUxAS/resources/AutomationDiagramDataService)。服务注册对象必须进入最终可执行文件，不能因拆成静态库后被链接器省略。
 - TCP、PUB/PULL、SUB/PUSH 等现有通信保留；[TCP 收发实现](../OpenUxAS/src/cpp/Communications/ZeroMqAddressedAttributedMessageTcpReceiverSender.cpp)使用 CZMQ，必须保留其构建及链接。
 - Windows CMake 提供 `UXAS_ENABLE_ZYRE`、`UXAS_ENABLE_SERIAL`，默认 OFF；同时处理源文件、头文件、包装工具及 [桥管理器](../OpenUxAS/src/cpp/Communications/LmcpObjectNetworkBridgeManager.cpp)的实例化分支。原源码保留，原 Makefile 默认行为不随本轮选项改变。
-- 配置请求未编入的桥时明确报错并返回失败，不静默跳过后继续宣称启动成功。T04 实现并静态核查拒绝路径，T06／T07 用真实可执行文件验证。
+- 配置请求未编入的桥时明确报错并返回失败，不静默跳过后继续宣称启动成功。T04 实现共享能力检查并以独立 C++ 探针验证拒绝路径，T06／T07 用真实可执行文件验证。
 - Zyre／串口的启用构建和运行验收另列延期事项；本轮不宣称 ON 组合可用。Windows 默认配置应无需获取这两项可选依赖。
 
 ## 3. 任务顺序与拟建接口

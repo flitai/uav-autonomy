@@ -16,6 +16,8 @@
 
 #ifndef UXAS_TYPEDEFS_SERIAL_H
 #define	UXAS_TYPEDEFS_SERIAL_H
+#include "UxAS_BridgeFeatures.h"
+#if UXAS_ENABLE_SERIAL
 
 #include "serial/serial.h"
 #include <memory>       //std::shared_ptr
@@ -27,5 +29,6 @@ namespace n_Typedefs
     
 }       //namespace n_Typedefs
 
+#endif // UXAS_ENABLE_SERIAL
 #endif	/* UXAS_TYPEDEFS_SERIAL_H */
 

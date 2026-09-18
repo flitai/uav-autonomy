@@ -9,16 +9,20 @@
 
 #include "LmcpObjectNetworkBridgeManager.h"
 #include "ServiceManager.h"
+#include "BridgeBuildCapabilities.h"
+#if UXAS_ENABLE_SERIAL
 #include "LmcpObjectNetworkSerialBridge.h"
+#endif
 #include "LmcpObjectNetworkTcpBridge.h"
 #include "LmcpObjectNetworkSubscribePushBridge.h"
 #include "LmcpObjectNetworkPublishPullBridge.h"
+#if UXAS_ENABLE_ZYRE
 #include "LmcpObjectNetworkZeroMqZyreBridge.h"
+#endif
 #include "UxAS_ConfigurationManager.h"
 #include "Constants/UxAS_String.h"
 #include "UxAS_Log.h"
 #include "stdUniquePtr.h"
-#include "LmcpObjectNetworkSerialBridge.h"
 #include "ImpactSubscribePushBridge.h"
 
 #include "uxas/messages/uxnative/KillService.h"
@@ -95,6 +99,12 @@ LmcpObjectNetworkBridgeManager::initialize()
         uint32_t addedBridgeXmlNodeCount = 0;
         uint32_t failedBridgeXmlNodeCount = 0;
         pugi::xml_node uxasEnabledBridgesXml = uxas::common::ConfigurationManager::getInstance().getEnabledBridges();
+        const std::string unavailable = unavailableConfiguredBridges(uxasEnabledBridgesXml);
+        if (!unavailable.empty())
+        {
+            UXAS_LOG_ERROR(s_typeName(), "::initialize ", unavailable);
+            return false;
+        }
         if (!uxasEnabledBridgesXml.empty())
         {
             for (pugi::xml_node bridgeNode = uxasEnabledBridgesXml.first_child(); bridgeNode; bridgeNode = bridgeNode.next_sibling())
@@ -141,6 +151,12 @@ LmcpObjectNetworkBridgeManager::createTestBridges(const std::string& cfgXmlFileP
 
     if (xmlParseSuccess)
     {
+        const std::string unavailable = unavailableConfiguredBridges(xmlDoc.child("UxAS"));
+        if (!unavailable.empty())
+        {
+            UXAS_LOG_ERROR(s_typeName(), "::createTestBridges ", unavailable);
+            return testBridgesByNetworkIdMap;
+        }
         for (pugi::xml_node serviceOrBridgeXmlNode = xmlDoc.child(uxas::common::StringConstant::UxAS().c_str()).first_child();
                 serviceOrBridgeXmlNode; serviceOrBridgeXmlNode = serviceOrBridgeXmlNode.next_sibling())
         {
@@ -178,14 +194,23 @@ LmcpObjectNetworkBridgeManager::createBridge(const pugi::xml_node& bridgeXmlNode
     if (uxas::common::StringConstant::Bridge().compare(bridgeXmlNode.name()) == 0)
     {
         std::string bridgeType = bridgeXmlNode.attribute(uxas::common::StringConstant::Type().c_str()).value();
+        const std::string unavailable = unavailableBridgeReason(bridgeType);
+        if (!unavailable.empty())
+        {
+            UXAS_LOG_ERROR(s_typeName(), "::createBridge ", unavailable);
+            return newBridgeFinal;
+        }
         UXAS_LOG_INFORM(s_typeName(), "::createBridge adding ", bridgeType);
         
         std::unique_ptr<LmcpObjectNetworkClientBase> newBridge;
+#if UXAS_ENABLE_SERIAL
         if (LmcpObjectNetworkSerialBridge::s_typeName().compare(bridgeType) == 0)
         {
             newBridge = uxas::stduxas::make_unique<LmcpObjectNetworkSerialBridge>();
         }
-        else if (LmcpObjectNetworkTcpBridge::s_typeName().compare(bridgeType) == 0)
+        else
+#endif
+        if (LmcpObjectNetworkTcpBridge::s_typeName().compare(bridgeType) == 0)
         {
             newBridge = uxas::stduxas::make_unique<LmcpObjectNetworkTcpBridge>();
         }
@@ -197,10 +222,12 @@ LmcpObjectNetworkBridgeManager::createBridge(const pugi::xml_node& bridgeXmlNode
         {
             newBridge = uxas::stduxas::make_unique<LmcpObjectNetworkPublishPullBridge>();
         }
+#if UXAS_ENABLE_ZYRE
         else if (LmcpObjectNetworkZeroMqZyreBridge::s_typeName().compare(bridgeType) == 0)
         {
             newBridge = uxas::stduxas::make_unique<LmcpObjectNetworkZeroMqZyreBridge>();
         }
+#endif
         else if (ImpactSubscribePushBridge::s_typeName().compare(bridgeType) == 0)
         {
             newBridge = uxas::stduxas::make_unique<ImpactSubscribePushBridge>();

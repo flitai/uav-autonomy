@@ -7,6 +7,8 @@
 
 #ifndef UXAS_ZYRE_H
 #define	UXAS_ZYRE_H
+#include "UxAS_BridgeFeatures.h"
+#if UXAS_ENABLE_ZYRE
 
 
 #include "czmq.h"
@@ -150,5 +152,6 @@ static int zyreShout (zyre_t* pZyreNode,std::string& strGroup,const std::string 
 
 
 
+#endif // UXAS_ENABLE_ZYRE
 #endif	/* UXAS_ZYRE_H */
 

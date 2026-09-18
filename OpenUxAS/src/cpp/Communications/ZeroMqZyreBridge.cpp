@@ -1,3 +1,5 @@
+#include "UxAS_BridgeFeatures.h"
+#if UXAS_ENABLE_ZYRE
 // ===============================================================================
 // Authors: AFRL/RQQA
 // Organization: Air Force Research Laboratory, Aerospace Systems Directorate, Power and Control Division
@@ -382,3 +384,5 @@ ZeroMqZyreBridge::sendZyreWhisperMessage(const std::string& zyreRemoteUuid, cons
 }; //namespace communications
 }; //namespace uxas
 
+
+#endif

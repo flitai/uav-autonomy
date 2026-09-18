@@ -1,0 +1,24 @@
+{
+  "version": 6,
+  "cmakeMinimumRequired": {"major": 3, "minor": 31, "patch": 12},
+  "configurePresets": [
+    {
+      "name": "windows-uxas-release",
+      "displayName": "Qualified Windows UxAS Release x64",
+      "generator": "Visual Studio 17 2022",
+      "architecture": "x64",
+      "toolset": "v143,host=x64,version=14.44.35207",
+      "binaryDir": "${sourceDir}/out/build/uxas/manual",
+      "condition": {"type": "equals", "lhs": "${hostSystemName}", "rhs": "Windows"},
+      "cacheVariables": {
+        "UXAS_BUILD_EXECUTABLE": "ON",
+        "UXAS_ENABLE_ZYRE": "OFF",
+        "UXAS_ENABLE_SERIAL": "OFF",
+        "CMAKE_CONFIGURATION_TYPES": "Release",
+        "CMAKE_SYSTEM_VERSION": "10.0.26100.0",
+        "CMAKE_FIND_USE_PACKAGE_REGISTRY": "OFF",
+        "CMAKE_FIND_USE_SYSTEM_PACKAGE_REGISTRY": "OFF"
+      }
+    }
+  ]
+}

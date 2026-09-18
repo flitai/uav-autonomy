@@ -9,6 +9,8 @@
 
 #ifndef UXAS_MESSAGE_LMCP_OBJECT_NETWORK_ZERO_MQ_ZYRE_BRIDGE_H
 #define    UXAS_MESSAGE_LMCP_OBJECT_NETWORK_ZERO_MQ_ZYRE_BRIDGE_H
+#include "UxAS_BridgeFeatures.h"
+#if UXAS_ENABLE_ZYRE
 
 #include "LmcpObjectNetworkClientBase.h"
 #include "ZeroMqZyreBridge.h"
@@ -256,4 +258,5 @@ private:
 }; //namespace communications
 }; //namespace uxas
 
+#endif // UXAS_ENABLE_ZYRE
 #endif    /* UXAS_MESSAGE_LMCP_OBJECT_NETWORK_ZERO_MQ_ZYRE_BRIDGE_H */

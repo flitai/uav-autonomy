@@ -9,6 +9,8 @@
 
 #ifndef UXAS_MESSAGE_ZERO_MQ_ZYRE_BRIDGE_H
 #define UXAS_MESSAGE_ZERO_MQ_ZYRE_BRIDGE_H
+#include "UxAS_BridgeFeatures.h"
+#if UXAS_ENABLE_ZYRE
 
 #include "UxAS_Zyre.h"
 
@@ -139,5 +141,6 @@ private:
 }; //namespace communications
 }; //namespace uxas
 
+#endif // UXAS_ENABLE_ZYRE
 #endif /* UXAS_MESSAGE_ZERO_MQ_ZYRE_BRIDGE_H */
 

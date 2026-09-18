@@ -767,3 +767,38 @@ T02 可执行、尚未启动，下一项为固定业务依赖、baseline／overl
 遗留事项与下一步：T04 接入 Makefile 的完整 UxAS 源码、服务注册和可选桥开关；T05 处理真实平台编译问题，T06／T07 验收 HelloWorld。G3 继续负责双向协议、来源过滤与真实规划命令闭环。本次完成后按持续授权提交、普通推送并核对远程，不自动进入 T04。
 
 归档结果：16 个交付文件经显式暂存、UTF-8／200 处相对链接检查、`git diff --cached --check`、合格包输入哈希及历史日志前缀复核后，创建提交 `f2dd834e55b1c44097886aab834ff62c3448a7cb`（`feat: build and validate Windows C++ LMCP library`）。`git push origin main` 退出 0；14:42:43 的 `git ls-remote --exit-code origin refs/heads/main` 返回相同完整标识，工作区干净，收据为 `out/tmp/g2-t03-push.json`。随后仅补齐本条实际结果与 status，独立归档收尾文档；不修改已验收实现，不进入 T04。
+
+
+## WL-20260918-008｜G2-T04：UxAS CMake 构建图与桥配置能力验收
+
+时间／时区：2026-09-18，Asia/Shanghai（UTC+08:00）。
+
+关联任务与状态：G2-T04 已完成；T05 可执行、尚未启动，G2 阶段尚未完成。
+
+背景、目标与范围：用户批准实施 T04 方案，并已持续授权完成阶段工作后自动提交推送。起点 main／`0366169c207f9832850b2dceaa8975ef720b04ed`，工作区干净。本轮建立 Windows UxAS 构建图、来源检查与可选桥拒绝路径，用独立 C++ 探针验证共享逻辑；没有安装依赖、完整编译 UxAS、运行 HelloWorld 或启动仿真。方案核查中确认的源码和资源事实、选择独立 C++ 拒绝探针的决定在本条落实。
+
+工作过程：读取状态、任务卡、近期日志及实际 Makefile／服务注册／桥管理代码。显式列出 125 个编译单元，默认只排除串口桥及两个 Zyre 实现，122 个直接编入 uxas 目标；保留 40 项服务注册、任务／规划／日志、SerialAutomationRequestTestService 和 SentinelSerialBuffer。确认 AutomationDiagramDataService.cpp 位于 Services，资源目录没有 .cpp；五个 .code 文件和其他资源均纳入来源清单。入口用 File API 对实际生成的编译／链接图核对，不凭源码清单直接认定完整构建通过。
+
+根 CMake 默认继续独立构建 LMCP；UxAS 预设开启 UXAS_BUILD_EXECUTABLE 后消费合格 Uxas::lmcp 与七类 UxasDeps 目标，不重复编译生成消息库，不隐式运行 vcpkg。配置固定 VS 2022、Release x64、v143／14.44.35207、SDK kit 10.0.26100.0、C++14／MD，并核对实际 CMake／cl／link 的合格来源。源码、目录、服务、资源、T02／T03／G1 和工具实时校验失败即退出，configured 与 compiled 明确分开。
+
+可选桥采用数值条件编译，覆盖三个实现、头文件、包装工具及实例化分支；未定义开关时保留原 Makefile 的启用行为。共享能力检查不启动网络：主程序在加载配置后、网络启动前拒绝关闭桥并返回 300；桥管理器创建前返回 false，单桥创建也拒绝。未扩展通用配置语义，不更改协议或任务算法。完整主程序的实际启动拒绝仍归 T06／T07。
+
+成果与修改文件：[根 CMake](CMakeLists.txt)、[CMakePresets.json](CMakePresets.json)、[Uxas.cmake](cmake/Uxas.cmake)、[显式源码清单](config/uxas-sources.json)、[配置入口](scripts/windows/configure-uxas.ps1)、[验收入口](tests/windows/uxas-cmake.tests.ps1)、`scripts/windows/uxas-cmake-common.ps1`、`scripts/uxas/graph.py`、`tests/uxas_cmake/bridge_probe.cpp`、桥能力头及必要条件分支。[T04 报告](docs/g2-uxas-cmake-validation.md)保存证据索引；同步 status、backlog、总体计划、G2 方案和 AGENTS，忽略本机 CMakeUserPresets.json。原 Makefile、00_ServiceList.h、模型、模板、生成文件、依赖配方及已有专题验收快照保持。
+
+验证：
+
+- 因根 CMake／cmake 输入变化，用原 `build-lmcp-cpp.ps1`／`lmcp-cpp.tests.ps1` 入口重建、完整复验 LMCP。最终构建 `g2-t03-build-20260918-151142-342`（编排 15:11:57～15:12:15）和验收 `g2-t03-test-20260918-151229-483`（15:12:44～15:12:55）均退出 0；183 个源文件、164 类型、三语言六帧、坏帧、VS／Ninja 消费及迁移发布全部通过。新包来源哈希 `5ABC0F28733C9D0E6F26E74C16083FED7EF4139E1097A940ED26468F2C903171`。旧批次和来源清单保留；G1 未重新生成，Java／AMASE 父级清单未改。
+- 从其他工作目录调用 `powershell.exe -NoProfile -ExecutionPolicy Bypass -File <仓库>/scripts/windows/configure-uxas.ps1 -PythonExecutable <已验证解释器>`，最终配置 `g2-t04-configure-20260918-151514-768`，编排 15:15:45～15:15:56，退出 0。原始配置、File API 及审查记录在本次 out/build/uxas 与 out/runs，结果仅为 configured。
+- 同样从 `C:/Windows/Temp` 调用 `tests/windows/uxas-cmake.tests.ps1 -PythonExecutable <已验证解释器> -ConfigureRunId g2-t04-configure-20260918-151514-768`，最终验收 `g2-t04-test-20260918-151556-601`，编排 15:16:27～15:17:03，退出 0。三次实际图审查（原目录、中文空格新目录、重复配置）均核对 122 个源码、40 项注册、5 个资源、27 个依赖静态库加 1 个 LMCP 库，以及正确包含目录、定义、C++14／MD 和 Windows 系统库。
+- 只编译两个独立探针。原 HelloWorld XML、TCP、SUB/PUSH、PUB/PULL、Impact SUB/PUSH 共五例返回 0；串口、Zyre、混合请求三例返回 300，含桥类型和开关；坏 XML 返回 100；未定义宏时的旧缺省探针返回 0，serial=1／zyre=1。共 10 例，未产生网络连接或服务运行证据。
+- 15 项隔离故障均返回 1：两个开关 ON、缺失来源上下文、依赖／LMCP 来源不符、工具来源变化、缺失源码／资源、新增／重复源码为十项真实 CMake 故障；CZMQ 库、LMCP 库、生成源码、嵌入资源、MDM 输入副本损坏为五项生产哈希校验 CLI 故障。所有修改只在 out 副本，故障后依赖／LMCP 合格指针哈希未变，未覆盖合格包。正式配置／验收入口记录环境恢复、工作目录与编码恢复、用户／系统 PATH 未变；完整 uxas.exe 没有被生成。
+
+问题与解决办法：首次配置 `g2-t04-configure-20260918-150947-051` 因错误假设 CMake 次版本 props 变量必须等于工具目录版本而失败；实际 CMake 3.31.12 在所选版本为默认目录时将其留空。对照随工具提供的官方变量说明和实际 cl／link 路径后，改为校验请求的工具集和真实可执行文件来源，保留精确编译器／SDK 约束。先前 LMCP 批次 `g2-t03-build-20260918-150806-612`／`g2-t03-test-20260918-150856-255` 已通过，但 CMake 修正使输入变化，因此另行重建并复验最终批次，没有改写旧清单。
+
+第二次配置 `g2-t04-configure-20260918-151302-293` 通过；首次 T04 验收 `g2-t04-test-20260918-151352-512` 的十个桥探针通过，Zyre ON 也正确失败，但诊断被 CMake 自动换行，测试的连续字符串断言误判。仅规范化用于断言的空白，保留原始日志；随后从新目录执行上述最终配置及完整验收通过。当前没有阻塞。
+
+重要决定与影响：UxAS 源码直接链接可执行目标以保留注册；可选桥关闭同时约束头文件、实现与创建路径。T04 的 339 项输入来源和 File API 证据只证明配置图完整，独立探针只证明共享能力判断；不能替代 T05 的完整链接或 T06 的真实服务消息。根 CMake／cmake 输入后续变化仍需重建、复验 LMCP。保留原先 Makefile 启用缺省值，不将旧 Linux 或可选桥完整构建宣称为已验证。
+
+遗留事项与下一步：T05 从干净输出构建 UxAS，按实际错误处理必要 Windows 和 CZMQ 等旧依赖兼容问题，不删除服务；T06／T07 负责 HelloWorld 双向消息、完整主程序拒绝与正常退出；G3 负责 WaterwaySearch 双向协议和执行闭环。本轮止于 T04。收尾核查 UTF-8、Markdown／链接、输入哈希、忽略规则及提交范围后，按持续授权自动提交、普通推送并核对远程。
+
+收尾检查：15:23:09 的 `out/tmp/check_t04_delivery.py` 退出 0，收据 `out/runs/g2-t04-docs-20260918-152309/result.json`：29 个变更文件、213 处本地链接、28 个表格、712 条构建／验收输入哈希、阶段状态和忽略规则通过；原日志字节前缀、G0／G1 backlog 历史保持。首次文档检查误把保留的 G1-T04 历史状态当成当前 G2 状态，仅修正检查范围为 G2 章节，未回写历史文档。PowerShell 5.1 语法解析、Python AST、`git diff --check` 及最终实时来源复查通过。`git fetch origin` 退出 0，提交前本地／origin/main 差异为 `0 0`；未发现无关改动，原始日志、输出、工具和本机路径不提交。补齐本项结果后再进行同入口收尾核查。

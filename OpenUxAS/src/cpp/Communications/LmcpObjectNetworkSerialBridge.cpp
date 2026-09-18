@@ -1,3 +1,5 @@
+#include "UxAS_BridgeFeatures.h"
+#if UXAS_ENABLE_SERIAL
 // ===============================================================================
 // Authors: AFRL/RQQA
 // Organization: Air Force Research Laboratory, Aerospace Systems Directorate, Power and Control Division
@@ -255,3 +257,5 @@ LmcpObjectNetworkSerialBridge::executeSerialReceiveProcessing()
 
 }; //namespace communications
 }; //namespace uxas
+
+#endif

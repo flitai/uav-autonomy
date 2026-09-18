@@ -14,6 +14,7 @@
 #include "ZeroMqFabric.h"
 
 #include "UxAS_ConfigurationManager.h"
+#include "BridgeBuildCapabilities.h"
 #include "UxAS_ConsoleLogger.h"
 #include "UxAS_FileLogger.h"
 #include "UxAS_Log.h"
@@ -198,6 +199,14 @@ main(int argc, char** argv)
     //
     // internal message network server
     //
+    const std::string unavailableBridges = uxas::communications::unavailableConfiguredBridges(
+            uxas::common::ConfigurationManager::getInstance().getEnabledBridges());
+    if (!unavailableBridges.empty())
+    {
+        UXAS_LOG_ERROR("UxAS_Main bridge initialization failed: ", unavailableBridges);
+        return 300;
+    }
+
     auto networkServer = uxas::stduxas::make_unique<uxas::communications::LmcpObjectNetworkServer>();
 
     if (networkServer)

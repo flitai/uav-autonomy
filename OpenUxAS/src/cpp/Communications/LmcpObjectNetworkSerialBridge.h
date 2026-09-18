@@ -9,6 +9,8 @@
 
 #ifndef UXAS_MESSAGE_LMCP_OBJECT_NETWORK_SERIAL_BRIDGE_H
 #define UXAS_MESSAGE_LMCP_OBJECT_NETWORK_SERIAL_BRIDGE_H
+#include "UxAS_BridgeFeatures.h"
+#if UXAS_ENABLE_SERIAL
 
 #include "LmcpObjectNetworkClientBase.h"
 
@@ -148,5 +150,6 @@ private:
 }; //namespace communications
 }; //namespace uxas
 
+#endif // UXAS_ENABLE_SERIAL
 #endif /* UXAS_MESSAGE_LMCP_OBJECT_NETWORK_SERIAL_BRIDGE_H */
 

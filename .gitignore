@@ -1,6 +1,7 @@
 # Project-local tools, downloads and generated outputs
 /.tools/
 /out/
+/CMakeUserPresets.json
 
 # Upstream Java projects: default Ant/NetBeans local outputs only
 /LmcpGen/build/
