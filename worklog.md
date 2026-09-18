@@ -765,3 +765,5 @@ T02 可执行、尚未启动，下一项为固定业务依赖、baseline／overl
 重要决定与影响：LMCP 使用自己的生成运行库和标准库，不额外链接不需要的第三方业务库；T02 仍作为工程工具／依赖前置核对。严格帧验证只属于验收探针，原生成工厂允许零校验和，不宣称已完成通用不可信数据防护。T04 若修改已登记的根 CMake 等输入，需要重新构建／验收 LMCP，禁止手改旧清单使其通过。主库仍按 VS 2022 验收，Ninja 只验证当前消费布局。
 
 遗留事项与下一步：T04 接入 Makefile 的完整 UxAS 源码、服务注册和可选桥开关；T05 处理真实平台编译问题，T06／T07 验收 HelloWorld。G3 继续负责双向协议、来源过滤与真实规划命令闭环。本次完成后按持续授权提交、普通推送并核对远程，不自动进入 T04。
+
+归档结果：16 个交付文件经显式暂存、UTF-8／200 处相对链接检查、`git diff --cached --check`、合格包输入哈希及历史日志前缀复核后，创建提交 `f2dd834e55b1c44097886aab834ff62c3448a7cb`（`feat: build and validate Windows C++ LMCP library`）。`git push origin main` 退出 0；14:42:43 的 `git ls-remote --exit-code origin refs/heads/main` 返回相同完整标识，工作区干净，收据为 `out/tmp/g2-t03-push.json`。随后仅补齐本条实际结果与 status，独立归档收尾文档；不修改已验收实现，不进入 T04。
