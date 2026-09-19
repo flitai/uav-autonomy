@@ -28,7 +28,9 @@ std::string ZmqGenericReceiver::receive() {
     int more = 1;
     while (more) {
         zmq::message_t msg;
-        m_socket->getRawZmqSocket()->recv(&msg);
+        if (!m_socket->getRawZmqSocket()->recv(&msg)) {
+            return retVal; // A configured receive timeout is not a multipart message.
+        }
         size_t moreSize = sizeof(more);
         m_socket->getRawZmqSocket()->getsockopt(ZMQ_RCVMORE, &more, &moreSize);
         // Use string concatenation for combining multipart messages from socket.

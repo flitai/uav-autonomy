@@ -14,6 +14,7 @@
 #include "stdUniquePtr.h"
 
 #include <thread>
+#include <atomic>
 
 namespace uxas {
 namespace communications {
@@ -42,7 +43,8 @@ public:
     bool run();
 
 protected:
-    bool m_shutdown;  // Derived classes should use this variable to identify when to shutdown the thread processing.
+    void stop(); // Derived destructors must call before destroying resources used by the thread.
+    std::atomic<bool> m_shutdown;
 
 private:
     std::unique_ptr<std::thread> m_thread;

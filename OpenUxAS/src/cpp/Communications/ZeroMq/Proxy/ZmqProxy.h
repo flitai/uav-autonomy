@@ -45,7 +45,7 @@ public:
     /**
      * @brief Default destructor for the Zmq Proxy object
      */
-    ~ZmqProxy() override = default;
+    ~ZmqProxy() override;
 
 protected:
     /**

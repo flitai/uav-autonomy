@@ -1,16 +1,16 @@
 # G3 实施方案：WaterwaySearch 系统运行闭环
 
-日期：2026-09-19，Asia/Shanghai。**G3-T01 已完成，T02 可执行、尚未启动，T03～T07 等待前置任务；G3 尚未完成。** 原规划交付不计作实现完成；T01 已另行完成实际资格复查，见 [输入基线报告](g3-input-baseline-validation.md)。当前状态见 [status](status.md)，完整任务卡见 [backlog](backlog.md#6-g3-顺序与任务卡)，过程见根级 [worklog](../worklog.md)。
+日期：2026-09-19，Asia/Shanghai。**G3-T01、T02 已完成，T03 可执行、尚未启动，T04～T07 等待前置任务；G3 尚未完成。** 原规划交付不计作实现完成；T01 已另行完成实际资格复查，见 [输入基线报告](g3-input-baseline-validation.md)。当前状态见 [status](status.md)，完整任务卡见 [backlog](backlog.md#6-g3-顺序与任务卡)，过程见根级 [worklog](../worklog.md)。
 
 ## 1. 目标、输入与边界
 
-按用户 2026-09-19 最新要求，G3 的通过条件调整为：**Windows 原生 GUI、无界面均完成 WaterwaySearch 任务执行闭环，覆盖率计算与报告正确，进程正常退出。** 当前重点是调通程序和系统，不设最低覆盖率，不为提高覆盖率进行算法／参数寻优。此前 95% 门槛及最多三组调优候选的要求取消，覆盖率提升另列后续工作。T01 报告和原始收据保留为历史快照；当前验收契约以本页及 config/g3-baseline.json 的 acceptanceRevision=2 为准，T01 输入资格结论保持有效。
+按用户 2026-09-19 最新要求，G3 的通过条件调整为：**Windows 原生 GUI、无界面均完成 WaterwaySearch 任务执行闭环，覆盖率计算与报告正确，进程正常退出。** 当前重点是调通程序和系统，不设最低覆盖率，不为提高覆盖率进行算法／参数寻优。此前 95% 门槛及最多三组调优候选的要求取消，覆盖率提升另列后续工作。T01 报告和原始收据保留为历史快照；当前验收契约以本页及 config/g3-baseline.json 的 acceptanceRevision=2 为准，T01 历史输入资格结论保留；T02 通信修复后，当前 inputRevision=2 的 43 项来源另经正式资格复查通过，见 [T02 报告](g3-protocol-validation.md)。
 
 - 实体 400／500 都须向 UxAS 提供真实动态状态；任务 1000 由 UxAS 实际分配的实体执行，不要求两架都被分配。完整水道的 90 个点及其顺序保持。
 - 覆盖率使用 AMASE `SearchTaskAnalysis`、20 米栅格和完整任务范围，如实记录实际结果。仅为功能兼容、任务正常执行和统计正确性作必要修复／配置调整，保留原示例与差异；覆盖率高低本身不阻塞 G3。
 - 本阶段包括双向协议、受控初始化、规划执行、任务完成、覆盖率、基础断线处理和整组重启；自动重连、初始化快照补齐及完整恢复矩阵归 G4。
 - 浏览器控制、重置分段与场景切换归 G6；Cesium、训练、实机、真实地形校准及第二机器／离线部署不纳入本阶段。当前零高程缺省条件必须随结果披露，不能把仿真覆盖率解释为实地覆盖保证。
-- 一次推进一个主要实现任务；方案细化时仅交付文档，T01 已落地独立只读资格检查与输入基线，未修改业务源码或启动联调。
+- 一次推进一个主要实现任务；T01 已落地独立只读资格检查，T02 已完成通信边界修复、正式发布及独立协议验收，见 [协议报告](g3-protocol-validation.md)；T03 的受控任务编排尚未启动。
 
 ### 规划期输入与源码复核
 
@@ -26,7 +26,7 @@
 | 覆盖分析 | [GUI 配置](../OpenAMASE/OpenAMASE/config/amase/Plugins.xml)与[无界面配置](../OpenAMASE/OpenAMASE/config/amase_headless/Plugins.xml)均为 20 米；[SearchTaskAnalysis](../OpenAMASE/OpenAMASE/src/Amase/avtas/amase/analysis/SearchTaskAnalysis.java)按已见／总栅格计算并格式化百分比；[AnalysisManager](../OpenAMASE/OpenAMASE/src/Amase/avtas/amase/analysis/AnalysisManager.java)分析路径创建进度窗口，无界面导出须实际验证并隔离窗口依赖 |
 | 既有验收限制 | [G1 探针](../tests/amase/RuntimeProbe.java)在 GUI 20 秒暂停，[G1 编排](../scripts/amase/amase.py)限制无界面运行 120 秒；G3 新建独立编排与插件，保留原验收含义 |
 
-上述表格保留规划期的历史记录与源码确认，不是双向运行、任务完成或覆盖率通过的证据。T01 已完成 `g3-t01-check-20260919-093348-422` 实际资格复查并冻结 35 个输入，详见 [报告及八项风险](g3-input-baseline-validation.md)。原任务 AllAny 在现有线搜索覆盖分支中提前返回，T05 须保留原参数证据，核实 AllAny 语义并验证统计修复，不能以调参绕过错误后宣称计算正确；重复 ViewAngleList／旧相机字段须核实有效值。CMASI 请求／响应没有关联 ID，T04 通过 Unique 请求／响应、分配与航点内容关联。上述风险未在本轮作业务修复。G1 实际接收和 G2 内部消息分别见 [TCP 报告](g1-tcp-validation.md)、[HelloWorld 报告](g2-uxas-helloworld-validation.md)。
+上述表格保留规划期的历史记录与源码确认，不是双向运行、任务完成或覆盖率通过的证据。T01 已完成 `g3-t01-check-20260919-093348-422` 实际资格复查并冻结 35 个输入，详见 [报告及八项风险](g3-input-baseline-validation.md)。原任务 AllAny 在现有线搜索覆盖分支中提前返回，T05 须保留原参数证据，核实 AllAny 语义并验证统计修复，不能以调参绕过错误后宣称计算正确；重复 ViewAngleList／旧相机字段须核实有效值。CMASI 请求／响应没有关联 ID，T04 通过 Unique 请求／响应、分配与航点内容关联。T01 当时未作业务修复；T02 的通信修复与字段实测另见 [协议报告](g3-protocol-validation.md)。G1 实际接收和 G2 内部消息分别见 [TCP 报告](g1-tcp-validation.md)、[HelloWorld 报告](g2-uxas-helloworld-validation.md)。
 
 ## 2. 已确定的技术路线
 
@@ -43,7 +43,7 @@ UxAS TCP 观察口用于读取总线消息、注入验收任务／请求以及�
 
 两模式顺序运行。端口是可配置的示例默认值，启动前检查冲突，启动后核对 PID，退出后检查释放；不得静默换端口或结束无关进程。PUB／PULL 若为来源对照试验启用，5560／5561 也必须登记和检查，正式闭环不依赖 PUB 提供完整状态。
 
-AMASE 对应的 UxAS TCP 桥显式使用 `ConsiderSelfGenerated="false"` 保留接收来源。T02 覆盖 true／false 对照，记录外层来源、接入连接、进入总线后的属性及 PUB 导出结果；业务实体 ID 与消息源 EntityID 分开记录，不从单一属性推断消息真实来路。
+AMASE 对应的 UxAS TCP 桥显式使用 `ConsiderSelfGenerated="false"` 保留接收来源。T02 已完成正式 true／false 对照；主桥另开启 `ExportOnlyLocalMessages="true"` 防止原巡航命令回送。记录外层来源、接入连接、进入总线后的属性及 PUB 导出结果；业务实体 ID 与消息源 EntityID 分开记录，不从单一属性推断消息真实来路。
 
 ### 初始化与生命周期
 
@@ -88,7 +88,7 @@ G3 插件只承担本地编排、事件观测、分析导出和关闭。仿真�
 
 ## 4. 拟建接口与来源管理
 
-以下是运行、验收及 GUI 收尾的接口约定，**尚无已验证的 G3 联调命令**。T01 的独立输入资格命令已通过，见 [基线报告](g3-input-baseline-validation.md#1-本轮交付与复用入口)：
+以下是运行、验收及 GUI 收尾的接口约定，**T03 任务编排／收尾仍为拟建；T02 独立正式协议验收入口已验证，见 [报告](g3-protocol-validation.md)**。T01 的独立输入资格命令已通过，见 [基线报告](g3-input-baseline-validation.md#1-本轮交付与复用入口)：
 
 - 新建独立运行、自动验收与 GUI 收尾入口。运行输入包含模式、配置、明确 Python 路径；验收／收尾绑定运行编号。配置承载端口、时长、倍率、任务输入和候选身份；缺失或冲突明确失败。
 - 输出包含运行状态、来源、配置快照、消息与事件证据、覆盖统计、人工确认及进程退出结果；int64 实体／任务／命令 ID 用十进制字符串。人工确认只对本次运行有效，不能复用 G1 的历史确认。

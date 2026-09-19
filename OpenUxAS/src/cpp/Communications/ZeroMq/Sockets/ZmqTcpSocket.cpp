@@ -15,14 +15,8 @@ namespace communications {
 
 ZmqTcpSocket::~ZmqTcpSocket() {
     UXAS_LOG_DEBUG_VERBOSE(typeid(this).name(),"::",__func__,":TRACE");
-    if (m_socket) {
-        //TODO possibly need to add disconnection logic for clients as well?
-        // Send routing ID followed by an empty message to close connection prior to
-        // closing socket on this end.
-        m_socket->send(m_routingId.begin(), m_routingId.end(), ZMQ_SNDMORE);
-        std::string tmp;
-        m_socket->send(tmp.data(),0);
-    }
+    // ZmqSocketBase closes this socket (linger=0), including every peer. The socket's
+    // own routing ID is not a connected STREAM peer ID and cannot be used to disconnect.
 }
 
 }

@@ -51,6 +51,10 @@ bool ZmqAttributedMsgSenderReceiver::initialize(const std::string& address, bool
 
     // Initialze the receiver backend
     m_receiveSocket->initialize(proxyReceiveAddress, true);
+    // Wake the bridge periodically so a normal stop does not depend on new TCP data.
+    const int receiveTimeoutMs = 100;
+    std::dynamic_pointer_cast<ZmqPullReceiver>(m_receiveSocket)->getSocketBase()->getRawZmqSocket()
+        ->setsockopt(ZMQ_RCVTIMEO, &receiveTimeoutMs, sizeof(receiveTimeoutMs));
 
     // Setup TCP proxy, initialize, and begin thread
     auto receiver = std::make_shared<ZmqPullReceiver>();

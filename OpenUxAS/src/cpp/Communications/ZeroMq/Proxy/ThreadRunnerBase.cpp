@@ -17,8 +17,12 @@ ThreadRunnerBase::ThreadRunnerBase() : m_shutdown{false} {}
 
 ThreadRunnerBase::~ThreadRunnerBase() {
     UXAS_LOG_DEBUG_VERBOSE(typeid(this).name(),"::",__func__,":TRACE");
+    stop();
+}
+
+void ThreadRunnerBase::stop() {
+    m_shutdown = true;
     if (m_thread && m_thread->joinable()) {
-        m_shutdown = true;
         m_thread->join();
     }
 }

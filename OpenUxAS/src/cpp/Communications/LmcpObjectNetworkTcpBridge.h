@@ -142,6 +142,8 @@ private:
      * simulation where the messages received would be considered self-generated in
      * normal operation. */
     bool m_isConsideredSelfGenerated{true};
+    // Opt-in for a simulator command link: do not send imported traffic back to it.
+    bool m_exportOnlyLocalMessages{false};
     
     std::map<std::string, std::string> m_messageAddressToAlias;
 };

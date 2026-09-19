@@ -20,6 +20,10 @@ ZmqProxy::ZmqProxy( ReceiverType inRecv, SenderType outSend, ReceiverType outRec
     m_externalReceiver(std::move(outRecv)), m_internalSender(std::move(inSend))
     {}
 
+ZmqProxy::~ZmqProxy() {
+    stop();
+}
+
 void ZmqProxy::executeOnThread() {
     UXAS_LOG_DEBUG_VERBOSE(typeid(this).name(),"::",__func__,":TRACE");
     std::vector<zmq_pollitem_t> pollItems;
@@ -27,8 +31,8 @@ void ZmqProxy::executeOnThread() {
     pollItems.push_back( {*m_externalReceiver.second->getRawZmqSocket(), 0, ZMQ_POLLIN, 0} );
 
     while (!m_shutdown) {
-        // blocking call for receiving data!
-        zmq::poll(pollItems);
+        // A bounded poll permits shutdown while both directions are idle.
+        zmq::poll(pollItems, 100);
         if (pollItems[0].revents & ZMQ_POLLIN) {
             std::string msg = m_internalReceiver.first->receive();
             m_externalSender.first->send(msg);

@@ -27,6 +27,7 @@ import avtas.util.WindowUtils;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.io.BufferedInputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayDeque;
@@ -178,7 +179,7 @@ public class TcpServer extends AmasePlugin {
     public class SocketThread extends Thread {
 
         private Socket socket;
-        private boolean running = true;
+        private volatile boolean running = true;
 
         public SocketThread(Socket socket) {
             this.socket = socket;
@@ -187,9 +188,9 @@ public class TcpServer extends AmasePlugin {
 
         public void run() {
             try {
+                BufferedInputStream input = new BufferedInputStream(getSocket().getInputStream());
                 while (isRunning()) {
-                    byte[] bytes = LMCPFactory.getMessageBytes(getSocket().getInputStream());
-                    avtas.lmcp.LMCPObject o = LMCPFactory.getObject(bytes);
+                    LMCPObject o = SentinelMessageReader.read(input);
 
                     messageReceived(o, this);
                 }
@@ -204,7 +205,7 @@ public class TcpServer extends AmasePlugin {
             }
         }
 
-        public boolean sendMessage(LMCPObject o) {
+        public synchronized boolean sendMessage(LMCPObject o) {
 
             try {
                 byte[] bytes = LMCPFactory.packMessage(o, true);

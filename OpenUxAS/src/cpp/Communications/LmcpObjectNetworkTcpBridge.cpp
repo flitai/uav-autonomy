@@ -44,6 +44,7 @@ bool
 LmcpObjectNetworkTcpBridge::configure(const pugi::xml_node& bridgeXmlNode)
 {
     bool isSuccess{true};
+    m_exportOnlyLocalMessages = bridgeXmlNode.attribute("ExportOnlyLocalMessages").as_bool(false);
 
     if (!bridgeXmlNode.attribute(uxas::common::StringConstant::TcpAddress().c_str()).empty())
     {
@@ -160,6 +161,13 @@ LmcpObjectNetworkTcpBridge::terminate()
 bool
 LmcpObjectNetworkTcpBridge::processReceivedSerializedLmcpMessage(std::unique_ptr<uxas::communications::data::AddressedAttributedMessage> receivedLmcpMessage)
 {
+    const auto& attributes = receivedLmcpMessage->getMessageAttributesReference();
+    if (m_exportOnlyLocalMessages &&
+        (attributes->getSourceEntityId() != std::to_string(m_entityId) ||
+         attributes->getSourceServiceId() == std::to_string(m_networkId)))
+    {
+        return false;
+    }
     // send message to the external entity
     UXAS_LOG_DEBUG_VERBOSE_BRIDGE("LmcpObjectNetworkTcpBridge::processReceivedSerializedLmcpMessage RECEIVED INTERNAL serialized message");
     UXAS_LOG_DEBUG_VERBOSE_BRIDGE("Address:          [", receivedLmcpMessage->getAddress(), "]");
@@ -207,6 +215,11 @@ LmcpObjectNetworkTcpBridge::executeTcpReceiveProcessing()
             UXAS_LOG_DEBUG_VERBOSE_BRIDGE("LmcpObjectNetworkTcpBridge::executeTcpReceiveProcessing BEFORE calling receivedTcpMessage");
             std::unique_ptr<uxas::communications::data::AddressedAttributedMessage> receivedTcpMessage =
                 stduxas::make_unique<data::AddressedAttributedMessage>(m_externalLmcpMsgTcpReceiverSenderPipe->receive());
+
+            if (!receivedTcpMessage->isValid())
+            {
+                continue; // Idle receive timeout or rejected frame; attributes are absent.
+            }
 
             UXAS_LOG_DEBUG_VERBOSE_BRIDGE("LmcpObjectNetworkTcpBridge::executeTcpReceiveProcessing RECEIVED EXTERNAL serialized message");
             UXAS_LOG_DEBUG_VERBOSE_BRIDGE("Address:          [", receivedTcpMessage->getAddress(), "]");

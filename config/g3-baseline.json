@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "task": "G3-T01",
   "baselineCommit": "5c0658ddd3a75da690daf4b0a90ee35714d1cdbc",
-  "purpose": "Frozen original inputs and acceptance contract; not a runtime success receipt",
+  "purpose": "Current qualified source inputs and acceptance contract; revision history preserves original G3-T01 inputs; not a task execution receipt",
   "files": [
     {
       "path": "LmcpGen/src/templates/java/lmcp_factory_java",
@@ -45,8 +45,12 @@
       "sha256": "CE653F01EB482A18235FC84CDFD92126A31E9F10AA7702772EE9F1075BB5A1CD"
     },
     {
+      "path": "OpenAMASE/OpenAMASE/src/Amase/avtas/amase/network/SentinelMessageReader.java",
+      "sha256": "D93AF34ABF33A777B71FAACD0F363BF1114DF3B2D522A2DDFAB338583E1D4093"
+    },
+    {
       "path": "OpenAMASE/OpenAMASE/src/Amase/avtas/amase/network/TcpServer.java",
-      "sha256": "E8D34007530A70DE7A1177193F1F0DB6EE8286A1D3FD874206F5266A10A33A2D"
+      "sha256": "B5CD8A7A0171325A697D81D5B32788AF3078BCB6815D61FC244722DFD9D56750"
     },
     {
       "path": "OpenAMASE/OpenAMASE/src/Amase/avtas/amase/scenario/ConstructiveControl.java",
@@ -102,11 +106,39 @@
     },
     {
       "path": "OpenUxAS/src/cpp/Communications/LmcpObjectNetworkTcpBridge.cpp",
-      "sha256": "E13BA954F406CA99A2A1AE4BF09AC759C53E0B3C820BA5D453D250357C170E90"
+      "sha256": "1810587B21938E7115A7F697D7AA4117490FF647A5555EC2E5D6525329D47A17"
     },
     {
       "path": "OpenUxAS/src/cpp/Communications/LmcpObjectNetworkTcpBridge.h",
-      "sha256": "1601255985C4540B38F3ACAA9084D05E095A6ECB719A55797963AD15A3595F11"
+      "sha256": "877CE60031F51D9A80058B871F1DDF9BD81F707E923482984FAA6E108DDF8E96"
+    },
+    {
+      "path": "OpenUxAS/src/cpp/Communications/ZeroMq/Proxy/ThreadRunnerBase.cpp",
+      "sha256": "C55DB5258FBD3DDDFA6E540E48B3400B9E23F7327E13EE3F85AA508E530B635F"
+    },
+    {
+      "path": "OpenUxAS/src/cpp/Communications/ZeroMq/Proxy/ThreadRunnerBase.h",
+      "sha256": "E959A65096DCF448841653972AA6542B78F411D28B88B2E0E37F4D8FD4DA6853"
+    },
+    {
+      "path": "OpenUxAS/src/cpp/Communications/ZeroMq/Proxy/ZmqProxy.cpp",
+      "sha256": "4C77F2140833194DA4617D042C889EF22FA1A3D9D32D21A2E19D0B2FAB7FDB19"
+    },
+    {
+      "path": "OpenUxAS/src/cpp/Communications/ZeroMq/Proxy/ZmqProxy.h",
+      "sha256": "74DACE96693EE502FB6717D3F3A3D570A8BF4DDE997262D09DA269376CC44267"
+    },
+    {
+      "path": "OpenUxAS/src/cpp/Communications/ZeroMq/Receivers/ZmqGenericReceiver.cpp",
+      "sha256": "FBDAD7C0A8D85BD5203ADEA0E6D78F848AFD2ECFEFD22BE42FFC1A3AE22C5391"
+    },
+    {
+      "path": "OpenUxAS/src/cpp/Communications/ZeroMq/Sockets/ZmqTcpSocket.cpp",
+      "sha256": "46529C5B7895602D8A351119529E5C8F6071F5FFB22E01B539FD5F122FFDC944"
+    },
+    {
+      "path": "OpenUxAS/src/cpp/Communications/ZeroMq/ZmqAttributedMsgSenderReceiver.cpp",
+      "sha256": "A631E797964FB8978F641F695F4C0DDCF894CC1C2AE3C575E7DA5649CA98498E"
     },
     {
       "path": "OpenUxAS/src/cpp/Services/AutomationRequestValidatorService.cpp",
@@ -219,7 +251,8 @@
     {
       "id": "G3-R01",
       "owner": "T02",
-      "finding": "AMASE Java source attributes are 0/0; default TCP import rewrites to UxAS EntityID 100; PUB filters non-local source."
+      "finding": "AMASE Java source attributes are 0/0; default TCP import rewrites to UxAS EntityID 100; PUB filters non-local source.",
+      "status": "T02 verified both settings and PUB filtering; main bridge uses ConsiderSelfGenerated=false and ExportOnlyLocalMessages=true"
     },
     {
       "id": "G3-R02",
@@ -248,8 +281,9 @@
     },
     {
       "id": "G3-R07",
-      "owner": "T02/T05",
-      "finding": "Task XML has duplicate ViewAngleList; camera XML has legacy plural SupportedWavelengthBands; effective generated parser fields must be checked."
+      "owner": "T05",
+      "finding": "Task XML has duplicate ViewAngleList; camera XML has legacy plural SupportedWavelengthBands; effective generated parser fields must be checked.",
+      "status": "T02 actual Java cameras use EO; actual C++ task has one Wedge (35,-60,0,0) and AllAny. Coverage semantics remain T05."
     },
     {
       "id": "G3-R08",
@@ -260,5 +294,78 @@
   "acceptanceRevision": 2,
   "acceptanceRevisionDate": "2026-09-19",
   "supersedesAcceptanceFromRunId": "g3-t01-check-20260919-093348-422",
-  "acceptanceRevisionReason": "User prioritizes system integration and correct coverage calculation; coverage improvement is deferred."
+  "acceptanceRevisionReason": "User prioritizes system integration and correct coverage calculation; coverage improvement is deferred.",
+  "inputRevision": 2,
+  "inputRevisionDate": "2026-09-19",
+  "inputRevisionParentRunId": "g3-t01-check-20260919-095541-064",
+  "inputRevisionReason": "G3-T02 verified TCP fragmentation, controlled shutdown and command export repairs; no scenario/model/algorithm changes",
+  "inputRevisionChanges": [
+    {
+      "path": "OpenAMASE/OpenAMASE/src/Amase/avtas/amase/network/SentinelMessageReader.java",
+      "before": null,
+      "after": "D93AF34ABF33A777B71FAACD0F363BF1114DF3B2D522A2DDFAB338583E1D4093"
+    },
+    {
+      "path": "OpenAMASE/OpenAMASE/src/Amase/avtas/amase/network/TcpServer.java",
+      "before": "E8D34007530A70DE7A1177193F1F0DB6EE8286A1D3FD874206F5266A10A33A2D",
+      "after": "B5CD8A7A0171325A697D81D5B32788AF3078BCB6815D61FC244722DFD9D56750"
+    },
+    {
+      "path": "OpenUxAS/src/cpp/Communications/LmcpObjectNetworkTcpBridge.cpp",
+      "before": "E13BA954F406CA99A2A1AE4BF09AC759C53E0B3C820BA5D453D250357C170E90",
+      "after": "1810587B21938E7115A7F697D7AA4117490FF647A5555EC2E5D6525329D47A17"
+    },
+    {
+      "path": "OpenUxAS/src/cpp/Communications/LmcpObjectNetworkTcpBridge.h",
+      "before": "1601255985C4540B38F3ACAA9084D05E095A6ECB719A55797963AD15A3595F11",
+      "after": "877CE60031F51D9A80058B871F1DDF9BD81F707E923482984FAA6E108DDF8E96"
+    },
+    {
+      "path": "OpenUxAS/src/cpp/Communications/ZeroMq/Proxy/ThreadRunnerBase.cpp",
+      "before": null,
+      "after": "C55DB5258FBD3DDDFA6E540E48B3400B9E23F7327E13EE3F85AA508E530B635F"
+    },
+    {
+      "path": "OpenUxAS/src/cpp/Communications/ZeroMq/Proxy/ThreadRunnerBase.h",
+      "before": null,
+      "after": "E959A65096DCF448841653972AA6542B78F411D28B88B2E0E37F4D8FD4DA6853"
+    },
+    {
+      "path": "OpenUxAS/src/cpp/Communications/ZeroMq/Proxy/ZmqProxy.cpp",
+      "before": null,
+      "after": "4C77F2140833194DA4617D042C889EF22FA1A3D9D32D21A2E19D0B2FAB7FDB19"
+    },
+    {
+      "path": "OpenUxAS/src/cpp/Communications/ZeroMq/Proxy/ZmqProxy.h",
+      "before": null,
+      "after": "74DACE96693EE502FB6717D3F3A3D570A8BF4DDE997262D09DA269376CC44267"
+    },
+    {
+      "path": "OpenUxAS/src/cpp/Communications/ZeroMq/Receivers/ZmqGenericReceiver.cpp",
+      "before": null,
+      "after": "FBDAD7C0A8D85BD5203ADEA0E6D78F848AFD2ECFEFD22BE42FFC1A3AE22C5391"
+    },
+    {
+      "path": "OpenUxAS/src/cpp/Communications/ZeroMq/Sockets/ZmqTcpSocket.cpp",
+      "before": null,
+      "after": "46529C5B7895602D8A351119529E5C8F6071F5FFB22E01B539FD5F122FFDC944"
+    },
+    {
+      "path": "OpenUxAS/src/cpp/Communications/ZeroMq/ZmqAttributedMsgSenderReceiver.cpp",
+      "before": null,
+      "after": "A631E797964FB8978F641F695F4C0DDCF894CC1C2AE3C575E7DA5649CA98498E"
+    }
+  ],
+  "inputRevisionEvidence": {
+    "report": "docs/g3-protocol-validation.md",
+    "amaseBuildRunId": "g1-t04-build-20260919-101509-695450",
+    "amaseAutomaticRunId": "g1-t04-automatic-20260919-101706-907868",
+    "amaseFinalizeRunId": "g1-t04-finalize-20260919-103730-933619",
+    "uxasBuildRunId": "g2-t05-build-20260919-101514-494",
+    "uxasValidationRunId": "g2-t05-test-20260919-101831-478",
+    "helloWorldRunId": "g2-t06-test-20260919-102042-847",
+    "candidateProtocolRunId": "g3-t02-verify-20260919-102900-997",
+    "uxasReleaseRunId": "g2-t07-test-20260919-103739-909",
+    "uxasPublishRunId": "g2-t07-publish-20260919-104007-031"
+  }
 }
