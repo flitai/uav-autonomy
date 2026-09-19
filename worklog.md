@@ -1158,3 +1158,5 @@ GUI 隔离与边界：为保留 G1 发布确认窗口，GUI 长程诊断显式�
 成果与交接：新增独立稳定性配置、三份编排模块、一份 Python 矩阵及两个 Windows 入口，专题报告 docs/g3-stability-validation.md；同步 AGENTS、status、backlog、G3 阶段方案、总体计划和本日志。没有修改业务源码、既有 T03～T05 入口、业务参数、生成代码或正式清单，因此不触发二进制重建／发布。T07 可执行、尚未启动，仍须最终两模式全程和本轮 GUI 人工确认；G3 阶段未完成。当前继续做最终文档／范围检查，按持续授权提交、普通推送并核对远程，实际归档结果随后记录。
 
 提交前检查：14 个任务文件、342 处本地文档链接、UTF-8、Python／PowerShell 语法、git diff --check、旧工作日志前缀及 T03～T05 源码／报告保护通过。out 原始证据和辅助脚本均被忽略；未提交生成物、本机工具或绝对用户路径。一次将包含中文字面量的静态检查经 PowerShell 管道传入 Python 时被编码为问号，改用 UTF-8 文件执行后通过；仓库原文件无编码损坏。远程 main 核对仍为起点 e1c2c83050b6e22ac638bfa4439301b09f45ea13。现在仅暂存本任务 14 文件，完成提交和普通推送。
+
+归档结果：主提交 b1f5e9b2ceb5cf9d05aca1cd5f9c8dbeeed0d1f2（test: validate G3 stability and whole-group recovery）包含已核对的本任务 14 文件；git push origin main 退出 0。2026-09-19T16:57:04.0394046+08:00 核对本地 HEAD 与远程 main 一致、工作区干净，收据 out/tmp/g3-t06-push.json。随后仅追加本段与 status 的真实归档说明，以独立文档提交收尾；运行配置、验收实现及原始证据保持不变。T06 已完成，T07 可执行但尚未启动，G3 阶段尚未完成。
