@@ -1,6 +1,6 @@
 # G3 实施方案：WaterwaySearch 系统运行闭环
 
-日期：2026-09-19，Asia/Shanghai。**G3-T01～T07 已完成，G3 已完成；G4 已细化，T01 可执行、实现尚未启动。** 原规划交付不计作实现完成；T01 已另行完成实际资格复查，见 [输入基线报告](g3-input-baseline-validation.md)。当前状态见 [status](status.md)，完整任务卡见 [backlog](backlog.md#6-g3-顺序与任务卡)，过程见根级 [worklog](../worklog.md)。
+日期：2026-09-19，Asia/Shanghai。**G3-T01～T07 已完成，G3 已完成；G4 已细化，T01 已完成、T02 可执行。** 原规划交付不计作实现完成；T01 已另行完成实际资格复查，见 [输入基线报告](g3-input-baseline-validation.md)。当前状态见 [status](status.md)，完整任务卡见 [backlog](backlog.md#6-g3-顺序与任务卡)，过程见根级 [worklog](../worklog.md)。
 
 ## 1. 目标、输入与边界
 

@@ -1200,3 +1200,21 @@ GUI 审查观察点：17:56:40 生成本轮 gui-ready.json，result.status=await
 遗留事项与下一步：完成本项检查和普通提交／推送后进入 T01。点／区域任务、在线恢复与 20 实体均待真实验收；不设覆盖率、观察时长或延迟硬门槛，不开展效果寻优。
 
 文档验证完成：7 个任务文件、372 处本地链接、UTF-8、git diff --check 和历史日志前缀保护通过，收据 out/tmp/g4-doc-check.json。没有运行软件测试或仿真；文档规划交付已完成。按持续授权只暂存上述任务文档并普通提交／推送，归档实际结果随下一任务日志记录。
+
+文档归档结果：提交 908fdfdd17d93c5a2f774bf120f1980e65fbe5f3（docs: define G4 gateway and mixed-mission implementation plan）已普通推送 origin/main，退出 0；git ls-remote 与本地 HEAD 一致，工作区干净。
+
+## WL-20260919-012｜G4-T01 输入、环境与契约
+
+时间／时区：2026-09-19，Asia/Shanghai；22:44 开始重新核查正式来源。
+关联任务与状态：G4-T01 进行中，T02～T09 待前置。
+背景、目标与范围：按已确认九卡顺序落实独立 Web 环境和 v1 契约；不以依赖冒烟代替真实网关验收。
+工作过程：新资格 g3-t01-check-20260919-224451-856 通过，绑定 G3-T07 合格 handoff；pip 官方索引只解析 Windows x64／CPython 3.14 可用 wheel，选择 FastAPI 0.141.1、Uvicorn 0.53.0、Pydantic 2.13.5、websockets 17.1 及完整 14 项依赖，固定每项版本、官方 URL 和 SHA-256。新增独立环境入口、环境／来源校验器、HTTP／WebSocket 冒烟、G4 基线与依赖锁、网关配置和浏览器契约。当前隔离环境安装正在执行。
+成果与修改文件：config/g4-*、scripts/g4_environment、scripts/windows/setup-g4.ps1、tests/g4_environment、docs/g4-browser-contract.md，原业务源码、生成库和历史收据保持。
+验证：仓库根目录运行现有 check-g3-baseline.ps1，退出 0；实际 Java 11.0.32.1+1／Ant 1.10.18 和正式来源通过。新入口 setup-g4.ps1 的完整安装／冒烟结果待追加；不预先登记通过。
+问题与处理：读取不存在的 g3-acceptance-common.ps1 后确认实际入口直接复用通用工具脚本，无新增依赖；来源错误必须拒绝，不修改历史哈希。
+重要决定与影响：Web 环境位于忽略的 .tools/g4/environments，成功冒烟后才切换当前指针；只读复验按安装文件摘要核查。协议 v1 明确运行／流身份、同连接快照边界、十进制字符串 ID／时间、权威来源和日志语义补齐。
+遗留事项与下一步：完成安装、冒烟、拒绝及路径检查；通过后独立归档 T01，再进入真实协议接入 T02。
+
+完成结果：安装运行 g4-t01-20260919-224933-026 的 result／entry-result passed；14 项 wheel 哈希校验、离线安装、pip check、Pydantic v2、HTTP、WebSocket 双向 JSON、超大整数字符串、正常退出与端口释放均通过。g4-t01-checks-20260919-225116 验证从中文空格且不同工作目录复验、重复编号拒绝并保留原收据、缺解释器拒绝；错误 handoff 与依赖摘要拒绝。补齐测试入口来源登记后，g4-t01-20260919-225218-157 的 VerifyOnly 全部通过；旧初次安装收据保持。环境／目录未改变，未启动仿真。专题报告 docs/g4-environment-validation.md；T01 已完成，T02 可执行。
+
+问题与解决办法：本轮安装和运行未出现功能失败；pip 解析／下载需要等待，保留每个文件官方 URL 和 SHA-256，不用重新计算下载内容替代信任值。测试专用随机端口是显式绑定的隔离样本，生产端口冲突规则保持。将新添加的入口检查源文件加入最终来源记录后重新 VerifyOnly，而不改写初次收据。接下来完成语法／文档及范围复核，再普通归档；实际提交结果随后记录。

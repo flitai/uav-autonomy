@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "host": "127.0.0.1",
+  "port": 8000,
+  "maximumFrameBodyBytes": 1048576,
+  "maximumAttributesBytes": 4096,
+  "clientQueueMessages": 256,
+  "clientQueueBytes": 8388608,
+  "journalBatchRows": 256,
+  "journalPollSeconds": 0.1,
+  "reconnectDelaysSeconds": [1, 2, 4, 8],
+  "staleAfterSeconds": 5,
+  "shutdownTimeoutSeconds": 30,
+  "readOnly": true
+}
