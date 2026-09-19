@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "scope": "stage-acceptance",
+  "connectionConfiguration": "config/g3-startup.json",
+  "executionConfiguration": "config/g3-execution.json",
+  "completionConfiguration": "config/g3-completion.json",
+  "simulationRate": 1,
+  "gridResolutionMeters": 20,
+  "minimumCoveragePercent": null,
+  "automaticWallTimeLimitSeconds": 2700,
+  "manualGuiConfirmationRequired": true,
+  "historicalRuns": {
+    "G3-T02": "g3-t02-verify-20260919-104721-817",
+    "G3-T03": "g3-t03-test-20260919-113944-818",
+    "G3-T04": "g3-t04-test-20260919-121531-644"
+  }
+}
