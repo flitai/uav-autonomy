@@ -1,0 +1,11 @@
+{
+  "schemaVersion": 1,
+  "scope": "execution",
+  "startupConfiguration": "config/g3-startup.json",
+  "executionTimeoutSeconds": 600,
+  "minimumTaskWaypoints": 4,
+  "minimumCompletedTaskLegs": 2,
+  "minimumLegProgressMeters": 10,
+  "maximumRouteDeviationMeters": 300,
+  "minimumSegmentCommands": 2
+}
