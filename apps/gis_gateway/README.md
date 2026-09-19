@@ -6,4 +6,4 @@
 
 默认本机端口 8000：`/api/v1/health`、`/api/v1/snapshot`、`/api/v1/stream` 和根诊断页。测试完成后自动正常关闭；长时间运行和完整任务在后续卡交付。Edge 仅用于诊断页验收，服务运行不依赖 Edge。
 
-字段、快照边界和来源见 [v1 契约](../../docs/g4-browser-contract.md)，运行证据与边界见 [T04 报告](../../docs/g4-web-validation.md)。T04 观察故障明确降级，自动重连／补齐由 T05 实现和验证；本目录不是 Cesium 应用。
+字段、快照边界和来源见 [v1 契约](../../docs/g4-browser-contract.md)，运行证据与边界见 [T04 报告](../../docs/g4-web-validation.md)。观察自动重连／补齐已由 [T05](../../docs/g4-recovery-validation.md) 验证，可用 `tests/windows/g4-recovery.tests.ps1` 运行完整恢复矩阵；主链路／后端失败必须新编号整组启动。本目录不是 Cesium 应用。

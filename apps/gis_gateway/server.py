@@ -3,6 +3,7 @@ import argparse
 import asyncio
 from contextlib import asynccontextmanager
 import json
+import socket
 from pathlib import Path
 import sys
 from typing import Annotated, Literal
@@ -95,6 +96,15 @@ def application(gateway):
 
 async def run(args):
     config = json.loads((args.root / 'config/g4-gateway.json').read_text(encoding='utf-8-sig'))
+    listener = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    try:
+        listener.setsockopt(socket.SOL_SOCKET, socket.SO_EXCLUSIVEADDRUSE, 1)
+        listener.bind((config['host'], config['port']))
+        listener.listen(128)
+        listener.setblocking(False)
+    except BaseException:
+        listener.close()
+        raise
     gateway = Gateway(args.root, args.manifest, args.manifest_sha256, args.output, config)
     server = uvicorn.Server(uvicorn.Config(application(gateway), host=config['host'], port=config['port'],
                                          access_log=False, ws='websockets', ws_max_size=4096,
@@ -107,10 +117,11 @@ async def run(args):
             await asyncio.sleep(0.1)
     watcher = asyncio.create_task(stop_requested())
     try:
-        await server.serve()
+        await server.serve(sockets=[listener])
     finally:
         watcher.cancel()
         await asyncio.gather(watcher, return_exceptions=True)
+        listener.close()
     return 0 if gateway.error is None else 1
 
 

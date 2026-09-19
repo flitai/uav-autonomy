@@ -15,9 +15,9 @@
 3. 新增消息网关，以 CesiumJS 三维 GIS 逐步替换原有态势可视化与操作界面。
 4. 后续为 TorchRL／BenchMARL 训练集成复用协议与仿真控制接口。
 
-截至上述核对日期，G0、G1 已完成，G1-T01～T05 均已完成；G2-T01 已完成，原生工具链十组验收及 VS／Ninja 在两类路径下的 C/C++ 探针通过；T02 已完成固定依赖的源码重建、11 组验收与迁移发布；T03 已完成七模型 C++ 库、164 类型及三语言双向样本验收和发布，T04 已完成 UxAS 构建图与独立桥配置探针，T05 已完成两类路径的候选构建及平台／来源验收，T06 已完成 HelloWorld 内部双向消息、正常退出与真实配置拒绝，T07 已完成复验和正式发布，G2 已完成；G3-T01～T07 已完成，G3 已完成，见 [G3-T03 记录](docs/g3-startup-validation.md)、 [G3-T01 记录](docs/g3-input-baseline-validation.md)、 [T07 记录](docs/g2-uxas-release-validation.md)、[T06 记录](docs/g2-uxas-helloworld-validation.md)、 [T05 记录](docs/g2-uxas-build-validation.md)、[T01 记录](docs/g2-cpp-toolchain-validation.md)、[T02 记录](docs/g2-dependencies-validation.md)、[T03 记录](docs/g2-lmcp-cpp-validation.md)和 [T04 记录](docs/g2-uxas-cmake-validation.md)。G2 历史方案及任务卡见 [G2 实施方案](docs/g2-windows-uxas-plan.md)和 [G2 任务清单](docs/backlog.md#4-g2-顺序与任务卡)；后续按 [G4 实施方案](docs/g4-message-gateway-plan.md)和 [G4 九张任务卡](docs/backlog.md#8-g4-顺序与任务卡)推进。项目内 Temurin JDK 11.0.32.1+1、Ant 1.10.18 已构建生成器、统一消息库和正式 AMASE；七模型已生成 Java／C++／Python 代码，Python 3.14.7 x64 的跨语言样本通过。T05 的 GUI／无界面真实 TCP 接收、十四组自动验收、GUI 人工确认、同版本受控复验及正常退出均完成；两层封装、分包、中文路径及故障处理已验证。证据见 [Java 验收](docs/g1-java-validation.md)、[T03 消息库验收](docs/g1-lmcp-validation.md)、[T04 AMASE 验收](docs/g1-amase-validation.md)和 [T05 TCP 验收](docs/g1-tcp-validation.md)。AMASE↔UxAS 双向协议及正式发布复验已通过；T05 已验证正式两模式完整任务、可靠 TaskComplete 与覆盖统计正确性，本轮新 AMASE GUI 确认／发布、UxAS 交接更新及来源修订通过；T06 稳定性、故障拒绝及整组重启矩阵已通过，在线自动重连未验证，也未落地 Cesium、消息网关或训练集成；Python 其他项目依赖未验证。继续工作时先读 [当前状态](docs/status.md) 与 [任务清单](docs/backlog.md)，并重新检查实际环境，不把历史快照当成永久结论。
+截至上述核对日期，G0、G1 已完成，G1-T01～T05 均已完成；G2-T01 已完成，原生工具链十组验收及 VS／Ninja 在两类路径下的 C/C++ 探针通过；T02 已完成固定依赖的源码重建、11 组验收与迁移发布；T03 已完成七模型 C++ 库、164 类型及三语言双向样本验收和发布，T04 已完成 UxAS 构建图与独立桥配置探针，T05 已完成两类路径的候选构建及平台／来源验收，T06 已完成 HelloWorld 内部双向消息、正常退出与真实配置拒绝，T07 已完成复验和正式发布，G2 已完成；G3-T01～T07 已完成，G3 已完成，见 [G3-T03 记录](docs/g3-startup-validation.md)、 [G3-T01 记录](docs/g3-input-baseline-validation.md)、 [T07 记录](docs/g2-uxas-release-validation.md)、[T06 记录](docs/g2-uxas-helloworld-validation.md)、 [T05 记录](docs/g2-uxas-build-validation.md)、[T01 记录](docs/g2-cpp-toolchain-validation.md)、[T02 记录](docs/g2-dependencies-validation.md)、[T03 记录](docs/g2-lmcp-cpp-validation.md)和 [T04 记录](docs/g2-uxas-cmake-validation.md)。G2 历史方案及任务卡见 [G2 实施方案](docs/g2-windows-uxas-plan.md)和 [G2 任务清单](docs/backlog.md#4-g2-顺序与任务卡)；后续按 [G4 实施方案](docs/g4-message-gateway-plan.md)和 [G4 九张任务卡](docs/backlog.md#8-g4-顺序与任务卡)推进。项目内 Temurin JDK 11.0.32.1+1、Ant 1.10.18 已构建生成器、统一消息库和正式 AMASE；七模型已生成 Java／C++／Python 代码，Python 3.14.7 x64 的跨语言样本通过。T05 的 GUI／无界面真实 TCP 接收、十四组自动验收、GUI 人工确认、同版本受控复验及正常退出均完成；两层封装、分包、中文路径及故障处理已验证。证据见 [Java 验收](docs/g1-java-validation.md)、[T03 消息库验收](docs/g1-lmcp-validation.md)、[T04 AMASE 验收](docs/g1-amase-validation.md)和 [T05 TCP 验收](docs/g1-tcp-validation.md)。AMASE↔UxAS 双向协议及正式发布复验已通过；T05 已验证正式两模式完整任务、可靠 TaskComplete 与覆盖统计正确性，本轮新 AMASE GUI 确认／发布、UxAS 交接更新及来源修订通过；T06 稳定性、故障拒绝及整组重启矩阵已通过，G4 网关及观察恢复的当前结果见下文；Cesium 与训练集成尚未落地；Python 其他项目依赖未验证。继续工作时先读 [当前状态](docs/status.md) 与 [任务清单](docs/backlog.md)，并重新检查实际环境，不把历史快照当成永久结论。
 
-G3 终点为 GUI／无界面分别完成 WaterwaySearch 任务执行，实际执行链可靠、AMASE 20 米栅格覆盖计算与报告正确、本轮 GUI 人工确认及正常退出。用户已明确当前重点是调通程序和系统，不设最低覆盖率，不开展为达指标的算法／参数寻优；覆盖效果优化归后续。完整水道保留，允许必要的功能兼容和统计正确性修复。基础断线清理及整组重启归 G3，自动重连／快照补齐归 G4，重置分段归 G6。T01 独立输入资格入口已验证，T02 独立协议编排／探针及通信修复已完成正式自动验收、本轮 GUI 确认和复验发布，见 [T02 报告](docs/g3-protocol-validation.md)；T03 已通过两模式真实初始化、单次任务请求、非空规划响应和正常收尾，见 [启动报告](docs/g3-startup-validation.md)；T04 已通过两模式分段命令、内部导航与任务航段关联及正常退出，见 [执行报告](docs/g3-execution-validation.md)；T05 已完成正式两模式全程、可靠 TaskComplete、统计独立复算和正常退出，见 [T05 报告](docs/g3-completion-validation.md)；T06 已完成，见 [稳定性报告](docs/g3-stability-validation.md)；T07 已完成，见 [阶段报告](docs/g3-stage-validation.md)；G4 已细化，T01～T04 已完成，T05 可执行。后续先读 [阶段报告](docs/g3-stage-validation.md)和 [G4 交接](docs/g3-g4-handoff.md)；[T01 输入基线](docs/g3-input-baseline-validation.md)中的风险为历史发现，处理结果以当前状态和各卡证据为准。
+G3 终点为 GUI／无界面分别完成 WaterwaySearch 任务执行，实际执行链可靠、AMASE 20 米栅格覆盖计算与报告正确、本轮 GUI 人工确认及正常退出。用户已明确当前重点是调通程序和系统，不设最低覆盖率，不开展为达指标的算法／参数寻优；覆盖效果优化归后续。完整水道保留，允许必要的功能兼容和统计正确性修复。基础断线清理及整组重启归 G3，自动重连／快照补齐归 G4，重置分段归 G6。T01 独立输入资格入口已验证，T02 独立协议编排／探针及通信修复已完成正式自动验收、本轮 GUI 确认和复验发布，见 [T02 报告](docs/g3-protocol-validation.md)；T03 已通过两模式真实初始化、单次任务请求、非空规划响应和正常收尾，见 [启动报告](docs/g3-startup-validation.md)；T04 已通过两模式分段命令、内部导航与任务航段关联及正常退出，见 [执行报告](docs/g3-execution-validation.md)；T05 已完成正式两模式全程、可靠 TaskComplete、统计独立复算和正常退出，见 [T05 报告](docs/g3-completion-validation.md)；T06 已完成，见 [稳定性报告](docs/g3-stability-validation.md)；T07 已完成，见 [阶段报告](docs/g3-stage-validation.md)；G4 已细化，T01～T05 已完成，T06 可执行。后续先读 [阶段报告](docs/g3-stage-validation.md)和 [G4 交接](docs/g3-g4-handoff.md)；[T01 输入基线](docs/g3-input-baseline-validation.md)中的风险为历史发现，处理结果以当前状态和各卡证据为准。
 
 Windows 原生运行是目标；WSL／Linux 可作参考或过渡环境，其验证结果必须单独标注。总体计划已确定首期默认 Windows 11 x64、联网开发与指定场景的基础离线演示，并保留原场景编辑器；实体规模和具体地理资源按任务细化。G2 已选定 MSVC v143／CMake 3.31、Release x64／动态 CRT 和 vcpkg manifest；Zyre／串口默认关闭，TCP 所需 CZMQ 保留。T01 已验证 MSVC／SDK／CMake／Ninja／vcpkg，固定业务依赖组合已由 T02 验证；Python 网关仍为后续候选实现。
 
@@ -153,7 +153,7 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\tests\windows\deps.tes
 
 构建只生成候选；验收包含 VS／Ninja、真实帧／数据库／XML／Boost 功能、CRT、中文空格路径、故障和迁移。成功后原子更新 `out/artifacts/deps/current.json`，保留旧批次和指针备份。后续脚本点入 `deps-common.ps1`，用 `Resolve-DepsPackage` 核对构建／验收身份及全部输入／安装哈希，再消费 `UxasDependencies`／`UxasDeps::*`；CMake 配置不隐式安装依赖。无 `-Rebuild` 时可复用匹配 ABI 的二进制缓存，不能将缓存恢复计作本次源码编译。
 
-依赖包只验收 Release x64／动态 CRT。CZMQ 旧 `snprintf` 宏和 CMake 3.31／Ninja 的中文响应文件处理见 T02 报告，固定依赖已通过 T05 的 UxAS 完整编译与候选验收。G2、G3 均已完成，见 [G3 阶段报告](docs/g3-stage-validation.md)；G4 已细化，T01～T04 已完成，T05 可执行。完整任务与稳定性证据另见 [完成报告](docs/g3-completion-validation.md)和 [稳定性报告](docs/g3-stability-validation.md)。
+依赖包只验收 Release x64／动态 CRT。CZMQ 旧 `snprintf` 宏和 CMake 3.31／Ninja 的中文响应文件处理见 T02 报告，固定依赖已通过 T05 的 UxAS 完整编译与候选验收。G2、G3 均已完成，见 [G3 阶段报告](docs/g3-stage-validation.md)；G4 已细化，T01～T05 已完成，T06 可执行。完整任务与稳定性证据另见 [完成报告](docs/g3-completion-validation.md)和 [稳定性报告](docs/g3-stability-validation.md)。
 
 ### Windows：统一 C++ LMCP 库
 
@@ -274,7 +274,7 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\tests\windows\g3-execu
 
 T05 已完成正式 GUI／无界面全程执行、可靠 TaskComplete、724 格逐格独立复算和 19 项完成／统计检查，正常退出与端口释放通过。入口为 run-g3-completion.ps1／g3-completion.tests.ps1，配置为 config/g3-completion.json，详见 [T05 报告](docs/g3-completion-validation.md)。原 90 点水道、20 米、785 秒、默认启动 1 倍及业务参数保持；两次实测均为 724／724，不设覆盖率门槛、不开展算法／参数寻优。本轮正式 GUI 实际 1→5→10 倍，用户已明确接受该单次差异，原始倍率和补充收据保持；后续仍须核对实际 SessionStatus，不能仅凭启动配置宣称全程 1 倍。
 
-本轮四项 AMASE 源码修复已重建，通过 11 组自动复验、用户真实 GUI 确认、正常退出和发布；未变更 UxAS 二进制按既有 T07 流程复验发布以更新 AMASE handoff。inputRevision=3 保留旧修订和摘要，当前资格与正式两模式收据见 T05 报告。T06 已完成，见 [稳定性报告](docs/g3-stability-validation.md)；T07 已完成，见 [阶段报告](docs/g3-stage-validation.md)；G4 已细化，T01～T04 已完成，T05 可执行，本轮阶段全程 GUI 人工确认及正常退出已完成。
+本轮四项 AMASE 源码修复已重建，通过 11 组自动复验、用户真实 GUI 确认、正常退出和发布；未变更 UxAS 二进制按既有 T07 流程复验发布以更新 AMASE handoff。inputRevision=3 保留旧修订和摘要，当前资格与正式两模式收据见 T05 报告。T06 已完成，见 [稳定性报告](docs/g3-stability-validation.md)；T07 已完成，见 [阶段报告](docs/g3-stage-validation.md)；G4 已细化，T01～T05 已完成，T06 可执行，本轮阶段全程 GUI 人工确认及正常退出已完成。
 
 ```powershell
 powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\windows\run-g3-completion.ps1 -PythonExecutable $pythonExe -Mode Headless
@@ -303,11 +303,11 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\windows\finish
 
 唯一连接配置为 config/g3-startup.json；execution／completion／acceptance 分别约束执行、完整任务和阶段验收。合格运行的 result／entry-result／acceptance／handoff 绑定四份配置、正式产物和当前确认，不能仅取目录中“最新”文件。GUI 自动审查通过后保持暂停，人工等待独立于 2700 秒自动预算，持续监测进程／连接／暂停时刻；不能用旧确认或自动审查代替本轮人工确认。
 
-没有新增业务源码／生成输入，正式包和历史收据保持；不设最低覆盖率、不开展寻优。G4 已按 [实施方案](docs/g4-message-gateway-plan.md) 细化九张任务卡，T01～T04 已完成，T05 可执行；本地观察工具不是网关，在线重连与快照／增量补齐仍待 G4；重置分段归 G6，零地形、Unicode 字段及第二机器部署限制保持。
+没有新增业务源码／生成输入，正式包和历史收据保持；不设最低覆盖率、不开展寻优。G4 已按 [实施方案](docs/g4-message-gateway-plan.md) 细化九张任务卡，T01～T05 已完成，T06 可执行；G3 观察工具与 G4 独立网关分开，G4-T05 已验证观察重连和语义补齐；重置分段归 G6，零地形、Unicode 字段及第二机器部署限制保持。
 
 ### Windows：G4 网关环境与契约
 
-G4-T01～T04 已完成，T05 可执行；[环境报告](docs/g4-environment-validation.md) 和 [v1 契约](docs/g4-browser-contract.md)。`scripts/windows/setup-g4.ps1 -PythonExecutable <已核查解释器>` 重新检查正式来源、创建并验收独立 Web 环境；`-VerifyOnly` 只复查已有环境。`tests/windows/g4-environment.tests.ps1` 接受 PythonExecutable 和本次 BaselineRunId，验证中文工作目录、重复编号保护和缺解释器拒绝。环境指针在 `.tools/g4/current.json`，完整版本／wheel 哈希见 config/g4-python-lock.json；调用前核查来源和安装文件。该冒烟未启动仿真，不代表真实网关或在线恢复通过。
+G4-T01～T05 已完成，T06 可执行；[环境报告](docs/g4-environment-validation.md) 和 [v1 契约](docs/g4-browser-contract.md)。`scripts/windows/setup-g4.ps1 -PythonExecutable <已核查解释器>` 重新检查正式来源、创建并验收独立 Web 环境；`-VerifyOnly` 只复查已有环境。`tests/windows/g4-environment.tests.ps1` 接受 PythonExecutable 和本次 BaselineRunId，验证中文工作目录、重复编号保护和缺解释器拒绝。环境指针在 `.tools/g4/current.json`，完整版本／wheel 哈希见 config/g4-python-lock.json；调用前核查来源和安装文件。该冒烟未启动仿真，不代表真实网关或在线恢复通过。
 
 ### Windows：G4 严格协议与真实接入
 
@@ -331,6 +331,14 @@ Anod 可能下载依赖或使用独立检出的 AMASE／LmcpGen；运行前检�
 C++ 测试入口为 `OpenUxAS/tests/cpp/run-tests`，在其所在目录执行 `./run-tests`；该入口也是 Bash，依赖已构建环境。详细说明见 [C++ 测试 README](OpenUxAS/tests/cpp/README.md)。
 
 当前没有已验证的根级 `cmake --preset`、`npm run dev` 或 `pytest` 流程。只有创建并验证相应配置后，才把它们记为本项目标准命令。旧 `.bat` 脚本和无界面配置也需核对路径、输出位置和行为，不能仅因文件存在就视为可运行。
+
+### Windows：G4 观察恢复与故障拒绝
+
+G4-T05 已完成；[恢复报告](docs/g4-recovery-validation.md)。`tests/windows/g4-recovery.tests.ps1 -PythonExecutable <已核查解释器>` 验证原例无界面真实完成跨缺口补齐、GUI 观察恢复、三持续客户端、主链路／后端退出拒绝及新整组运行。单模式诊断入口为 run-g4-recovery.ps1，接受 Mode／BaselineRunId；GUI 单模式只做恢复短程，不能当作完整任务通过。
+
+网关独立绑定本次进程创建时间、主 TCP 元组、日志文件身份与首行摘要；持久事件库跨网关重启保留，按分片／行号核对摘要和内容。恢复期间 snapshot 返回 503、旧流关闭，新流先完整快照后增量。原始残包及缺口保留，只声明语义补齐。主链路或后端失败不自动续跑，必须创建新的运行身份。故障代理端口 15555／19999、主链路故障端口 15556 仅为隔离验收设施，产品仍监听本机 8000。
+
+G4 导航取证保留所有原始 command-applied 与 step；只对无任务／动作的相邻重叠点、即时下一真实 step 保持原目标且无网络状态回退的命令交接瞬间另行分类。真实 step 回退和任务／动作重入仍拒绝；见报告中的实际失败、九项对照及来源摘要。不改变 G3 历史收据或后端业务源码。T06 两模式全程、T07 三类任务、T08 二十实体与 T09 当前 GUI 人工确认仍须独立验收。
 
 ## 5. 架构边界
 

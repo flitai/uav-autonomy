@@ -73,6 +73,10 @@ class Journal:
         self.directory = Path(self.binding['log_directory']).resolve()
         require(self.directory.is_dir(), 'Journal directory missing')
         self.identities, self.first_hashes, self.closed, self.highest = {}, {}, {}, {}
+        for item in self.binding.get('journal_anchors', []):
+            self.identities[item['file']] = tuple(item['identity'])
+            self.first_hashes[item['file']] = item['first_sha256']
+            self.highest[item['file']] = int(item['row_id'])
         self.decoder = Decoder(schema)
 
     def connect(self, path):
@@ -116,6 +120,9 @@ class Journal:
                 self.closed[path.name] = last[0]
             boundary.append({'shard': str(number), 'file': path.name, 'row_id': str(last[0]), 'first_sha256': fingerprint})
         return boundary
+
+    def anchors(self):
+        return [dict(item, identity=list(self.identities[item['file']])) for item in self.boundary()]
 
     def decode(self, row, shard):
         row_id, time_ms, descriptor, group, entity, service, xml = row
@@ -181,8 +188,8 @@ class EventStore:
         require(event['run_id'] == self.run_id, 'Event store input belongs to another run')
         key = (int(event['event_id']['shard']), int(event['event_id']['row_id']))
         data, checksum = canonical(event), digest(event)
-        previous = self.connection.execute('SELECT sha256 FROM events WHERE shard=? AND row_id=?', key).fetchone()
-        require(previous is None or previous[0] == checksum, 'Committed event changed on reread')
+        previous = self.connection.execute('SELECT sha256,event FROM events WHERE shard=? AND row_id=?', key).fetchone()
+        require(previous is None or (previous[0] == checksum and previous[1] == data), 'Committed event changed on reread')
         if previous is not None:
             return False
         with self.connection:
@@ -194,6 +201,10 @@ class EventStore:
             event = json.loads(data)
             require(digest(event) == checksum, 'Normalized record is corrupt')
             yield event
+
+    def boundaries(self):
+        return {int(shard): int(row) for shard, row in self.connection.execute(
+            'SELECT shard,MAX(row_id) FROM events GROUP BY shard')}
 
     def close(self):
         self.connection.close()

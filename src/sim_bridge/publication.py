@@ -104,6 +104,12 @@ class Publication:
                 client.close(reason)
             self.clients.clear()
 
+    def rebuild(self, state):
+        with self.lock:
+            self.suspend('New snapshot required after recovery')
+            self.state = state
+            self.stream_id = str(uuid.uuid4())
+
     def metrics(self):
         with self.lock:
             return {'clients': len(self.clients), 'published_deltas': str(self.delta_count),
