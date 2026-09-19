@@ -169,9 +169,20 @@
     ],
     "coverage": {
       "gridMetres": 20,
-      "percentMinimum": 95,
-      "predicate": "total > 0 and 100 * seen >= 95 * total",
-      "combineRuns": false
+      "predicate": "total > 0 and 0 <= seen <= total",
+      "combineRuns": false,
+      "mode": "calculation-correctness",
+      "requireCoverageThreshold": false,
+      "percentFormula": "100 * seen / total",
+      "requireCorrectnessControls": true,
+      "correctnessControls": [
+        "known-covered-and-uncovered-cells",
+        "repeat-observation-deduplication",
+        "wavelength-match-and-AllAny-semantics",
+        "manually-checkable-small-sample",
+        "same-event-record-gui-headless-count-equality",
+        "raw-count-and-formatted-report-consistency"
+      ]
     },
     "gui": {
       "amasePort": 5555,
@@ -192,17 +203,17 @@
       "simRate": 1
     },
     "originalSimSeconds": 785,
-    "maximumTunedSimSeconds": 1800,
     "maximumAutomaticWallSeconds": 2700,
     "initializationTimeoutSeconds": 30,
     "taskInitializationTimeoutSeconds": 30,
     "planningTimeoutSeconds": 30,
     "shutdownTimeoutSeconds": 30,
-    "maximumTunedCandidates": 3,
     "successfulExitCode": 0,
     "forcedTerminationAllowed": false,
     "requiresCurrentGuiHumanConfirmation": true,
-    "automaticReconnectStage": "G4"
+    "automaticReconnectStage": "G4",
+    "maximumSimSeconds": 1800,
+    "coverageOptimization": "deferred; not required for G3"
   },
   "knownRisks": [
     {
@@ -228,7 +239,7 @@
     {
       "id": "G3-R05",
       "owner": "T05",
-      "finding": "Original AllAny desired band triggers unconditional early return in LinearSearchHighlight.processSensor; no runtime coverage claim."
+      "finding": "Original AllAny desired band triggers early return in LinearSearchHighlight.processSensor; T05 must establish intended semantics, validate correctness and minimally fix confirmed defects; no runtime coverage claim."
     },
     {
       "id": "G3-R06",
@@ -245,5 +256,9 @@
       "owner": "T03/T04",
       "finding": "EntityModel and Test_SimulationTime use simulation milliseconds; task timestamps cannot be presumed UTC."
     }
-  ]
+  ],
+  "acceptanceRevision": 2,
+  "acceptanceRevisionDate": "2026-09-19",
+  "supersedesAcceptanceFromRunId": "g3-t01-check-20260919-093348-422",
+  "acceptanceRevisionReason": "User prioritizes system integration and correct coverage calculation; coverage improvement is deferred."
 }

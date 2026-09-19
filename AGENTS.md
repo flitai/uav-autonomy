@@ -17,7 +17,7 @@
 
 截至上述核对日期，G0、G1 已完成，G1-T01～T05 均已完成；G2-T01 已完成，原生工具链十组验收及 VS／Ninja 在两类路径下的 C/C++ 探针通过；T02 已完成固定依赖的源码重建、11 组验收与迁移发布；T03 已完成七模型 C++ 库、164 类型及三语言双向样本验收和发布，T04 已完成 UxAS 构建图与独立桥配置探针，T05 已完成两类路径的候选构建及平台／来源验收，T06 已完成 HelloWorld 内部双向消息、正常退出与真实配置拒绝，T07 已完成复验和正式发布，G2 已完成；G3-T01 已完成，T02 可执行、尚未启动，见 [G3-T01 记录](docs/g3-input-baseline-validation.md)、 [T07 记录](docs/g2-uxas-release-validation.md)、[T06 记录](docs/g2-uxas-helloworld-validation.md)、 [T05 记录](docs/g2-uxas-build-validation.md)、[T01 记录](docs/g2-cpp-toolchain-validation.md)、[T02 记录](docs/g2-dependencies-validation.md)、[T03 记录](docs/g2-lmcp-cpp-validation.md)和 [T04 记录](docs/g2-uxas-cmake-validation.md)。G2 历史方案及任务卡见 [G2 实施方案](docs/g2-windows-uxas-plan.md)和 [G2 任务清单](docs/backlog.md#4-g2-顺序与任务卡)；当前按 [G3 实施方案](docs/g3-system-integration-plan.md)和 [G3 七张任务卡](docs/backlog.md#6-g3-顺序与任务卡)推进。项目内 Temurin JDK 11.0.32.1+1、Ant 1.10.18 已构建生成器、统一消息库和正式 AMASE；七模型已生成 Java／C++／Python 代码，Python 3.14.7 x64 的跨语言样本通过。T05 的 GUI／无界面真实 TCP 接收、十四组自动验收、GUI 人工确认、同版本受控复验及正常退出均完成；两层封装、分包、中文路径及故障处理已验证。证据见 [Java 验收](docs/g1-java-validation.md)、[T03 消息库验收](docs/g1-lmcp-validation.md)、[T04 AMASE 验收](docs/g1-amase-validation.md)和 [T05 TCP 验收](docs/g1-tcp-validation.md)。尚未完成 AMASE↔UxAS 双向联调或完整重连验证，也未落地 Cesium、消息网关或训练集成；Python 其他项目依赖未验证。继续工作时先读 [当前状态](docs/status.md) 与 [任务清单](docs/backlog.md)，并重新检查实际环境，不把历史快照当成永久结论。
 
-G3 终点为 GUI／无界面分别完整完成 WaterwaySearch，实际执行链可靠、AMASE 20 米栅格覆盖率 ≥95%、本轮 GUI 人工确认及正常退出；允许保留原例的受控参数调优，完整水道和验收门槛固定。基础断线清理及整组重启归 G3，自动重连／快照补齐归 G4，重置分段归 G6。T01 独立输入资格入口已验证，G3 运行编排和插件仍为拟建；下一项为 T02 真实双向协议与来源验证。先读 [T01 输入基线](docs/g3-input-baseline-validation.md)，按其消息关联与八项风险继续。
+G3 终点为 GUI／无界面分别完成 WaterwaySearch 任务执行，实际执行链可靠、AMASE 20 米栅格覆盖计算与报告正确、本轮 GUI 人工确认及正常退出。用户已明确当前重点是调通程序和系统，不设最低覆盖率，不开展为达指标的算法／参数寻优；覆盖效果优化归后续。完整水道保留，允许必要的功能兼容和统计正确性修复。基础断线清理及整组重启归 G3，自动重连／快照补齐归 G4，重置分段归 G6。T01 独立输入资格入口已验证，G3 运行编排和插件仍为拟建；下一项为 T02 真实双向协议与来源验证。先读 [T01 输入基线](docs/g3-input-baseline-validation.md)，按其消息关联与八项风险继续。
 
 Windows 原生运行是目标；WSL／Linux 可作参考或过渡环境，其验证结果必须单独标注。总体计划已确定首期默认 Windows 11 x64、联网开发与指定场景的基础离线演示，并保留原场景编辑器；实体规模和具体地理资源按任务细化。G2 已选定 MSVC v143／CMake 3.31、Release x64／动态 CRT 和 vcpkg manifest；Zyre／串口默认关闭，TCP 所需 CZMQ 保留。T01 已验证 MSVC／SDK／CMake／Ninja／vcpkg，固定业务依赖组合已由 T02 验证；Python 网关仍为后续候选实现。
 
@@ -48,7 +48,7 @@ Windows 原生运行是目标；WSL／Linux 可作参考或过渡环境，其验
 3. 检查适用的目录说明，阅读目标组件 README、实际构建配置及相关源码；优先用 `rg` 定位。
 4. 根据任务按需阅读项目文档，不必每次加载全部长文：
    - [当前状态](docs/status.md)、[任务清单](docs/backlog.md)：当前关卡、缺口、下一任务及验收条件；历史基线见 [G0 报告](docs/g0-baseline.md)。
-   - [G3 实施方案](docs/g3-system-integration-plan.md)：当前七卡顺序、双向连接、启动屏障、完整执行／覆盖率判据、受控调优及 G4 边界；T01 实际资格通过见 [输入基线](docs/g3-input-baseline-validation.md)，不等于闭环通过。
+   - [G3 实施方案](docs/g3-system-integration-plan.md)：当前七卡顺序、双向连接、启动屏障、完整执行／覆盖统计正确性、后续优化及 G4 边界；T01 实际资格通过见 [输入基线](docs/g3-input-baseline-validation.md)，不等于闭环通过。
    - [G2 实施方案](docs/g2-windows-uxas-plan.md)：Windows 原生工具链、vcpkg 依赖、C++ 消息库、可选桥及 HelloWorld 的当前任务边界；规划入口不视为已实现命令。
    - [工作日志](worklog.md)：先读最近记录及当前任务关联的问题、尝试和决定，避免重复排查；新记录按第 10 节要求追加。
    - [总体实施计划与阶段验收](04.项目总体实施计划与阶段验收.md)：按用户主导、AI 逐项实施的方式推进，G0～G8 为任务细化与验收依据；首期采用联网开发、基础离线演示。
@@ -229,7 +229,7 @@ $pythonExe = Join-Path $env:LOCALAPPDATA 'Python/pythoncore-3.14-64/python.exe'
 powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\windows\check-g3-baseline.ps1 -PythonExecutable $pythonExe
 ```
 
-来源与契约为 config/g3-baseline.json，结果在独立 out/runs；只有 result 与 entry-result 均 passed 才算通过。输入变化按影响重建／复验，不改写旧清单。真实双向协议与来源过滤归 T02，运行编排／插件归 T03，命令实际执行归 T04，完整完成／覆盖归 T05；现有 AllAny 覆盖分支与旧 XML 字段风险见 [T01 报告](docs/g3-input-baseline-validation.md)。
+来源与当前契约为 config/g3-baseline.json（acceptanceRevision=2，取消历史 95% 门槛及调优候选要求），结果在独立 out/runs；T01 原报告／收据保留历史口径，不改写为新口径验收；只有 result 与 entry-result 均 passed 才算通过。输入变化按影响重建／复验，不改写旧清单。真实双向协议与来源过滤归 T02，运行编排／插件归 T03，命令实际执行归 T04，完整完成／覆盖归 T05；现有 AllAny 覆盖分支与旧 XML 字段风险见 [T01 报告](docs/g3-input-baseline-validation.md)。
 
 ### Linux／WSL：现有 UxAS 参考流程
 
