@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>仿真状态诊断</title>
+<style>
+body{font:15px system-ui,sans-serif;background:#f3f5f7;color:#172b3b;margin:0;padding:24px;max-width:1250px}
+h1{font-size:25px;margin:0 0 8px}button{padding:8px 16px;cursor:pointer}header,section{background:white;padding:18px;margin-bottom:16px;border:1px solid #d9e1e7;border-radius:8px}
+header p{overflow-wrap:anywhere}table{width:100%;border-collapse:collapse}td,th{text-align:left;border-bottom:1px solid #e4e9ec;padding:9px}small{color:#526471}pre{white-space:pre-wrap;overflow-wrap:anywhere;max-height:300px;overflow:auto}.ok{color:#086f4e}.wait{color:#975600}
+</style>
+<header><h1>仿真状态诊断</h1><small>只读观察 · 时间为仿真毫秒 · 高度保留后端基准</small>
+<p id="connection" class="wait">正在连接…</p><p id="identity"></p><p id="clock"></p><button id="reconnect">重新连接</button></header>
+<section><h2>实体</h2><table><thead><tr><th>ID</th><th>位置／高度</th><th>当前命令／航点</th><th>任务</th><th>源时间</th></tr></thead><tbody id="entities"></tbody></table></section>
+<section><h2>任务</h2><table><thead><tr><th>ID</th><th>类型</th><th>状态</th><th>分配／参与实体</th><th>完成时间</th></tr></thead><tbody id="tasks"></tbody></table></section>
+<section><h2>规划与连接</h2><p id="counts"></p><details><summary>连接详情</summary><pre id="health"></pre></details></section>
+<script>
+'use strict';
+let socket, retry, state=null, stream=null, sequence=null, generation=0;
+const byId=id=>document.getElementById(id);
+function text(id,value){byId(id).textContent=value;}
+function cell(row,value){const td=document.createElement('td');td.textContent=value??'—';row.append(td);}
+function draw(){
+ if(!state)return;
+ const entities=byId('entities');entities.replaceChildren();
+ for(const [id,e] of Object.entries(state.entities)){
+  const row=document.createElement('tr'),p=e.position;
+  cell(row,id);cell(row,p?`${p.longitude_deg.toFixed(6)}, ${p.latitude_deg.toFixed(6)} / ${p.altitude_m.toFixed(1)} m（基准 ${p.altitude_reference}）`:'等待状态');
+  cell(row,`${e.current_command_id??'—'} / ${e.current_waypoint_id??'—'}`);cell(row,(e.associated_task_ids??[]).join(', '));cell(row,e.simulation_time_ms);entities.append(row);
+ }
+ const tasks=byId('tasks');tasks.replaceChildren();
+ for(const [id,t] of Object.entries(state.tasks)){
+  const row=document.createElement('tr');cell(row,id);cell(row,({point:'点搜索',line:'线搜索',area:'区域搜索'})[t.kind]??t.kind);
+  cell(row,t.backend_completed?'后端报告完成':t.active?'执行中':t.initialized?'已初始化':'已定义');
+  const participants=t.completed_entity_ids??(t.active_entity_id?[t.active_entity_id]:t.assignments?.map(a=>a.AssignedVehicle)??t.eligible_entity_ids??[]);
+  cell(row,[...new Set(participants)].join(', ')||'尚未分配');cell(row,t.completed_time_ms);tasks.append(row);
+ }
+ text('clock',`仿真时间：${state.simulation.simulation_time_ms??'—'} ms　实际倍率：${state.simulation.real_time_multiple??'—'}`);
+ text('counts',`规划航线 ${Object.keys(state.routes).length} · 当前命令 ${Object.keys(state.commands).length} · 区域 ${Object.keys(state.zones).length}`);
+}
+function connect(){
+ const current=++generation;clearTimeout(retry);if(socket)socket.close();
+ state=null;stream=null;sequence=null;text('connection','正在获取新快照…');byId('connection').className='wait';
+ socket=new WebSocket(`${location.protocol==='https:'?'wss:':'ws:'}//${location.host}/api/v1/stream`);
+ socket.onmessage=event=>{
+  if(current!==generation)return;
+  try{
+   const message=JSON.parse(event.data);
+   if(message.kind==='health'){text('connection',`后端状态：${message.status}`);return;}
+   if(message.kind==='snapshot'){state=message.state;stream=message.stream_id;sequence=BigInt(message.sequence);text('identity',`运行 ${message.run_id} · 数据流 ${stream}`);}
+   else if(message.kind==='delta'){
+    if(!state||stream!==message.stream_id||BigInt(message.sequence)!==sequence+1n){connect();return;}
+    for(const change of message.changes){if(change.collection==='simulation'){state.simulation=change.value;}else if(change.op==='delete'){delete state[change.collection][change.id];}else{state[change.collection][change.id]=change.value;}}
+    sequence=BigInt(message.sequence);
+   }
+   text('connection',`已同步 · 序号 ${sequence}`);byId('connection').className='ok';draw();
+  }catch(error){text('connection','数据校验失败，重新同步');socket.close();}
+ };
+ socket.onclose=()=>{if(current!==generation)return;text('connection','连接已断开，显示内容已过期；正在重连…');byId('connection').className='wait';retry=setTimeout(connect,1000);};
+}
+byId('reconnect').onclick=connect;
+setInterval(async()=>{try{const response=await fetch('/api/v1/health');const h=await response.json();text('health',JSON.stringify(h,null,2));if(!h.ready){text('connection',`后端状态：${h.status}，显示内容已过期`);byId('connection').className='wait';}}catch{ text('health','网关不可达');}},1000);
+connect();
+</script></html>
