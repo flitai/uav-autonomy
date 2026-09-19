@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "scope": "startup",
+  "modes": {
+    "Gui": {"amasePort": 5555, "entityPorts": {"400": 9400, "500": 9500}, "observerPort": 9999},
+    "Headless": {"amasePort": 5556, "entityPorts": {"400": 19400, "500": 19500}, "observerPort": 9999}
+  },
+  "timeoutsSeconds": {"initialization": 30, "taskInitialization": 30, "planning": 30, "shutdown": 30, "wholeRun": 2700},
+  "minimumDynamicStates": 5,
+  "simulationRate": 1,
+  "scenario": "OpenUxAS/examples/02_Example_WaterwaySearch/Scenario_WaterwaySearch.xml",
+  "uxasConfiguration": "OpenUxAS/examples/02_Example_WaterwaySearch/cfg_WaterwaySearch.xml",
+  "task": "OpenUxAS/examples/02_Example_WaterwaySearch/MessagesToSend/tasks/1000_LineSearch_LINE_Waterway_Deschutes.xml",
+  "request": "OpenUxAS/examples/02_Example_WaterwaySearch/MessagesToSend/tasks/1001_AutomationRequest_LINE_Waterway_Deschutes.xml"
+}

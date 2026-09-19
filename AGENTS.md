@@ -15,9 +15,9 @@
 3. 新增消息网关，以 CesiumJS 三维 GIS 逐步替换原有态势可视化与操作界面。
 4. 后续为 TorchRL／BenchMARL 训练集成复用协议与仿真控制接口。
 
-截至上述核对日期，G0、G1 已完成，G1-T01～T05 均已完成；G2-T01 已完成，原生工具链十组验收及 VS／Ninja 在两类路径下的 C/C++ 探针通过；T02 已完成固定依赖的源码重建、11 组验收与迁移发布；T03 已完成七模型 C++ 库、164 类型及三语言双向样本验收和发布，T04 已完成 UxAS 构建图与独立桥配置探针，T05 已完成两类路径的候选构建及平台／来源验收，T06 已完成 HelloWorld 内部双向消息、正常退出与真实配置拒绝，T07 已完成复验和正式发布，G2 已完成；G3-T01、T02 已完成，见 [G3-T01 记录](docs/g3-input-baseline-validation.md)、 [T07 记录](docs/g2-uxas-release-validation.md)、[T06 记录](docs/g2-uxas-helloworld-validation.md)、 [T05 记录](docs/g2-uxas-build-validation.md)、[T01 记录](docs/g2-cpp-toolchain-validation.md)、[T02 记录](docs/g2-dependencies-validation.md)、[T03 记录](docs/g2-lmcp-cpp-validation.md)和 [T04 记录](docs/g2-uxas-cmake-validation.md)。G2 历史方案及任务卡见 [G2 实施方案](docs/g2-windows-uxas-plan.md)和 [G2 任务清单](docs/backlog.md#4-g2-顺序与任务卡)；当前按 [G3 实施方案](docs/g3-system-integration-plan.md)和 [G3 七张任务卡](docs/backlog.md#6-g3-顺序与任务卡)推进。项目内 Temurin JDK 11.0.32.1+1、Ant 1.10.18 已构建生成器、统一消息库和正式 AMASE；七模型已生成 Java／C++／Python 代码，Python 3.14.7 x64 的跨语言样本通过。T05 的 GUI／无界面真实 TCP 接收、十四组自动验收、GUI 人工确认、同版本受控复验及正常退出均完成；两层封装、分包、中文路径及故障处理已验证。证据见 [Java 验收](docs/g1-java-validation.md)、[T03 消息库验收](docs/g1-lmcp-validation.md)、[T04 AMASE 验收](docs/g1-amase-validation.md)和 [T05 TCP 验收](docs/g1-tcp-validation.md)。AMASE↔UxAS 双向协议及正式发布复验已通过；尚未完成任务执行闭环或完整重连验证，也未落地 Cesium、消息网关或训练集成；Python 其他项目依赖未验证。继续工作时先读 [当前状态](docs/status.md) 与 [任务清单](docs/backlog.md)，并重新检查实际环境，不把历史快照当成永久结论。
+截至上述核对日期，G0、G1 已完成，G1-T01～T05 均已完成；G2-T01 已完成，原生工具链十组验收及 VS／Ninja 在两类路径下的 C/C++ 探针通过；T02 已完成固定依赖的源码重建、11 组验收与迁移发布；T03 已完成七模型 C++ 库、164 类型及三语言双向样本验收和发布，T04 已完成 UxAS 构建图与独立桥配置探针，T05 已完成两类路径的候选构建及平台／来源验收，T06 已完成 HelloWorld 内部双向消息、正常退出与真实配置拒绝，T07 已完成复验和正式发布，G2 已完成；G3-T01～T03 已完成，见 [G3-T03 记录](docs/g3-startup-validation.md)、 [G3-T01 记录](docs/g3-input-baseline-validation.md)、 [T07 记录](docs/g2-uxas-release-validation.md)、[T06 记录](docs/g2-uxas-helloworld-validation.md)、 [T05 记录](docs/g2-uxas-build-validation.md)、[T01 记录](docs/g2-cpp-toolchain-validation.md)、[T02 记录](docs/g2-dependencies-validation.md)、[T03 记录](docs/g2-lmcp-cpp-validation.md)和 [T04 记录](docs/g2-uxas-cmake-validation.md)。G2 历史方案及任务卡见 [G2 实施方案](docs/g2-windows-uxas-plan.md)和 [G2 任务清单](docs/backlog.md#4-g2-顺序与任务卡)；当前按 [G3 实施方案](docs/g3-system-integration-plan.md)和 [G3 七张任务卡](docs/backlog.md#6-g3-顺序与任务卡)推进。项目内 Temurin JDK 11.0.32.1+1、Ant 1.10.18 已构建生成器、统一消息库和正式 AMASE；七模型已生成 Java／C++／Python 代码，Python 3.14.7 x64 的跨语言样本通过。T05 的 GUI／无界面真实 TCP 接收、十四组自动验收、GUI 人工确认、同版本受控复验及正常退出均完成；两层封装、分包、中文路径及故障处理已验证。证据见 [Java 验收](docs/g1-java-validation.md)、[T03 消息库验收](docs/g1-lmcp-validation.md)、[T04 AMASE 验收](docs/g1-amase-validation.md)和 [T05 TCP 验收](docs/g1-tcp-validation.md)。AMASE↔UxAS 双向协议及正式发布复验已通过；尚未完成任务执行闭环或完整重连验证，也未落地 Cesium、消息网关或训练集成；Python 其他项目依赖未验证。继续工作时先读 [当前状态](docs/status.md) 与 [任务清单](docs/backlog.md)，并重新检查实际环境，不把历史快照当成永久结论。
 
-G3 终点为 GUI／无界面分别完成 WaterwaySearch 任务执行，实际执行链可靠、AMASE 20 米栅格覆盖计算与报告正确、本轮 GUI 人工确认及正常退出。用户已明确当前重点是调通程序和系统，不设最低覆盖率，不开展为达指标的算法／参数寻优；覆盖效果优化归后续。完整水道保留，允许必要的功能兼容和统计正确性修复。基础断线清理及整组重启归 G3，自动重连／快照补齐归 G4，重置分段归 G6。T01 独立输入资格入口已验证，T02 独立协议编排／探针及通信修复已完成正式自动验收、本轮 GUI 确认和复验发布，见 [T02 报告](docs/g3-protocol-validation.md)；下一项 T03 可执行、尚未启动，任务初始化编排仍为拟建。先读 [T01 输入基线](docs/g3-input-baseline-validation.md)，按其消息关联与八项风险继续。
+G3 终点为 GUI／无界面分别完成 WaterwaySearch 任务执行，实际执行链可靠、AMASE 20 米栅格覆盖计算与报告正确、本轮 GUI 人工确认及正常退出。用户已明确当前重点是调通程序和系统，不设最低覆盖率，不开展为达指标的算法／参数寻优；覆盖效果优化归后续。完整水道保留，允许必要的功能兼容和统计正确性修复。基础断线清理及整组重启归 G3，自动重连／快照补齐归 G4，重置分段归 G6。T01 独立输入资格入口已验证，T02 独立协议编排／探针及通信修复已完成正式自动验收、本轮 GUI 确认和复验发布，见 [T02 报告](docs/g3-protocol-validation.md)；T03 已通过两模式真实初始化、单次任务请求、非空规划响应和正常收尾，见 [启动报告](docs/g3-startup-validation.md)；下一项 T04 可执行、尚未启动。先读 [T01 输入基线](docs/g3-input-baseline-validation.md)，按其消息关联与八项风险继续。
 
 Windows 原生运行是目标；WSL／Linux 可作参考或过渡环境，其验证结果必须单独标注。总体计划已确定首期默认 Windows 11 x64、联网开发与指定场景的基础离线演示，并保留原场景编辑器；实体规模和具体地理资源按任务细化。G2 已选定 MSVC v143／CMake 3.31、Release x64／动态 CRT 和 vcpkg manifest；Zyre／串口默认关闭，TCP 所需 CZMQ 保留。T01 已验证 MSVC／SDK／CMake／Ninja／vcpkg，固定业务依赖组合已由 T02 验证；Python 网关仍为后续候选实现。
 
@@ -153,7 +153,7 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\tests\windows\deps.tes
 
 构建只生成候选；验收包含 VS／Ninja、真实帧／数据库／XML／Boost 功能、CRT、中文空格路径、故障和迁移。成功后原子更新 `out/artifacts/deps/current.json`，保留旧批次和指针备份。后续脚本点入 `deps-common.ps1`，用 `Resolve-DepsPackage` 核对构建／验收身份及全部输入／安装哈希，再消费 `UxasDependencies`／`UxasDeps::*`；CMake 配置不隐式安装依赖。无 `-Rebuild` 时可复用匹配 ABI 的二进制缓存，不能将缓存恢复计作本次源码编译。
 
-依赖包只验收 Release x64／动态 CRT。CZMQ 旧 `snprintf` 宏和 CMake 3.31／Ninja 的中文响应文件处理见 T02 报告，固定依赖已通过 T05 的 UxAS 完整编译与候选验收。G2-T01～T07 已完成，G2 验收通过；G3-T01、T02 已完成，T03 可执行，详见 [T02 报告](docs/g3-protocol-validation.md)。
+依赖包只验收 Release x64／动态 CRT。CZMQ 旧 `snprintf` 宏和 CMake 3.31／Ninja 的中文响应文件处理见 T02 报告，固定依赖已通过 T05 的 UxAS 完整编译与候选验收。G2-T01～T07 已完成，G2 验收通过；G3-T01～T03 已完成，T04 可执行，详见 [T03 报告](docs/g3-startup-validation.md)。
 
 ### Windows：统一 C++ LMCP 库
 
@@ -206,7 +206,7 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\tests\windows\uxas-hel
 
 运行入口仅支持默认 `-Example HelloWorld`，不启动 AMASE 或外部 TCP 桥。记录位于独立 out/runs，同时检查 result 与 entry-result 成功及来源哈希；自动验收另有 acceptance.json。运行编排和反例位于 scripts/uxas_runtime、tests/uxas_runtime，单独登记输入，未改变旧构建来源规则。
 
-为取得配置、服务 ID 和退出证据，UxAS 目标启用原有 UXAS_INFO_LOGGING_ENABLED；因此 T03／T04／T05 已重新完整验收。T06 历史批次见 [T06 报告](docs/g2-uxas-helloworld-validation.md)，最新候选和正式批次见 [T07 报告](docs/g2-uxas-release-validation.md)。G2 已完成，外部双向协议仍待 G3。
+为取得配置、服务 ID 和退出证据，UxAS 目标启用原有 UXAS_INFO_LOGGING_ENABLED；因此 T03／T04／T05 已重新完整验收。T06 历史批次见 [T06 报告](docs/g2-uxas-helloworld-validation.md)，最新候选和正式批次见 [T07 报告](docs/g2-uxas-release-validation.md)。G2 已完成；外部协议已由 G3-T02 验证，受控初始化由 T03 验证，完整执行仍待后续。
 
 ### Windows：正式 UxAS 与 G2 复验发布
 
@@ -240,7 +240,24 @@ $pythonExe = Join-Path $env:LOCALAPPDATA 'Python/pythoncore-3.14-64/python.exe'
 powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\tests\windows\g3-protocol.tests.ps1 -PythonExecutable $pythonExe -BaselineRunId g3-t01-check-20260919-104119-819
 ```
 
-来源改变时先重跑 check-g3-baseline.ps1，使用新的合格编号。主桥显式 ConsiderSelfGenerated=false、ExportOnlyLocalMessages=true；观察口完整订阅且不回送消息，不能依赖 PUB 提供全部状态。正式产物、候选诊断参数与边界见 [T02 报告](docs/g3-protocol-validation.md)。测试启动屏障只保证协议取样；T03 初始数据与任务请求屏障、T04 规划执行、T05 完成／覆盖统计尚待实施，在线重连／快照归 G4。
+来源改变时先重跑 check-g3-baseline.ps1，使用新的合格编号。主桥显式 ConsiderSelfGenerated=false、ExportOnlyLocalMessages=true；观察口完整订阅且不回送消息，不能依赖 PUB 提供全部状态。正式产物、候选诊断参数与边界见 [T02 报告](docs/g3-protocol-validation.md)。T02 测试屏障只保证协议取样；T03 已另行验证初始数据和任务请求屏障；T04 规划执行、T05 完成／覆盖统计仍待实施，在线重连／快照归 G4。
+
+### Windows：G3 受控启动与初始化
+
+T03 独立编排、AMASE 插件与默认配置已通过两模式真实初始化、11 组运行／故障、10 项屏障反例及独立 GUI 正常收尾。入口仅支持 startup 验收范围，取得非空规划响应后收尾，不代表实际任务执行或覆盖统计通过：
+
+```powershell
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\windows\run-g3.ps1 -PythonExecutable $pythonExe -Mode Headless
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\tests\windows\g3-startup.tests.ps1 -PythonExecutable $pythonExe
+# 可选 GUI 观察：运行入口加 -Mode Gui -KeepGui；用本次运行编号收尾。
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\windows\finish-g3-gui.ps1 -PythonExecutable $pythonExe -RunId '<G3_RUN_ID>'
+```
+
+运行／验收接受 Configuration、RunId 和可选 BaselineRunId，默认重新做只读来源资格复查；详情见 [T03 报告](docs/g3-startup-validation.md)。当前正式二进制与 43 项冻结输入不变，新插件在 out/build 单独编译。原 XML 保留，运行副本移除 SendMessagesService；两实体真实初始数据齐全、TaskInitialized 到达后才发单次请求。
+
+主桥保留 AMASE 来源；控制观察桥显式 ConsiderSelfGenerated=true，将少量编排注入登记为本地桥来源，观察客户端不回送所收消息。自身注入被该桥过滤，来源改写须看 UxAS 原消息日志，不能据缺少回显判失败。初始化整体、任务初始化、规划和关闭各 30 秒，整次上限 2700 秒。GUI 收尾只表示正常关闭，不代替 T07 人工确认。
+
+中文运行目录已通过；原消息库通用 Unicode 字符串仍有长度／编码边界。编排标识使用 ASCII，场景从运行目录相对加载；涉及中文业务字段时按模板／生成器统一修复并重新验收，不手改生成文件。T04 从规划命令的实际执行开始，当前覆盖统计仍未验收。
 
 ### Linux／WSL：现有 UxAS 参考流程
 
