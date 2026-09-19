@@ -1093,3 +1093,5 @@ GUI 状态更新：10:35:56 的真实运行收据变为 automatic-passed，GUI �
 重要决定与遗留：taskExecutionValidated=true，taskCompletionValidated=false，coverageValidated=false。T05 接续完整末端／TaskComplete 与 AllAny 等覆盖统计正确性及两模式导出；低覆盖率本身不阻塞。重复启停／故障恢复归 T06，全程 GUI 人工确认归 T07，本卡 GUI 自动关闭不等同于人工确认。最终交付检查与提交／普通推送结果随后追加。
 
 最终交付复核：2026-09-19T12:21:11.198384+08:00 的 out/tmp/g3-t04-delivery.json 通过，14 个任务文件、324 个链接、27 个锚点、30 个表格及 173 条来源／证据摘要通过；Python／PowerShell 语法、UTF-8、状态一致性、历史报告与日志前缀、git diff --check 和敏感标记检查通过。已使用旧运行编号实测拒绝，历史失败收据摘要不变；全部七个 G3 监听端口释放。文档差异复查恢复了辅助替换误删的 status 中 G1 历史批次段落，未改旧验收记录；一次通过 PowerShell 标准输入执行含中文文本的辅助脚本因编码转换而匹配失败，改为 UTF-8 文件执行后修正。按持续授权显式暂存本任务 14 文件，随后提交、普通推送并核对远程。
+
+归档结果：首次暂存后，辅助归档脚本把 Git NUL 分隔输出的末尾空项计入文件集合，范围断言拒绝；过滤空项后核对仍为本任务 14 文件，无额外暂存内容。创建主提交 43b4f56d2f386cdb34c1322113d3d07175197ae7（feat: validate G3 planned mission execution），git push origin main 退出 0；2026-09-19T12:22:39.693197+08:00 的远程 main 标识与本地一致、工作区干净，收据 out/tmp/g3-t04-push.json。随后仅提交本段及 status 的归档说明，不改实现或验收输入。T04 已完成，T05 可执行、尚未启动，G3 阶段未完成。
