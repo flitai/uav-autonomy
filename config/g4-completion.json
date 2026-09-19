@@ -1,0 +1,11 @@
+{
+  "schemaVersion": 1,
+  "scope": "gateway-completion",
+  "recoveryRunId": "g4-t05-test-20260920-004801-605",
+  "completionConfiguration": "config/g3-completion.json",
+  "modes": ["Headless", "Gui"],
+  "simulationRate": 1,
+  "gridResolutionMeters": 20,
+  "minimumCoveragePercent": null,
+  "browserClients": 3
+}
