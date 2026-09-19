@@ -4,21 +4,21 @@
 
 ## 当前关卡
 
-**G0、G1、G2 已完成，G2-T01～T07 均已完成；G3 已细化，实施尚未启动；G3-T01 可执行。** 原生 UxAS 干净重建、连续三次启停、中文路径构建／运行、故障矩阵与正式发布通过，见 [T07 报告](g2-uxas-release-validation.md)。
+**G0、G1、G2 已完成，G2-T01～T07 均已完成；G3-T01 输入与验收基线已完成；G3-T02 可执行、尚未启动，G3 尚未完成。** 原生 UxAS 干净重建、连续三次启停、中文路径构建／运行、故障矩阵与正式发布通过，见 [T07 报告](g2-uxas-release-validation.md)。
 
 | 项目 | 当前记录 |
 | --- | --- |
-| 最近通过的实现任务 | G2-T07：完整复验、正式发布及 G3 输入交接；[报告](g2-uxas-release-validation.md)；本轮完成 G3 文档细化，不计作 T01 完成 |
-| 源码基线 | 本轮文档起点 `aa0067c`，工作区干净；构建、业务源码、模型、生成代码、算法、原 XML 和正式产物均未修改 |
+| 最近通过的实现任务 | G3-T01：正式输入复查、原场景与消息流、完成／覆盖判据；[报告](g3-input-baseline-validation.md) |
+| 源码基线 | T01 起点 `5c0658d`，工作区干净；本轮新增独立核查入口，业务源码、构建、模型、生成输出、算法、原 XML 和正式产物未改 |
 | 已归档历史 | G1-T01～T03 为 `304def9`，G1-T04 为 `f2f73ab`，G1-T05 为 `d77dd78`；T04 `b8ccf72`／`68ed420`、T05 `0fe8553`／交接 `5c2d387` 已推送 origin/main |
-| 本轮变更 | 新增 [G3 阶段方案](g3-system-integration-plan.md)和七张任务卡，同步总体计划、AGENTS 与日志；文档检查通过，主提交 65034b7 已普通推送，09:10:56 核对远程一致；归档结果见 WL-20260919-001 |
+| 本轮变更 | 新增 [基线清单](../config/g3-baseline.json)、独立资格入口与输入反例、[T01 报告](g3-input-baseline-validation.md)；正式复查及 10 项输入检查通过，缺失解释器明确拒绝；归档结果见 WL-20260919-002 |
 | 当前前置批次 | LMCP `g2-t03-build-20260918-195001-565`／`g2-t03-test-20260918-195057-347`；T04 `g2-t04-configure-20260918-195135-036`／`g2-t04-test-20260918-195240-495`；UxAS `g2-t05-build-20260918-201846-291`／`g2-t05-test-20260918-202115-333`，新 T06 `g2-t06-test-20260918-202616-245`；均完整复验通过 |
 | 已确定的 G2 路线 | MSVC v143＋CMake 3.31、Release x64／动态 CRT；固定 vcpkg baseline／overlay；Zyre／串口关闭，CZMQ／TCP 保留 |
 | 已验证工具 | Temurin 11.0.32.1+1、Ant 1.10.18、Python 3.14.7 x64；Build Tools 17.14.41／cl 19.44.35229、SDK 工具 10.0.26100.7705、CMake 3.31.12、Ninja 1.13.2、固定 vcpkg 提交及工具 |
 | 已验证能力 | UxAS 原生正式包、重复构建／启停与中文路径、HelloWorld 内部双向消息、配置拒绝、真实超时及发布回滚；七模型三语言文件样本及既有 AMASE TCP 接收 |
 | 尚未验证能力 | AMASE↔UxAS 双向网络、完整任务执行及覆盖率 ≥95%、基础断线恢复／完整重连、重置分段验收、Cesium；Python 其他项目依赖 |
-| 下一动作 | [G3-T01](backlog.md#6-g3-顺序与任务卡)：复核正式输入、场景与消息流，落实完整执行／覆盖率判据；可执行、尚未启动 |
-| 当前边界 | G2 已完成，G3 仅文档细化完成；本轮未实现 G3 脚本／插件，未启动 AMASE／UxAS 或执行联调 |
+| 下一动作 | [G3-T02](backlog.md#6-g3-顺序与任务卡)：真实 Java／C++ 双向帧、来源改写／订阅矩阵与必要兼容修复；可执行、尚未启动 |
+| 当前边界 | G2 与 G3-T01 已完成；本轮仅资格检查和输入基线，未启动仿真或网络联调，运行编排／插件仍为拟建 |
 | 已确定的 G3 验收 | GUI／无界面分别完整搜索，AMASE 20 米栅格覆盖率 ≥95%，本轮 GUI 确认及正常退出；允许受控参数调优，完整水道和门槛固定 |
 
 ## 已处理项与剩余缺口
@@ -35,6 +35,8 @@
 | AMASE 与 UxAS 封装（R04） | AMASE→Python 的真实 Sentinel／属性及 LMCP 双层校验、分包解析已通过；不代表 UxAS 双向兼容 | G3 核查双向封装、来源过滤、完整执行／覆盖及基础断线处理；自动重连／快照补齐归 G4 | G3／G4 |
 | C++／Node 与旧依赖补丁（R02／R10） | T01 工具链、T02 固定依赖及 T03 七模型 LMCP 通过，生成器／模型未变；微软目录描述哈希差异原因仍未知，实体已有独立签名验证；Node 留待 G5 | G2 构建、HelloWorld 和正式发布已通过；既有转换、符号性及弃用警告保留，其他服务按 G3 场景验证 | G2／G5 |
 
+T01 另确认：原任务 AllAny 在现有覆盖分析分支中直接返回，归 T05 原参数实测及受控波段候选；重复 ViewAngleList／旧相机字段归 T02／T05，CMASI 请求无关联 ID、分段命令关联归 T04。详见 [八项 G3 风险](g3-input-baseline-validation.md#6-已确认风险与后续责任)，本轮没有覆盖率实测值。
+
 上游精确 SHA 未知（R01）、Anod 来源绑定（R05）继续按 [G0 风险表](g0-baseline.md#6-风险归属与下一次验证)执行。G0 保留为历史快照，本页反映当前进度。
 
 ## 当前使用约定
@@ -48,13 +50,14 @@
 - 消息通过 `scripts/windows/generate-lmcp.ps1 -PythonExecutable <实际解释器路径>` 生成与验证；正式 Java 库为 `out/artifacts/lmcp/java/lmcplib.jar`。使用前核对生成目录 generation-info.json 与产物目录 build-info.json 的运行编号、模型及文件哈希。旧随库 JAR 保留，不允许同一 classpath 混入新旧版本。
 - AMASE 通过 build-amase.ps1 构建候选，完成验收后正式发布到 `out/artifacts/amase/`；run-amase.ps1 默认使用正式目录，配置与资源隔离到本次运行目录。标准命令和显式端口参数见 T04 报告。
 - 实际 TCP 接收通过 receive-amase.ps1 指定本次 AmaseRunId；amase-tcp.tests.ps1 自动运行两种模式、分包／故障及路径验收，Finalize 需要本轮真实 GUI 人工确认。客户端仅接收不发送；来源、数据与统计保存在独立 out/runs 目录，标准命令见 T05 报告。
+- G3-T01 输入资格入口为 `scripts/windows/check-g3-baseline.ps1 -PythonExecutable <实际解释器路径>`，使用新 PowerShell 进程及项目既有 Bypass 方式调用；原例语义反例为 `tests/g3_baseline/checks.py`，具体命令见 [T01 报告](g3-input-baseline-validation.md#1-本轮交付与复用入口)。此入口不启动仿真，不代表双向网络通过。
 - 运行记录与临时探针分别位于 `out/runs/`、`out/tmp/`，不进入 Git。隔离故障副本不能充当正式工具。
 - 各任务独立验收并追加根级工作日志；G1 已依据 T01～T05 的历史证据登记完成，不据此宣布原系统闭环通过。G2-T01～T07 已通过并登记 G2 完成；HelloWorld 内部消息不代表 AMASE↔UxAS 双向网络通过。
 - G2 按 [阶段方案](g2-windows-uxas-plan.md)和七张任务卡推进。工具准备、依赖、LMCP 及 UxAS CMake 配置入口已验证；用 `configure-uxas.ps1` 和 `uxas-cmake.tests.ps1` 复核构建图，详见 [T04 报告](g2-uxas-cmake-validation.md)。完整构建与候选验收入口 `build-uxas.ps1`／`uxas-build.tests.ps1` 已通过，候选由构建／验收双编号解析；运行入口 run-uxas.ps1 和验收入口 uxas-helloworld.tests.ps1 已通过；最新候选双编号与正式包见 [T07 报告](g2-uxas-release-validation.md)，T05／T06 报告保留历史批次。正式运行使用 run-uxas-release.ps1，脚本消费使用 Resolve-UxasPackage；复验和发布使用 uxas-release.tests.ps1／publish-uxas.ps1。
 
 ## 下一次工作的起点
 
-下一项为 [G3-T01：输入与验收基线](backlog.md#6-g3-顺序与任务卡)，可执行、尚未启动；按 [G3 方案](g3-system-integration-plan.md)逐卡推进。使用 [T07 报告](g2-uxas-release-validation.md)的正式 UxAS、同批 LMCP、既有 AMASE 与 handoff.json，重新完成资格复核，登记原场景、消息流和完整任务／覆盖率判据。本轮源码阅读及文档检查不代替 T01 验收。根 CMake 或其他 LMCP 输入变化时仍需重建／复验，不能改写旧清单。
+下一项为 [G3-T02：双向协议与来源验证](backlog.md#6-g3-顺序与任务卡)，可执行、尚未启动；先读 [T01 报告](g3-input-baseline-validation.md)及 [G3 方案](g3-system-integration-plan.md)。T01 正式检查为 `g3-t01-check-20260919-093348-422`，绑定 `g2-t07-resolve-20260919-093348-447`，两级结果通过；35 个冻结输入及同批消息身份一致。复用 check-g3-baseline.ps1 重查实时来源；T02 从真实双向协议、默认来源改写与 PUB 过滤开始，不直接启动完整任务。根 CMake 或其他来源输入变化时仍需按影响重建／复验，不能改写旧清单。
 
 G1-T05 最终自动批次为 `g1-t05-automatic-20260917-222209-133086`，收尾批次为 `g1-t05-finalize-20260917-222451-856588`，均已通过；GUI 已正常退出。专题报告保留当时的历史快照。
 

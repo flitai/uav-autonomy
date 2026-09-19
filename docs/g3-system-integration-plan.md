@@ -1,6 +1,6 @@
 # G3 实施方案：WaterwaySearch 完整搜索闭环
 
-日期：2026-09-19，Asia/Shanghai。**G3 已细化，实施尚未启动；G3-T01 可执行，T02～T07 等待前置任务。** 本次交付为规划文档，不计作任何实现卡完成。当前状态见 [status](status.md)，完整任务卡见 [backlog](backlog.md#6-g3-顺序与任务卡)，过程见根级 [worklog](../worklog.md)。
+日期：2026-09-19，Asia/Shanghai。**G3-T01 已完成，T02 可执行、尚未启动，T03～T07 等待前置任务；G3 尚未完成。** 原规划交付不计作实现完成；T01 已另行完成实际资格复查，见 [输入基线报告](g3-input-baseline-validation.md)。当前状态见 [status](status.md)，完整任务卡见 [backlog](backlog.md#6-g3-顺序与任务卡)，过程见根级 [worklog](../worklog.md)。
 
 ## 1. 目标、输入与边界
 
@@ -10,14 +10,14 @@ G3 的通过条件提升为：**Windows 原生 GUI、无界面均完成 Waterway
 - 覆盖率使用 AMASE `SearchTaskAnalysis`、20 米栅格和完整任务范围。允许在独立副本中受控调整飞行、传感器、规划参数及场景时长，保留原示例作对照。
 - 本阶段包括双向协议、受控初始化、规划执行、任务完成、覆盖率、基础断线处理和整组重启；自动重连、初始化快照补齐及完整恢复矩阵归 G4。
 - 浏览器控制、重置分段与场景切换归 G6；Cesium、训练、实机、真实地形校准及第二机器／离线部署不纳入本阶段。当前零高程缺省条件必须随结果披露，不能把仿真覆盖率解释为实地覆盖保证。
-- 一次推进一个主要实现任务；本次仅落地方案、任务卡与状态说明，不安装工具、修改业务代码或启动联调。
+- 一次推进一个主要实现任务；方案细化时仅交付文档，T01 已落地独立只读资格检查与输入基线，未修改业务源码或启动联调。
 
-### 输入与源码复核
+### 规划期输入与源码复核
 
 | 项目 | 本轮确认及使用约束 |
 | --- | --- |
 | Git 与状态 | 文档实施起点 `aa0067ce53dd9b2c1ac88d2d1e59818f11240324`，工作区干净；G0～G2 已完成。实现开始时重新检查 |
-| 正式产物 | 从 [G2-T07 报告](g2-uxas-release-validation.md)接收正式 UxAS、同批七模型 LMCP、既有 AMASE 与 handoff.json；本轮读取记录，T01 再执行完整来源复查 |
+| 正式产物 | 从 [G2-T07 报告](g2-uxas-release-validation.md)接收正式 UxAS、同批七模型 LMCP、既有 AMASE 与 handoff.json；规划期只读记录，T01 的实际资格结果另见下文 |
 | 工具 | 规划期实际版本查询确认 Python 3.14.7、Temurin 11.0.32.1+1；构建工具及产物资格仍须通过既有解析入口复核 |
 | 原始场景 | [场景 XML](../OpenUxAS/examples/02_Example_WaterwaySearch/Scenario_WaterwaySearch.xml)包含两实体配置／状态和初始巡航命令，时长 785 秒；[任务 XML](../OpenUxAS/examples/02_Example_WaterwaySearch/MessagesToSend/tasks/1000_LineSearch_LINE_Waterway_Deschutes.xml)为任务 1000、90 个水道点 |
 | 原 UxAS 配置 | [原配置](../OpenUxAS/examples/02_Example_WaterwaySearch/cfg_WaterwaySearch.xml)会注入静态实体配置／状态，并定时发送任务与请求；这些样本不能证明实时 AMASE 状态进入 UxAS |
@@ -26,7 +26,7 @@ G3 的通过条件提升为：**Windows 原生 GUI、无界面均完成 Waterway
 | 覆盖分析 | [GUI 配置](../OpenAMASE/OpenAMASE/config/amase/Plugins.xml)与[无界面配置](../OpenAMASE/OpenAMASE/config/amase_headless/Plugins.xml)均为 20 米；[SearchTaskAnalysis](../OpenAMASE/OpenAMASE/src/Amase/avtas/amase/analysis/SearchTaskAnalysis.java)按已见／总栅格计算并格式化百分比；[AnalysisManager](../OpenAMASE/OpenAMASE/src/Amase/avtas/amase/analysis/AnalysisManager.java)分析路径创建进度窗口，无界面导出须实际验证并隔离窗口依赖 |
 | 既有验收限制 | [G1 探针](../tests/amase/RuntimeProbe.java)在 GUI 20 秒暂停，[G1 编排](../scripts/amase/amase.py)限制无界面运行 120 秒；G3 新建独立编排与插件，保留原验收含义 |
 
-上述为历史记录或源码确认，不是本轮双向运行、任务完成或覆盖率通过的证据。G1 实际接收和 G2 内部消息分别见 [TCP 报告](g1-tcp-validation.md)、[HelloWorld 报告](g2-uxas-helloworld-validation.md)。
+上述表格保留规划期的历史记录与源码确认，不是双向运行、任务完成或覆盖率通过的证据。T01 已完成 `g3-t01-check-20260919-093348-422` 实际资格复查并冻结 35 个输入，详见 [报告及八项风险](g3-input-baseline-validation.md)。原任务 AllAny 在现有线搜索覆盖分支中提前返回，T05 须保留原参数实测并评估具体波段候选；重复 ViewAngleList／旧相机字段须核实有效值。CMASI 请求／响应没有关联 ID，T04 通过 Unique 请求／响应、分配与航点内容关联。上述风险未在本轮作业务修复。G1 实际接收和 G2 内部消息分别见 [TCP 报告](g1-tcp-validation.md)、[HelloWorld 报告](g2-uxas-helloworld-validation.md)。
 
 ## 2. 已确定的技术路线
 
@@ -86,7 +86,7 @@ G3 插件只承担本地编排、事件观测、分析导出和关闭。仿真�
 
 ## 4. 拟建接口与来源管理
 
-以下是实现任务的接口约定，**尚无已验证的 G3 命令**：
+以下是运行、验收及 GUI 收尾的接口约定，**尚无已验证的 G3 联调命令**。T01 的独立输入资格命令已通过，见 [基线报告](g3-input-baseline-validation.md#1-本轮交付与复用入口)：
 
 - 新建独立运行、自动验收与 GUI 收尾入口。运行输入包含模式、配置、明确 Python 路径；验收／收尾绑定运行编号。配置承载端口、时长、倍率、任务输入和候选身份；缺失或冲突明确失败。
 - 输出包含运行状态、来源、配置快照、消息与事件证据、覆盖统计、人工确认及进程退出结果；int64 实体／任务／命令 ID 用十进制字符串。人工确认只对本次运行有效，不能复用 G1 的历史确认。
@@ -113,6 +113,6 @@ G3 插件只承担本地编排、事件观测、分析导出和关闭。仿真�
 
 - 来源不一致、双向兼容未解决、真实初始化缺失、无法证明实际执行、完成／覆盖不达标或正常退出失败时，不推进依赖这些结果的任务。必要兼容修复在当前任务范围内进行，失败记录保留。
 - 回退只处理本任务修改、配置副本和持有句柄的进程；保留原场景、合格包、旧指针及历史验收报告。不卸载共享工具、不清空全局缓存、不以宽泛进程名清理实例。
-- 每项任务先验收，再追加工作日志、同步状态与待办，按持续授权提交、普通推送并核对远程。文档细化通过只登记“G3 已细化，实施尚未启动”。
+- 每项任务先验收，再追加工作日志、同步状态与待办，按持续授权提交、普通推送并核对远程。文档细化当时只登记“G3 已细化，实施尚未启动”；当前 T01 已按独立证据登记完成，不据此登记整个 G3 完成。
 - T07 交接唯一合格连接配置、同批产物身份、消息方向与来源／过滤矩阵、初始数据清单、实际时间语义、协议样本、完整任务与覆盖报告、正常退出证据及 G4 恢复缺口；不能把观察客户端描述为已建成的网关。
 - 七卡与 [G3 结束检查](backlog.md#7-g3-阶段结束检查)全部通过后才登记 G3 完成。自动重连／快照补齐归 G4，重置分段归 G6，其余延期项保持原归属。

@@ -1,0 +1,249 @@
+{
+  "schemaVersion": 1,
+  "task": "G3-T01",
+  "baselineCommit": "5c0658ddd3a75da690daf4b0a90ee35714d1cdbc",
+  "purpose": "Frozen original inputs and acceptance contract; not a runtime success receipt",
+  "files": [
+    {
+      "path": "LmcpGen/src/templates/java/lmcp_factory_java",
+      "sha256": "5C030C8374055EA6F03219C4BCDAB61D16218D4006818BC8CE97ACA7004BDE14"
+    },
+    {
+      "path": "OpenAMASE/OpenAMASE/config/amase/EntityControl.xml",
+      "sha256": "BEAC58990D56FC96BBF6372DC587A25A27C3B1AE7DFEC41CADBFB7B21A85A8D4"
+    },
+    {
+      "path": "OpenAMASE/OpenAMASE/config/amase/Plugins.xml",
+      "sha256": "C843FD22ED3AF8500F33AFA98625F449A7452EA708BEBC41041E2F3AA9E09C78"
+    },
+    {
+      "path": "OpenAMASE/OpenAMASE/config/amase_headless/EntityControl.xml",
+      "sha256": "764D8983392123C6D5DEB19837D69A826E0477F49D4AF9754981D8EC5FAC8BD9"
+    },
+    {
+      "path": "OpenAMASE/OpenAMASE/config/amase_headless/Plugins.xml",
+      "sha256": "B08450EA58949235D9EA9550978ADF836B38A7292212E16B673A205CDCE8AAF6"
+    },
+    {
+      "path": "OpenAMASE/OpenAMASE/src/Amase/avtas/amase/analysis/AnalysisManager.java",
+      "sha256": "17CB66EFA94C35F66A0A20E18AAB9F3FC711E042E07DCF2D66DBD131EF8B8A4D"
+    },
+    {
+      "path": "OpenAMASE/OpenAMASE/src/Amase/avtas/amase/analysis/LinearSearchHighlight.java",
+      "sha256": "A51D3832B0D52E8ADDDED8518CD20A972644AD2BC1D7CF63F0656177F42A3C34"
+    },
+    {
+      "path": "OpenAMASE/OpenAMASE/src/Amase/avtas/amase/analysis/SearchTaskAnalysis.java",
+      "sha256": "A41EF9E5F823ABEE7368E900222F76749B9CB446C8ADD53529B5E8A8A852D39B"
+    },
+    {
+      "path": "OpenAMASE/OpenAMASE/src/Amase/avtas/amase/entity/EntityModel.java",
+      "sha256": "ECA7CCE257A0B4E0E56934E20460B0B8718681FD46ADDB4250E93A2C27946401"
+    },
+    {
+      "path": "OpenAMASE/OpenAMASE/src/Amase/avtas/amase/entity/modules/WaypointFollower.java",
+      "sha256": "CE653F01EB482A18235FC84CDFD92126A31E9F10AA7702772EE9F1075BB5A1CD"
+    },
+    {
+      "path": "OpenAMASE/OpenAMASE/src/Amase/avtas/amase/network/TcpServer.java",
+      "sha256": "E8D34007530A70DE7A1177193F1F0DB6EE8286A1D3FD874206F5266A10A33A2D"
+    },
+    {
+      "path": "OpenAMASE/OpenAMASE/src/Amase/avtas/amase/scenario/ConstructiveControl.java",
+      "sha256": "4D2700DB5A4D1A50B7E4A65426D3666E3212CDD05DB652EE4165AD1836FDBB73"
+    },
+    {
+      "path": "OpenAMASE/OpenAMASE/src/Amase/avtas/amase/util/SimTimer.java",
+      "sha256": "CF3B5512E618AB97362BA2000CB6FBA542754BB09E49FD190B9E90828DBC819E"
+    },
+    {
+      "path": "OpenUxAS/examples/02_Example_WaterwaySearch/MessagesToSend/AirVehicleConfiguration_V400.xml",
+      "sha256": "7496F923EF13BDC91AD1A2F843B4D777F82B3501D91F01B37EED59AE61ED4219"
+    },
+    {
+      "path": "OpenUxAS/examples/02_Example_WaterwaySearch/MessagesToSend/AirVehicleConfiguration_V500.xml",
+      "sha256": "BA05D0D43683EFE066908AF787C1BD48E284CF26910FF4C204F5EA2EFF05097D"
+    },
+    {
+      "path": "OpenUxAS/examples/02_Example_WaterwaySearch/MessagesToSend/AirVehicleState_V400.xml",
+      "sha256": "AD43B4006F0A136BF263713054E2B51C754D4E577EA21D4D875231E4D700AB1B"
+    },
+    {
+      "path": "OpenUxAS/examples/02_Example_WaterwaySearch/MessagesToSend/AirVehicleState_V500.xml",
+      "sha256": "50A19C5DC66E18612517F29FD6608F70C5C27E56E458B5169A6C31F29269D593"
+    },
+    {
+      "path": "OpenUxAS/examples/02_Example_WaterwaySearch/MessagesToSend/tasks/1000_LineSearch_LINE_Waterway_Deschutes.xml",
+      "sha256": "CEFB2CD4D150D93EABBB622A7959A090DB287560FE554629E84762A2C29D7ACC"
+    },
+    {
+      "path": "OpenUxAS/examples/02_Example_WaterwaySearch/MessagesToSend/tasks/1001_AutomationRequest_LINE_Waterway_Deschutes.xml",
+      "sha256": "A2530B7F160CD866D72C99A98AD2FCD388C35D7D06739DE3686B08C54D8A2D20"
+    },
+    {
+      "path": "OpenUxAS/examples/02_Example_WaterwaySearch/Scenario_WaterwaySearch.xml",
+      "sha256": "AB44112D8151D7C24AC571DD6424F0FB3E236BDD85ABB5A5FDEE85B7EA1BEB0D"
+    },
+    {
+      "path": "OpenUxAS/examples/02_Example_WaterwaySearch/cfg_WaterwaySearch.xml",
+      "sha256": "5FD1776107C25D3463DFDA09B9508D171A29D5F67017FE754A9855F68F55F21C"
+    },
+    {
+      "path": "OpenUxAS/mdms/CMASI.xml",
+      "sha256": "EBF4D93CD57F798CF9D4CCC5464C4BED23FD113277F7956543885897C29BF360"
+    },
+    {
+      "path": "OpenUxAS/mdms/UXTASK.xml",
+      "sha256": "227E32424E25789084B6811DAD109425812EE1EF4188D2A88FC5CE557654F707"
+    },
+    {
+      "path": "OpenUxAS/src/cpp/Communications/LmcpObjectNetworkPublishPullBridge.cpp",
+      "sha256": "EC12BEF0928427348595E5130BC37BA1C5CD30C118373196D0B958F6F8C59A4C"
+    },
+    {
+      "path": "OpenUxAS/src/cpp/Communications/LmcpObjectNetworkTcpBridge.cpp",
+      "sha256": "E13BA954F406CA99A2A1AE4BF09AC759C53E0B3C820BA5D453D250357C170E90"
+    },
+    {
+      "path": "OpenUxAS/src/cpp/Communications/LmcpObjectNetworkTcpBridge.h",
+      "sha256": "1601255985C4540B38F3ACAA9084D05E095A6ECB719A55797963AD15A3595F11"
+    },
+    {
+      "path": "OpenUxAS/src/cpp/Services/AutomationRequestValidatorService.cpp",
+      "sha256": "A07434D05AD732AFECDE521C6D737CA0BA7901097CB8B83B47CE2D610EBDFB1C"
+    },
+    {
+      "path": "OpenUxAS/src/cpp/Services/PlanBuilderService.cpp",
+      "sha256": "9A7B87101EF347A74E34765B666BC237C832BCB56FF661258EF72F936B76FB82"
+    },
+    {
+      "path": "OpenUxAS/src/cpp/Services/Test_SimulationTime.cpp",
+      "sha256": "D32BDA29874A2D5CD0B82663AF8ABB63D66D6E636EF51D96143D5DC42535B40F"
+    },
+    {
+      "path": "OpenUxAS/src/cpp/Services/WaypointPlanManagerService.cpp",
+      "sha256": "D2585415D21454B5BB3E5B5C254F51C43714C17869579F961DF6D3EB8C4F05E6"
+    },
+    {
+      "path": "OpenUxAS/src/cpp/Tasks/TaskManagerService.cpp",
+      "sha256": "5677935F22F1239473041E646126055BEA9331403C49A71801348948B96B3BD9"
+    },
+    {
+      "path": "OpenUxAS/src/cpp/Tasks/TaskServiceBase.cpp",
+      "sha256": "ED523B2D1FDD9B1C403BA4EF970B2A7906D1E1BDC6E9E3A521A8747D3CF7F655"
+    },
+    {
+      "path": "config/lmcp-models.json",
+      "sha256": "1AACBCFD4D3CD93EE40615717A8FA2391B2A7F860DA751BBD391A21A64A05F24"
+    },
+    {
+      "path": "config/windows-cpp-toolchain.json",
+      "sha256": "5ACB0BAB15AE4E6787084B0659728872345E8E1A51866B7F538E10ED877AC1C5"
+    },
+    {
+      "path": "config/windows-java-toolchain.json",
+      "sha256": "955377E551977BF02E1864687936844C8CEA5AB898401206EBA1553EE7002922"
+    }
+  ],
+  "acceptance": {
+    "entityIds": [
+      "400",
+      "500"
+    ],
+    "taskId": "1000",
+    "waterwayPointCount": 90,
+    "initialState": {
+      "configurationsPerEntity": 1,
+      "distinctTimeSamplesPerEntity": 3,
+      "minimumDistinctPositionsPerEntity": 2,
+      "requireAmaseToUxasPayloadCorrelation": true,
+      "rejectStaticStateSubstitution": true
+    },
+    "taskRequestCount": 1,
+    "automationRequestCount": 1,
+    "requestCorrelation": "UniqueAutomationRequest.RequestID = UniqueAutomationResponse.ResponseID",
+    "completion": [
+      "TaskActive",
+      "executed-task-route-through-terminal",
+      "TaskComplete"
+    ],
+    "coverage": {
+      "gridMetres": 20,
+      "percentMinimum": 95,
+      "predicate": "total > 0 and 100 * seen >= 95 * total",
+      "combineRuns": false
+    },
+    "gui": {
+      "amasePort": 5555,
+      "entityPorts": {
+        "400": 9400,
+        "500": 9500
+      },
+      "observationPort": 9999,
+      "simRate": 1
+    },
+    "headless": {
+      "amasePort": 5556,
+      "entityPorts": {
+        "400": 19400,
+        "500": 19500
+      },
+      "observationPort": 9999,
+      "simRate": 1
+    },
+    "originalSimSeconds": 785,
+    "maximumTunedSimSeconds": 1800,
+    "maximumAutomaticWallSeconds": 2700,
+    "initializationTimeoutSeconds": 30,
+    "taskInitializationTimeoutSeconds": 30,
+    "planningTimeoutSeconds": 30,
+    "shutdownTimeoutSeconds": 30,
+    "maximumTunedCandidates": 3,
+    "successfulExitCode": 0,
+    "forcedTerminationAllowed": false,
+    "requiresCurrentGuiHumanConfirmation": true,
+    "automaticReconnectStage": "G4"
+  },
+  "knownRisks": [
+    {
+      "id": "G3-R01",
+      "owner": "T02",
+      "finding": "AMASE Java source attributes are 0/0; default TCP import rewrites to UxAS EntityID 100; PUB filters non-local source."
+    },
+    {
+      "id": "G3-R02",
+      "owner": "T03",
+      "finding": "Original UxAS injects static entity configuration/state; headless AMASE auto-start can precede connections."
+    },
+    {
+      "id": "G3-R03",
+      "owner": "T04",
+      "finding": "CMASI request/response have no correlation ID; original commands share ID 100 across vehicles; mission segments get new IDs."
+    },
+    {
+      "id": "G3-R04",
+      "owner": "T05",
+      "finding": "TaskComplete follows task disassociation, not proof of terminal execution."
+    },
+    {
+      "id": "G3-R05",
+      "owner": "T05",
+      "finding": "Original AllAny desired band triggers unconditional early return in LinearSearchHighlight.processSensor; no runtime coverage claim."
+    },
+    {
+      "id": "G3-R06",
+      "owner": "T05",
+      "finding": "AnalysisManager constructs a dialog; rounded CoveragePercent alone is insufficient."
+    },
+    {
+      "id": "G3-R07",
+      "owner": "T02/T05",
+      "finding": "Task XML has duplicate ViewAngleList; camera XML has legacy plural SupportedWavelengthBands; effective generated parser fields must be checked."
+    },
+    {
+      "id": "G3-R08",
+      "owner": "T03/T04",
+      "finding": "EntityModel and Test_SimulationTime use simulation milliseconds; task timestamps cannot be presumed UTC."
+    }
+  ]
+}
