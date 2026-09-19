@@ -14,6 +14,7 @@ import avtas.amase.scenario.ScenarioEvent;
 import avtas.amase.scenario.ScenarioState;
 import avtas.amase.scenario.ScenarioState.EventWrapper;
 import avtas.app.Context;
+import avtas.app.ContextListener;
 import avtas.app.UserExceptions;
 import avtas.swing.UserNotice;
 import avtas.xml.XMLUtil;
@@ -25,6 +26,8 @@ import javax.swing.JFrame;
 import javax.swing.JMenu;
 import avtas.xml.Element;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.awt.GraphicsEnvironment;
 import javax.swing.AbstractAction;
 import javax.swing.JMenuBar;
 
@@ -41,6 +44,11 @@ public class AnalysisManager extends AmasePlugin {
     int data_index = 0;
 
     public AnalysisManager() {
+    }
+
+    /** Read-only access for analysis exporters, including headless applications. */
+    public List<AnalysisClient> getAnalysisClients() {
+        return Collections.unmodifiableList(clientList);
     }
 
     /**
@@ -101,6 +109,9 @@ public class AnalysisManager extends AmasePlugin {
             try {
                 Object o = ReflectionUtils.createInstance(el.getText());
                 if (o instanceof AnalysisClient) {
+                    if (o instanceof ContextListener) {
+                        ((ContextListener) o).addedToApplication(context, xml, cmdParams);
+                    }
                     clientList.add((AnalysisClient) o);
                 }
             } catch (Exception ex) {
@@ -112,24 +123,25 @@ public class AnalysisManager extends AmasePlugin {
 
     protected void doAnalysis() {
 
-        final List<EventWrapper> eventList = ScenarioState.getEventList();
+        final List<EventWrapper> eventList = new ArrayList<>(ScenarioState.getEventList());
 
         if (data_index >= eventList.size()) {
             return;
         }
 
-        UserNotice notice = new UserNotice("Performing Analysis", null);
-        notice.setVisible(true);
-
-        for (int i = data_index; i < eventList.size(); i++) {
-            for (AnalysisClient c : clientList) {
-                notice.setText("Processing Event " + i + " of " + eventList.size());
-                c.eventOccurred(eventList.get(i).event);
+        UserNotice notice = GraphicsEnvironment.isHeadless() ? null : new UserNotice("Performing Analysis", null);
+        try {
+            if (notice != null) notice.setVisible(true);
+            for (int i = data_index; i < eventList.size(); i++) {
+                if (notice != null) notice.setText("Processing Event " + i + " of " + eventList.size());
+                for (AnalysisClient c : clientList) {
+                    c.eventOccurred(eventList.get(i).event);
+                }
             }
+            data_index = eventList.size();
+        } finally {
+            if (notice != null) notice.dispose();
         }
-
-        data_index = eventList.size();
-        notice.setVisible(false);
 
     }
 

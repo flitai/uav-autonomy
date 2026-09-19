@@ -34,8 +34,6 @@ public class LinearSearchHighlight extends MapGraphicsList<MapGraphicsList<MapLi
     private SearchPixel[][] pixelMap;
     private SearchTask task;
 
-    private int MAX_DIVISIONS = 10;
-
     /**
      * Constructs a new linear search highlighter for the specified search task
      * with the given grid cell size.
@@ -43,6 +41,9 @@ public class LinearSearchHighlight extends MapGraphicsList<MapGraphicsList<MapLi
      * @param task The search task to manage.
      */
     public LinearSearchHighlight(double cellSize, LineSearchTask task) {
+        if (!Double.isFinite(cellSize) || cellSize <= 0) {
+            throw new IllegalArgumentException("Line search grid resolution must be positive and finite");
+        }
         this.task = task;
         if (task.getPointList().size() < 2) {
             return;
@@ -61,7 +62,6 @@ public class LinearSearchHighlight extends MapGraphicsList<MapGraphicsList<MapLi
             //double radHdg = NavUtils.headingBetween(loc1_lat, loc1_lon, loc2_lat, loc2_lon);
             double dist = NavUtils.distance(loc1_lat, loc1_lon, loc2_lat, loc2_lon);
             int numSteps = (int) (dist / cellSize) + 1;
-            numSteps = Math.min(numSteps, MAX_DIVISIONS);
             //double distStep = dist / numSteps;
             double dlat = Math.toDegrees(loc2_lat - loc1_lat) / numSteps;
             double dlon = Math.toDegrees(loc2_lon - loc1_lon) / numSteps;
@@ -115,7 +115,7 @@ public class LinearSearchHighlight extends MapGraphicsList<MapGraphicsList<MapLi
 
         // don't do any further testing if the wavelength band doesn't match
         if (!task.getDesiredWavelengthBands().contains(model.getCameraConfig().getSupportedWavelengthBand()) 
-            || task.getDesiredWavelengthBands().contains(WavelengthBand.AllAny)) {
+            && !task.getDesiredWavelengthBands().contains(WavelengthBand.AllAny)) {
             return;
         }
 

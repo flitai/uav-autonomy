@@ -26,15 +26,15 @@
     },
     {
       "path": "OpenAMASE/OpenAMASE/src/Amase/avtas/amase/analysis/AnalysisManager.java",
-      "sha256": "17CB66EFA94C35F66A0A20E18AAB9F3FC711E042E07DCF2D66DBD131EF8B8A4D"
+      "sha256": "C04679C598FFF2CAB623D6D5828905725DE7887E70C6FEA2251A04B96304429B"
     },
     {
       "path": "OpenAMASE/OpenAMASE/src/Amase/avtas/amase/analysis/LinearSearchHighlight.java",
-      "sha256": "A51D3832B0D52E8ADDDED8518CD20A972644AD2BC1D7CF63F0656177F42A3C34"
+      "sha256": "13716FA1CECCB16459D451A0D47233D003D71EA3E5B00806B7CCE34E841B2DC5"
     },
     {
       "path": "OpenAMASE/OpenAMASE/src/Amase/avtas/amase/analysis/SearchTaskAnalysis.java",
-      "sha256": "A41EF9E5F823ABEE7368E900222F76749B9CB446C8ADD53529B5E8A8A852D39B"
+      "sha256": "28B99E8BB16EE97ACA8221FBCD157BCD1767187EACFF0812C80081481B1BF76B"
     },
     {
       "path": "OpenAMASE/OpenAMASE/src/Amase/avtas/amase/entity/EntityModel.java",
@@ -42,7 +42,7 @@
     },
     {
       "path": "OpenAMASE/OpenAMASE/src/Amase/avtas/amase/entity/modules/WaypointFollower.java",
-      "sha256": "CE653F01EB482A18235FC84CDFD92126A31E9F10AA7702772EE9F1075BB5A1CD"
+      "sha256": "E628F9F785FBD3907CD73AD7CA4A0FF89DA9CAB8F700A6E1FB845AF71E54EB35"
     },
     {
       "path": "OpenAMASE/OpenAMASE/src/Amase/avtas/amase/network/SentinelMessageReader.java",
@@ -295,77 +295,120 @@
   "acceptanceRevisionDate": "2026-09-19",
   "supersedesAcceptanceFromRunId": "g3-t01-check-20260919-093348-422",
   "acceptanceRevisionReason": "User prioritizes system integration and correct coverage calculation; coverage improvement is deferred.",
-  "inputRevision": 2,
+  "inputRevision": 3,
   "inputRevisionDate": "2026-09-19",
-  "inputRevisionParentRunId": "g3-t01-check-20260919-095541-064",
-  "inputRevisionReason": "G3-T02 verified TCP fragmentation, controlled shutdown and command export repairs; no scenario/model/algorithm changes",
+  "inputRevisionParentRunId": "g3-t01-check-20260919-130929-695",
+  "inputRevisionReason": "G3-T05 terminal marker arrival, line-search AllAny and true 20 m sampling, native count/cell export and headless analysis; original scenario and planning parameters unchanged",
   "inputRevisionChanges": [
     {
-      "path": "OpenAMASE/OpenAMASE/src/Amase/avtas/amase/network/SentinelMessageReader.java",
-      "before": null,
-      "after": "D93AF34ABF33A777B71FAACD0F363BF1114DF3B2D522A2DDFAB338583E1D4093"
+      "path": "OpenAMASE/OpenAMASE/src/Amase/avtas/amase/analysis/AnalysisManager.java",
+      "before": "17CB66EFA94C35F66A0A20E18AAB9F3FC711E042E07DCF2D66DBD131EF8B8A4D",
+      "after": "C04679C598FFF2CAB623D6D5828905725DE7887E70C6FEA2251A04B96304429B"
     },
     {
-      "path": "OpenAMASE/OpenAMASE/src/Amase/avtas/amase/network/TcpServer.java",
-      "before": "E8D34007530A70DE7A1177193F1F0DB6EE8286A1D3FD874206F5266A10A33A2D",
-      "after": "B5CD8A7A0171325A697D81D5B32788AF3078BCB6815D61FC244722DFD9D56750"
+      "path": "OpenAMASE/OpenAMASE/src/Amase/avtas/amase/analysis/LinearSearchHighlight.java",
+      "before": "A51D3832B0D52E8ADDDED8518CD20A972644AD2BC1D7CF63F0656177F42A3C34",
+      "after": "13716FA1CECCB16459D451A0D47233D003D71EA3E5B00806B7CCE34E841B2DC5"
     },
     {
-      "path": "OpenUxAS/src/cpp/Communications/LmcpObjectNetworkTcpBridge.cpp",
-      "before": "E13BA954F406CA99A2A1AE4BF09AC759C53E0B3C820BA5D453D250357C170E90",
-      "after": "1810587B21938E7115A7F697D7AA4117490FF647A5555EC2E5D6525329D47A17"
+      "path": "OpenAMASE/OpenAMASE/src/Amase/avtas/amase/analysis/SearchTaskAnalysis.java",
+      "before": "A41EF9E5F823ABEE7368E900222F76749B9CB446C8ADD53529B5E8A8A852D39B",
+      "after": "28B99E8BB16EE97ACA8221FBCD157BCD1767187EACFF0812C80081481B1BF76B"
     },
     {
-      "path": "OpenUxAS/src/cpp/Communications/LmcpObjectNetworkTcpBridge.h",
-      "before": "1601255985C4540B38F3ACAA9084D05E095A6ECB719A55797963AD15A3595F11",
-      "after": "877CE60031F51D9A80058B871F1DDF9BD81F707E923482984FAA6E108DDF8E96"
-    },
-    {
-      "path": "OpenUxAS/src/cpp/Communications/ZeroMq/Proxy/ThreadRunnerBase.cpp",
-      "before": null,
-      "after": "C55DB5258FBD3DDDFA6E540E48B3400B9E23F7327E13EE3F85AA508E530B635F"
-    },
-    {
-      "path": "OpenUxAS/src/cpp/Communications/ZeroMq/Proxy/ThreadRunnerBase.h",
-      "before": null,
-      "after": "E959A65096DCF448841653972AA6542B78F411D28B88B2E0E37F4D8FD4DA6853"
-    },
-    {
-      "path": "OpenUxAS/src/cpp/Communications/ZeroMq/Proxy/ZmqProxy.cpp",
-      "before": null,
-      "after": "4C77F2140833194DA4617D042C889EF22FA1A3D9D32D21A2E19D0B2FAB7FDB19"
-    },
-    {
-      "path": "OpenUxAS/src/cpp/Communications/ZeroMq/Proxy/ZmqProxy.h",
-      "before": null,
-      "after": "74DACE96693EE502FB6717D3F3A3D570A8BF4DDE997262D09DA269376CC44267"
-    },
-    {
-      "path": "OpenUxAS/src/cpp/Communications/ZeroMq/Receivers/ZmqGenericReceiver.cpp",
-      "before": null,
-      "after": "FBDAD7C0A8D85BD5203ADEA0E6D78F848AFD2ECFEFD22BE42FFC1A3AE22C5391"
-    },
-    {
-      "path": "OpenUxAS/src/cpp/Communications/ZeroMq/Sockets/ZmqTcpSocket.cpp",
-      "before": null,
-      "after": "46529C5B7895602D8A351119529E5C8F6071F5FFB22E01B539FD5F122FFDC944"
-    },
-    {
-      "path": "OpenUxAS/src/cpp/Communications/ZeroMq/ZmqAttributedMsgSenderReceiver.cpp",
-      "before": null,
-      "after": "A631E797964FB8978F641F695F4C0DDCF894CC1C2AE3C575E7DA5649CA98498E"
+      "path": "OpenAMASE/OpenAMASE/src/Amase/avtas/amase/entity/modules/WaypointFollower.java",
+      "before": "CE653F01EB482A18235FC84CDFD92126A31E9F10AA7702772EE9F1075BB5A1CD",
+      "after": "E628F9F785FBD3907CD73AD7CA4A0FF89DA9CAB8F700A6E1FB845AF71E54EB35"
     }
   ],
   "inputRevisionEvidence": {
-    "report": "docs/g3-protocol-validation.md",
-    "amaseBuildRunId": "g1-t04-build-20260919-101509-695450",
-    "amaseAutomaticRunId": "g1-t04-automatic-20260919-101706-907868",
-    "amaseFinalizeRunId": "g1-t04-finalize-20260919-103730-933619",
+    "report": "docs/g3-completion-validation.md",
+    "amaseBuildRunId": "g1-t04-build-20260919-132521-005392",
+    "amaseAutomaticRunId": "g1-t04-automatic-20260919-132647-813805",
+    "amaseFinalizeRunId": "g1-t04-finalize-20260919-154103-934413",
+    "coverageAndTerminalControls": "g3-t05-candidate-checks-20260919-132900",
+    "sameEventReplay": "g3-t05-replay-original-events-20260919-133000",
     "uxasBuildRunId": "g2-t05-build-20260919-101514-494",
     "uxasValidationRunId": "g2-t05-test-20260919-101831-478",
     "helloWorldRunId": "g2-t06-test-20260919-102042-847",
-    "candidateProtocolRunId": "g3-t02-verify-20260919-102900-997",
-    "uxasReleaseRunId": "g2-t07-test-20260919-103739-909",
-    "uxasPublishRunId": "g2-t07-publish-20260919-104007-031"
-  }
+    "uxasReleaseRunId": "g2-t07-test-20260919-154235-410",
+    "uxasPublishRunId": "g2-t07-publish-20260919-154459-188"
+  },
+  "inputRevisionHistory": [
+    {
+      "inputRevision": 2,
+      "inputRevisionDate": "2026-09-19",
+      "inputRevisionParentRunId": "g3-t01-check-20260919-095541-064",
+      "inputRevisionReason": "G3-T02 verified TCP fragmentation, controlled shutdown and command export repairs; no scenario/model/algorithm changes",
+      "inputRevisionChanges": [
+        {
+          "path": "OpenAMASE/OpenAMASE/src/Amase/avtas/amase/network/SentinelMessageReader.java",
+          "before": null,
+          "after": "D93AF34ABF33A777B71FAACD0F363BF1114DF3B2D522A2DDFAB338583E1D4093"
+        },
+        {
+          "path": "OpenAMASE/OpenAMASE/src/Amase/avtas/amase/network/TcpServer.java",
+          "before": "E8D34007530A70DE7A1177193F1F0DB6EE8286A1D3FD874206F5266A10A33A2D",
+          "after": "B5CD8A7A0171325A697D81D5B32788AF3078BCB6815D61FC244722DFD9D56750"
+        },
+        {
+          "path": "OpenUxAS/src/cpp/Communications/LmcpObjectNetworkTcpBridge.cpp",
+          "before": "E13BA954F406CA99A2A1AE4BF09AC759C53E0B3C820BA5D453D250357C170E90",
+          "after": "1810587B21938E7115A7F697D7AA4117490FF647A5555EC2E5D6525329D47A17"
+        },
+        {
+          "path": "OpenUxAS/src/cpp/Communications/LmcpObjectNetworkTcpBridge.h",
+          "before": "1601255985C4540B38F3ACAA9084D05E095A6ECB719A55797963AD15A3595F11",
+          "after": "877CE60031F51D9A80058B871F1DDF9BD81F707E923482984FAA6E108DDF8E96"
+        },
+        {
+          "path": "OpenUxAS/src/cpp/Communications/ZeroMq/Proxy/ThreadRunnerBase.cpp",
+          "before": null,
+          "after": "C55DB5258FBD3DDDFA6E540E48B3400B9E23F7327E13EE3F85AA508E530B635F"
+        },
+        {
+          "path": "OpenUxAS/src/cpp/Communications/ZeroMq/Proxy/ThreadRunnerBase.h",
+          "before": null,
+          "after": "E959A65096DCF448841653972AA6542B78F411D28B88B2E0E37F4D8FD4DA6853"
+        },
+        {
+          "path": "OpenUxAS/src/cpp/Communications/ZeroMq/Proxy/ZmqProxy.cpp",
+          "before": null,
+          "after": "4C77F2140833194DA4617D042C889EF22FA1A3D9D32D21A2E19D0B2FAB7FDB19"
+        },
+        {
+          "path": "OpenUxAS/src/cpp/Communications/ZeroMq/Proxy/ZmqProxy.h",
+          "before": null,
+          "after": "74DACE96693EE502FB6717D3F3A3D570A8BF4DDE997262D09DA269376CC44267"
+        },
+        {
+          "path": "OpenUxAS/src/cpp/Communications/ZeroMq/Receivers/ZmqGenericReceiver.cpp",
+          "before": null,
+          "after": "FBDAD7C0A8D85BD5203ADEA0E6D78F848AFD2ECFEFD22BE42FFC1A3AE22C5391"
+        },
+        {
+          "path": "OpenUxAS/src/cpp/Communications/ZeroMq/Sockets/ZmqTcpSocket.cpp",
+          "before": null,
+          "after": "46529C5B7895602D8A351119529E5C8F6071F5FFB22E01B539FD5F122FFDC944"
+        },
+        {
+          "path": "OpenUxAS/src/cpp/Communications/ZeroMq/ZmqAttributedMsgSenderReceiver.cpp",
+          "before": null,
+          "after": "A631E797964FB8978F641F695F4C0DDCF894CC1C2AE3C575E7DA5649CA98498E"
+        }
+      ],
+      "inputRevisionEvidence": {
+        "report": "docs/g3-protocol-validation.md",
+        "amaseBuildRunId": "g1-t04-build-20260919-101509-695450",
+        "amaseAutomaticRunId": "g1-t04-automatic-20260919-101706-907868",
+        "amaseFinalizeRunId": "g1-t04-finalize-20260919-103730-933619",
+        "uxasBuildRunId": "g2-t05-build-20260919-101514-494",
+        "uxasValidationRunId": "g2-t05-test-20260919-101831-478",
+        "helloWorldRunId": "g2-t06-test-20260919-102042-847",
+        "candidateProtocolRunId": "g3-t02-verify-20260919-102900-997",
+        "uxasReleaseRunId": "g2-t07-test-20260919-103739-909",
+        "uxasPublishRunId": "g2-t07-publish-20260919-104007-031"
+      }
+    }
+  ]
 }

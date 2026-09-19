@@ -1,0 +1,10 @@
+{
+  "schemaVersion": 1,
+  "scope": "completion",
+  "startupConfiguration": "config/g3-startup.json",
+  "executionConfiguration": "config/g3-execution.json",
+  "scenarioDurationSeconds": 785,
+  "simulationRate": 1,
+  "gridResolutionMeters": 20,
+  "minimumCoveragePercent": null
+}

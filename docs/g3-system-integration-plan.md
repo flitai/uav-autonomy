@@ -1,16 +1,16 @@
 # G3 实施方案：WaterwaySearch 系统运行闭环
 
-日期：2026-09-19，Asia/Shanghai。**G3-T01～T04 已完成，T05 可执行、尚未启动，T06～T07 等待前置任务；G3 尚未完成。** 原规划交付不计作实现完成；T01 已另行完成实际资格复查，见 [输入基线报告](g3-input-baseline-validation.md)。当前状态见 [status](status.md)，完整任务卡见 [backlog](backlog.md#6-g3-顺序与任务卡)，过程见根级 [worklog](../worklog.md)。
+日期：2026-09-19，Asia/Shanghai。**G3-T01～T05 已完成，T06 可执行、尚未启动，T07 等待前置任务；G3 尚未完成。** 原规划交付不计作实现完成；T01 已另行完成实际资格复查，见 [输入基线报告](g3-input-baseline-validation.md)。当前状态见 [status](status.md)，完整任务卡见 [backlog](backlog.md#6-g3-顺序与任务卡)，过程见根级 [worklog](../worklog.md)。
 
 ## 1. 目标、输入与边界
 
-按用户 2026-09-19 最新要求，G3 的通过条件调整为：**Windows 原生 GUI、无界面均完成 WaterwaySearch 任务执行闭环，覆盖率计算与报告正确，进程正常退出。** 当前重点是调通程序和系统，不设最低覆盖率，不为提高覆盖率进行算法／参数寻优。此前 95% 门槛及最多三组调优候选的要求取消，覆盖率提升另列后续工作。T01 报告和原始收据保留为历史快照；当前验收契约以本页及 config/g3-baseline.json 的 acceptanceRevision=2 为准，T01 历史输入资格结论保留；T02 通信修复后，当前 inputRevision=2 的 43 项来源另经正式资格复查通过，见 [T02 报告](g3-protocol-validation.md)。
+按用户 2026-09-19 最新要求，G3 的通过条件调整为：**Windows 原生 GUI、无界面均完成 WaterwaySearch 任务执行闭环，覆盖率计算与报告正确，进程正常退出。** 当前重点是调通程序和系统，不设最低覆盖率，不为提高覆盖率进行算法／参数寻优。此前 95% 门槛及最多三组调优候选的要求取消，覆盖率提升另列后续工作。T01 报告和原始收据保留为历史快照；当前验收契约以本页及 config/g3-baseline.json 的 acceptanceRevision=2 为准，T01 历史输入资格结论保留；T02 通信修复后的 inputRevision=2 保留为历史；T05 完成／统计修复后的当前 inputRevision=3 仍为 43 项来源，已完成新发布和正式资格复查，见 [T05 报告](g3-completion-validation.md)。
 
 - 实体 400／500 都须向 UxAS 提供真实动态状态；任务 1000 由 UxAS 实际分配的实体执行，不要求两架都被分配。完整水道的 90 个点及其顺序保持。
 - 覆盖率使用 AMASE `SearchTaskAnalysis`、20 米栅格和完整任务范围，如实记录实际结果。仅为功能兼容、任务正常执行和统计正确性作必要修复／配置调整，保留原示例与差异；覆盖率高低本身不阻塞 G3。
 - 本阶段包括双向协议、受控初始化、规划执行、任务完成、覆盖率、基础断线处理和整组重启；自动重连、初始化快照补齐及完整恢复矩阵归 G4。
 - 浏览器控制、重置分段与场景切换归 G6；Cesium、训练、实机、真实地形校准及第二机器／离线部署不纳入本阶段。当前零高程缺省条件必须随结果披露，不能把仿真覆盖率解释为实地覆盖保证。
-- 一次推进一个主要实现任务；T01 已落地独立只读资格检查，T02 已完成通信边界修复、正式发布及独立协议验收，见 [协议报告](g3-protocol-validation.md)；T03 已完成受控初始化和规划响应验收，见 [启动报告](g3-startup-validation.md)，T04 已通过两模式分段命令实际执行及内部导航／轨迹关联，见 [执行报告](g3-execution-validation.md)；完整任务及覆盖统计仍归 T05。
+- 一次推进一个主要实现任务；T01 已落地独立只读资格检查，T02 已完成通信边界修复、正式发布及独立协议验收，见 [协议报告](g3-protocol-validation.md)；T03 已完成受控初始化和规划响应验收，见 [启动报告](g3-startup-validation.md)，T04 已通过两模式分段命令实际执行及内部导航／轨迹关联，见 [执行报告](g3-execution-validation.md)；T05 已完成正式两模式完整任务、可靠 TaskComplete 与覆盖统计独立复算，新 AMASE／UxAS 交接发布及当前资格通过，见 [完成报告](g3-completion-validation.md)。
 
 ### 规划期输入与源码复核
 
@@ -26,7 +26,7 @@
 | 覆盖分析 | [GUI 配置](../OpenAMASE/OpenAMASE/config/amase/Plugins.xml)与[无界面配置](../OpenAMASE/OpenAMASE/config/amase_headless/Plugins.xml)均为 20 米；[SearchTaskAnalysis](../OpenAMASE/OpenAMASE/src/Amase/avtas/amase/analysis/SearchTaskAnalysis.java)按已见／总栅格计算并格式化百分比；[AnalysisManager](../OpenAMASE/OpenAMASE/src/Amase/avtas/amase/analysis/AnalysisManager.java)分析路径创建进度窗口，无界面导出须实际验证并隔离窗口依赖 |
 | 既有验收限制 | [G1 探针](../tests/amase/RuntimeProbe.java)在 GUI 20 秒暂停，[G1 编排](../scripts/amase/amase.py)限制无界面运行 120 秒；G3 新建独立编排与插件，保留原验收含义 |
 
-上述表格保留规划期的历史记录与源码确认，不是双向运行、任务完成或覆盖率通过的证据。T01 已完成 `g3-t01-check-20260919-093348-422` 实际资格复查并冻结 35 个输入，详见 [报告及八项风险](g3-input-baseline-validation.md)。原任务 AllAny 在现有线搜索覆盖分支中提前返回，T05 须保留原参数证据，核实 AllAny 语义并验证统计修复，不能以调参绕过错误后宣称计算正确；重复 ViewAngleList／旧相机字段须核实有效值。CMASI 请求／响应没有关联 ID，T04 通过 Unique 请求／响应、分配与航点内容关联。T01 当时未作业务修复；T02 的通信修复与字段实测另见 [协议报告](g3-protocol-validation.md)。G1 实际接收和 G2 内部消息分别见 [TCP 报告](g1-tcp-validation.md)、[HelloWorld 报告](g2-uxas-helloworld-validation.md)。
+上述表格保留规划期的历史记录与源码确认，不是双向运行、任务完成或覆盖率通过的证据。T01 已完成 `g3-t01-check-20260919-093348-422` 实际资格复查并冻结 35 个输入，详见 [报告及八项风险](g3-input-baseline-validation.md)。T01 当时发现原任务 AllAny 在线搜索覆盖分支中提前返回；T05 已保留原参数，以最小样本、原记录重放和两模式正式全程验证统计修复，见 [完成报告](g3-completion-validation.md)，未以调参绕过错误；重复 ViewAngleList／旧相机字段须核实有效值。CMASI 请求／响应没有关联 ID，T04 通过 Unique 请求／响应、分配与航点内容关联。T01 当时未作业务修复；T02 的通信修复与字段实测另见 [协议报告](g3-protocol-validation.md)。G1 实际接收和 G2 内部消息分别见 [TCP 报告](g1-tcp-validation.md)、[HelloWorld 报告](g2-uxas-helloworld-validation.md)。
 
 ## 2. 已确定的技术路线
 
@@ -58,6 +58,8 @@ AMASE 对应的 UxAS TCP 桥显式使用 `ConsiderSelfGenerated="false"` 保留�
 
 默认 GUI／无界面均使用 1 倍速。原始场景先按 785 仿真秒运行；为完成任务执行而必要调整的副本最多 1800 仿真秒；不因覆盖率低延长运行。初始化阶段、任务初始化／规划等待及正常关闭各设 30 秒超时，整次自动运行墙钟上限 2700 秒。GUI 自动运行到验收观察点后可进入独立的人工确认等待状态，等待人工不算仿真运行或自动成功；确认后仍须验证正常退出。任何超时、强制终止或未完成条件都保留失败／待确认状态。
 
+T05 本轮正式无界面实际全程 1 倍，GUI 运行中实际变为 1→5→10 倍；用户明确接受本轮实际变速并要求保留倍率记录，见 [T05 报告](g3-completion-validation.md#5-正式发布资格与两模式验收)。该单次接受不改变默认启动 1 倍，不冒称本次正式 GUI 全程固定 1 倍；后续复验必须核对真实 SessionStatus，不能仅依据启动参数判断实际倍率。
+
 G3 插件只承担本地编排、事件观测、分析导出和关闭。仿真毫秒与墙钟时间分别保存，TaskActive／TaskComplete 时间须追踪实际时间源，不能仅依据字段注释转换为 UTC。
 
 ### 任务完成与覆盖率计算正确性
@@ -68,7 +70,7 @@ G3 插件只承担本地编排、事件观测、分析导出和关闭。仿真�
 
 先记录原参数及原始分析行为，修复必要的兼容或统计缺陷，再固定 GUI／无界面共同使用的功能验证配置。完整水道、实体身份与 20 米栅格保持；每次必要修复保存依据、配置／源码差异及复验结果。低覆盖率仅作为后续算法／参数实验的基线，不触发 G3 的搜索调优循环。
 
-允许修复经对照证明的覆盖统计实现缺陷，但不得为提高数值而放宽传感器条件、删除未覆盖水道或改变分母。AllAny 提前返回属于待核实的正确性问题，需最小复现、语义依据和修复前后对照，按影响重建／复验 AMASE；保留失败证据。计算错误、缺末端执行、正常退出失败或任务执行超过时长上限仍阻塞相应任务；经验证正确的低覆盖率不阻塞。
+允许修复经对照证明的覆盖统计实现缺陷，但不得为提高数值而放宽传感器条件、删除未覆盖水道或改变分母。T05 已核实并修复 AllAny 提前返回、20 米分格和分析导出问题，最小样本／同记录对照、新 AMASE 重建／复验及正式发布均通过，失败证据保留。计算错误、缺末端执行、正常退出失败或任务执行超过时长上限仍阻塞相应任务；经验证正确的低覆盖率不阻塞。
 
 现有 [AnalysisManager](../OpenAMASE/OpenAMASE/src/Amase/avtas/amase/analysis/AnalysisManager.java)按事件记录计算报告，[SearchTaskAnalysis](../OpenAMASE/OpenAMASE/src/Amase/avtas/amase/analysis/SearchTaskAnalysis.java)统计栅格；[线搜索规划服务](../OpenUxAS/src/cpp/Tasks/CmasiLineSearchTaskService.cpp)根据任务及实体约束构造规划选项。现有 WaterwaySearch 链路没有“报告覆盖率 → 自动修改算法／参数 → 重新仿真直至达标”的反馈流程。UxAS 内置分配／规划算法的求解能力不能视为这种自动调优能力。
 
@@ -90,8 +92,8 @@ G3 插件只承担本地编排、事件观测、分析导出和关闭。仿真�
 
 以下是运行、验收及 GUI 收尾的接口约定，**T03 的运行、自动验收及 GUI 正常收尾入口已验证，见 [启动报告](g3-startup-validation.md)；T02 协议入口见 [报告](g3-protocol-validation.md)**。T01 的独立输入资格命令已通过，见 [基线报告](g3-input-baseline-validation.md#1-本轮交付与复用入口)：
 
-- 已提供 run-g3.ps1、g3-startup.tests.ps1、finish-g3-gui.ps1。运行输入包含模式、配置、明确 Python 路径和运行编号；收尾绑定运行编号。当前 scope=startup、仅消费合格正式包，1 倍速且保留原 785 秒场景；取得非空规划响应即收尾。T04 另提供 run-g3-execution.ps1／g3-execution.tests.ps1 和 config/g3-execution.json，实际命令与局部任务航段已通过；全程完成／覆盖由 T05 扩展，不能把当前短程入口用于阶段完成声明。
-- 当前输出包含运行状态、来源、配置快照、消息与事件及进程退出证据；完整任务、覆盖统计及阶段人工确认待 T05～T07；int64 实体／任务／命令 ID 用十进制字符串。人工确认只对本次运行有效，不能复用 G1 的历史确认。
+- 已提供 run-g3.ps1、g3-startup.tests.ps1、finish-g3-gui.ps1。运行输入包含模式、配置、明确 Python 路径和运行编号；收尾绑定运行编号。当前 scope=startup、仅消费合格正式包，1 倍速且保留原 785 秒场景；取得非空规划响应即收尾。T04 另提供 run-g3-execution.ps1／g3-execution.tests.ps1 和 config/g3-execution.json，实际命令与局部任务航段已通过；T05 另提供 run-g3-completion.ps1／g3-completion.tests.ps1 和 config/g3-completion.json，已通过正式完整执行与统计正确性对照；不能把短程入口用于阶段完成声明。
+- 当前输出包含运行状态、来源、配置快照、消息与事件及进程退出证据；完整任务及覆盖统计已由 T05 验证，稳定性／故障和阶段人工确认仍待 T06～T07；int64 实体／任务／命令 ID 用十进制字符串。人工确认只对本次运行有效，不能复用 G1 的历史确认。
 - 编排优先使用已验证的 Python 标准库和消息代码，协议解析复用 [G1 严格解析器](../scripts/validation/sentinel.py)的规则；扩展时单独登记输入，避免无意改变旧构建来源。不能将 Python 原始 LMCP 直接当作完整 Java／C++ TCP 帧。
 - G3 编排／插件位于 scripts/g3_integration，测试位于 tests/g3_integration，默认配置为 config/g3-startup.json；具体已验证命令见 T03 报告。现有 G1／G2 接口及原示例保留，MDM／生成代码不因编排而改变。
 - 每次运行使用独立 `out/runs/<run-id>/`；编译插件等候选放在独立 `out/build/`。正式产物通过既有资格解析入口消费，不直接读指针后绕过来源检查。

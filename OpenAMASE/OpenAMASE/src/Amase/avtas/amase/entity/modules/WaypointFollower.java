@@ -102,7 +102,7 @@ public class WaypointFollower extends EntityModule {
         // estimated nominal turn radius based on speed, bank angle
         turnRadiusMeter = pow(data.u.asDouble(), 2) / (GRAVITY * tan(data.autopilotCommands.maxBank.asDouble()));
 
-        if (currentWp.getTurnType() == TurnType.FlyOver) {
+        if (currentWp.getTurnType() == TurnType.FlyOver || isTerminalTaskBoundary()) {
             computeTurnPast(dist, az);
             computeReturnToRoute(az);
         }
@@ -121,6 +121,22 @@ public class WaypointFollower extends EntityModule {
         //data.autopilotCommands.cmdAlt.setValue(currentWp.getAltitude());
         //data.autopilotCommands.cmdSpeed.setValue(currentWp.getSpeed());
         //data.autopilotCommands.speedCmdType.setValue(SpeedType.Airspeed);
+    }
+
+    /**
+     * UxAS terminates a task with a co-located, task-free, self-loop waypoint.
+     * That point is a completion marker, not a turn to another route leg. Using
+     * turn-short here can consume both points in consecutive frames before the
+     * last leg is flown and makes the next state trigger TaskComplete early.
+     * Require the existing fly-past arrival rule at this boundary only.
+     */
+    private boolean isTerminalTaskBoundary() {
+        return currentWp != null && nextWp != null
+                && !currentWp.getAssociatedTasks().isEmpty() && nextWp.getAssociatedTasks().isEmpty()
+                && nextWp.getNextWaypoint() == nextWp.getNumber()
+                && currentWp.getLatitude() == nextWp.getLatitude()
+                && currentWp.getLongitude() == nextWp.getLongitude()
+                && currentWp.getAltitude() == nextWp.getAltitude();
     }
 
     /**

@@ -30,7 +30,10 @@ import avtas.app.Context;
 import avtas.app.ContextListener;
 import avtas.terrain.TerrainService;
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.HashMap;
+import java.util.Locale;
+import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import avtas.xml.Element;
@@ -49,7 +52,7 @@ import avtas.xml.Element;
 public class SearchTaskAnalysis implements AnalysisClient, ContextListener {
 
     private double resolutionMeter = 20;
-    private DecimalFormat format = new DecimalFormat("#.##");
+    private DecimalFormat format = new DecimalFormat("#.##", DecimalFormatSymbols.getInstance(Locale.ROOT));
     HashMap<CameraModel.CameraIndex, CameraModel> cameraMap = new HashMap<>();
     HashMap<Long, SearchGraphic> graphicMap = new HashMap<>();
     double time, lastTime = 0;
@@ -60,6 +63,8 @@ public class SearchTaskAnalysis implements AnalysisClient, ContextListener {
      */
     public void initScenario() {
         graphicMap.clear();
+        cameraMap.clear();
+        time = lastTime = 0;
     }
     
     
@@ -178,7 +183,7 @@ public class SearchTaskAnalysis implements AnalysisClient, ContextListener {
 
         Element el = new Element("SearchTaskAnalysis");
 
-        for (SearchGraphic g : graphicMap.values()) {
+        for (SearchGraphic g : new TreeMap<>(graphicMap).values()) {
 
             SearchGraphic sg = (SearchGraphic) g;
             AreaSearchHighlight.SearchPixel[][] pixels = sg.getPixels();
@@ -202,12 +207,16 @@ public class SearchTaskAnalysis implements AnalysisClient, ContextListener {
                 Element subNode = new Element("SearchArea");
                 el.add(subNode);
                 subNode.setAttribute("ID", String.valueOf(sg.getTask().getTaskID()));
+                subNode.add(new Element("TotalCells", numPix));
+                subNode.add(new Element("SeenCells", pixSeen));
                 subNode = (Element) subNode.add(new Element("CoveragePercent"));
                 subNode.setText(format.format(pct));
             } else if (sg instanceof LinearSearchHighlight) {
                 Element subNode = new Element("SearchLine");
                 el.add(subNode);
                 subNode.setAttribute("ID", String.valueOf(sg.getTask().getTaskID()));
+                subNode.add(new Element("TotalCells", numPix));
+                subNode.add(new Element("SeenCells", pixSeen));
                 subNode = (Element) subNode.add(new Element("CoveragePercent"));
                 subNode.setText(format.format(pct));
             } else if (sg instanceof PointSearchHighlight) {
@@ -219,6 +228,32 @@ public class SearchTaskAnalysis implements AnalysisClient, ContextListener {
             }
         }
         return el;
+    }
+
+    /** Export every native cell, including unobserved locations, without a GUI. */
+    public Element getCoverageCellsXML() {
+        Element root = new Element("CoverageCells");
+        root.setAttribute("GridResolutionMeters", Double.toString(resolutionMeter));
+        for (SearchGraphic graphic : new TreeMap<>(graphicMap).values()) {
+            Element task = new Element("Task");
+            task.setAttribute("ID", Long.toString(graphic.getTask().getTaskID()));
+            root.add(task);
+            SearchGraphic.SearchPixel[][] pixels = graphic.getPixels();
+            for (int i = 0; i < pixels.length; i++) {
+                for (int j = 0; j < pixels[i].length; j++) {
+                    SearchGraphic.SearchPixel pixel = pixels[i][j];
+                    if (pixel == null) continue;
+                    Element cell = new Element("Cell");
+                    cell.setAttribute("row", Integer.toString(i));
+                    cell.setAttribute("column", Integer.toString(j));
+                    cell.setAttribute("latitude", Double.toString(pixel.lat));
+                    cell.setAttribute("longitude", Double.toString(pixel.lon));
+                    cell.setAttribute("seen", Boolean.toString(pixel.seen));
+                    task.add(cell);
+                }
+            }
+        }
+        return root;
     }
 
     @Override
