@@ -11,7 +11,7 @@
 | 最近通过的实现任务 | G3-T02：真实双向协议／来源、最小通信修复、正常退出与正式发布；[报告](g3-protocol-validation.md) |
 | 源码基线 | T02 起点 `a1c814b`，工作区干净；已修复 Java TCP 接收分包及严格校验、UxAS 关闭和导出方向；原 XML／模型／生成代码不变 |
 | 已归档历史 | G1-T01～T03 为 `304def9`，G1-T04 为 `f2f73ab`，G1-T05 为 `d77dd78`；T04 `b8ccf72`／`68ed420`、T05 `0fe8553`／交接 `5c2d387` 已推送 origin/main |
-| 本轮变更 | [T02 报告](g3-protocol-validation.md)：本轮 GUI 确认、AMASE／UxAS 正式发布和六组正式协议复验通过；当前输入修订 2／43 项，验收不设覆盖率门槛；待 Git 归档 |
+| 本轮变更 | [T02 报告](g3-protocol-validation.md)：本轮 GUI 确认、AMASE／UxAS 正式发布和六组正式协议复验通过；当前输入修订 2／43 项，验收不设覆盖率门槛；主提交 `0feaf3f` 已普通推送，10:54:40 远程核对一致；见 WL-20260919-004 |
 | 当前前置批次 | AMASE `g1-t04-build-20260919-101509-695450`，Finalize `g1-t04-finalize-20260919-103730-933619`；UxAS 构建／验收 `g2-t05-build-20260919-101514-494`／`g2-t05-test-20260919-101831-478`，T07 发布 `g2-t07-publish-20260919-104007-031`；同批 LMCP 不变 |
 | 已确定的 G2 路线 | MSVC v143＋CMake 3.31、Release x64／动态 CRT；固定 vcpkg baseline／overlay；Zyre／串口关闭，CZMQ／TCP 保留 |
 | 已验证工具 | Temurin 11.0.32.1+1、Ant 1.10.18、Python 3.14.7 x64；Build Tools 17.14.41／cl 19.44.35229、SDK 工具 10.0.26100.7705、CMake 3.31.12、Ninja 1.13.2、固定 vcpkg 提交及工具 |
