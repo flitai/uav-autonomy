@@ -15,6 +15,7 @@
 #include "stdUniquePtr.h"
 
 #include <iostream>
+#include <stdexcept>
 
 namespace uxas
 {
@@ -74,6 +75,15 @@ DatabaseLoggerHelper::openStream(std::string& logFilePath)
             remove(m_dbFilePath.c_str());
         }
             m_db = uxas::stduxas::make_unique<SQLite::Database>(m_dbFilePath, SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE);
+
+            // A read-only gateway consumes committed rows while this connection
+            // remains the only writer. Rollback-journal readers otherwise cause
+            // immediate SQLITE_BUSY failures and silently missing messages.
+            m_db->exec("PRAGMA busy_timeout=5000");
+            if (std::string(m_db->execAndGet("PRAGMA journal_mode=WAL").getText()) != "wal")
+            {
+                throw std::runtime_error("WAL journal mode is required for concurrent log readers");
+            }
 
             // begin transaction
             SQLite::Transaction createTableTrans(*(m_db.get()));
@@ -144,6 +154,7 @@ DatabaseLoggerHelper::insertValuesIntoTable(const std::string& commaDelimitedVal
         }
         catch (std::exception& ex)
         {
+            isSuccess = false;
             std::cout << "ERROR: DatabaseLoggerHelper::insertMessageIntoTable insert failed while executing SQL statement [" << insertSqlStmt << "] - ERROR: [" << ex.what() << "]" << std::endl;
         }
     }

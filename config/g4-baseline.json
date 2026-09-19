@@ -1,5 +1,92 @@
 {
   "schemaVersion": 1,
   "g3StageRunId": "g3-t07-test-20260919-173116-474",
-  "g3HandoffSHA256": "b173fe908e612470cab35652c3ea8409a293d039960124be4ba2d168bd4c4bd3"
+  "g3HandoffSHA256": "b173fe908e612470cab35652c3ea8409a293d039960124be4ba2d168bd4c4bd3",
+  "uxasRevision": {
+    "reason": "G4-T03: WAL and bounded busy handling prevent committed message loss during read-only journal consumption",
+    "parentFormalUxas": {
+      "schemaVersion": 1,
+      "status": "passed",
+      "path": "g2-t05-build-20260919-101514-494/g2-t07-test-20260919-154235-410/g2-t07-publish-20260919-154459-188",
+      "buildRunId": "g2-t05-build-20260919-101514-494",
+      "validationRunId": "g2-t05-test-20260919-101831-478",
+      "releaseRunId": "g2-t07-test-20260919-154235-410",
+      "publishRunId": "g2-t07-publish-20260919-154459-188",
+      "buildInfoSHA256": "25A07119C0960A406AB34770844CC51E227AA05D02A0C851954FB029DE79D40B"
+    },
+    "formalUxas": {
+      "schemaVersion": 1,
+      "status": "passed",
+      "path": "g2-t05-build-20260919-232557-986/g2-t07-test-20260919-233237-819/g2-t07-publish-20260919-233516-550",
+      "buildRunId": "g2-t05-build-20260919-232557-986",
+      "validationRunId": "g2-t05-test-20260919-232811-379",
+      "releaseRunId": "g2-t07-test-20260919-233237-819",
+      "publishRunId": "g2-t07-publish-20260919-233516-550",
+      "buildInfoSHA256": "BF0FC4F7D29FF58030C0B0B87FDCBDBA6A0AD88D3734532300C188466931138C"
+    },
+    "uxasSHA256": "0b8ae83ff66d3aaee05454bd923b6fc9b15aaf01b7ebcda17bfd34a1bc340ef5",
+    "sourceChanges": [
+      {
+        "path": "OpenUxAS/src/cpp/Utilities/UxAS_DatabaseLoggerHelper.cpp",
+        "before": "8AB0C9455642AC8EE92C70CE1518E0AF7098E1BB08549F97B17031CF9200991F",
+        "after": "407b055bd26d8b7d4244d1ac48499a5a401112a1bd81975445d0afce524696c3"
+      }
+    ],
+    "sources": [
+      {
+        "path": "OpenUxAS/src/cpp/Utilities/UxAS_DatabaseLoggerHelper.cpp",
+        "sha256": "407b055bd26d8b7d4244d1ac48499a5a401112a1bd81975445d0afce524696c3"
+      }
+    ],
+    "receipts": [
+      {
+        "path": "out/runs/g2-t05-build-20260919-232557-986/entry-result.json",
+        "sha256": "106d3854f32a84b50bb0626b0869a2594da6d175ad09aa8c9206b0fbe07d6acd"
+      },
+      {
+        "path": "out/runs/g2-t05-test-20260919-232811-379/result.json",
+        "sha256": "50577b4b1bf4f69a204c88c36b09db115337d9874b643a271d3382ca96032f54"
+      },
+      {
+        "path": "out/runs/g2-t05-test-20260919-232811-379/entry-result.json",
+        "sha256": "3619857b898ace12f44153f10ce3db151115abfda8432994bf1213ecb87e1e42"
+      },
+      {
+        "path": "out/runs/g2-t05-test-20260919-232811-379/acceptance.json",
+        "sha256": "0c2e133010b4e8490f80dffdc9a4e8e8108eb563b8bed3833cd35a250e86c72e"
+      },
+      {
+        "path": "out/runs/g2-t06-test-20260919-233042-631/result.json",
+        "sha256": "81c6f22cbe8c2e9c88a6a76d83fcc5d27a2c2ed11d9dd305282385a2c51a98de"
+      },
+      {
+        "path": "out/runs/g2-t06-test-20260919-233042-631/entry-result.json",
+        "sha256": "0b213ca6eca45102d44214436fa9acc4d38c9b85fd3969bf9a80c0310a1ee379"
+      },
+      {
+        "path": "out/runs/g2-t06-test-20260919-233042-631/acceptance.json",
+        "sha256": "8ae99b8d97552bcedd5a72c245450b4cea808097ecf91d4a67a0e10ded071008"
+      },
+      {
+        "path": "out/runs/g2-t07-test-20260919-233237-819/result.json",
+        "sha256": "f9ea8b96f049bad7224bc81ff0c4223a2250842417d5e05c5e3601b6d6d55441"
+      },
+      {
+        "path": "out/runs/g2-t07-test-20260919-233237-819/entry-result.json",
+        "sha256": "628012943e45bcb8192a8a0ce9fea5f5e4c830d2849149a363997235ef42a19e"
+      },
+      {
+        "path": "out/runs/g2-t07-test-20260919-233237-819/acceptance.json",
+        "sha256": "fbc14e629d2d5394249a57f645d435d66c8b48c20b03996eefe392875f8c3e5a"
+      },
+      {
+        "path": "out/runs/g2-t07-publish-20260919-233516-550/result.json",
+        "sha256": "6dd884782b07f07cc873e39f6ced41334fc6b2b05167ff322f077423f6845c71"
+      },
+      {
+        "path": "out/runs/g2-t07-publish-20260919-233516-550/entry-result.json",
+        "sha256": "b68388cfa75c9fb924584ce75f2c4003f61f3d66f3b3e7e44122b64faab342f9"
+      }
+    ]
+  }
 }

@@ -37,3 +37,20 @@
 恢复时先核查 run_id、后端 PID／创建时间和日志来源，按日志提交边界重建，随后新流快照接续真实增量。日志缺失、损坏、身份变化或主任务链路故障时不得恢复 live。所有队列有界，慢客户端超限后关闭并重新同步；关键事件保留在磁盘，不能因浏览器消费慢阻塞主任务。
 
 G4 不提供任务注入、仿真控制、任意文件路径读取或浏览器历史回放接口。
+
+## T03 对象字段与记录约定
+
+下表为已落地状态归约的字段；HTTP／WebSocket 发布仍由 T04 验收。
+
+| 集合／键 | 主要字段 |
+| --- | --- |
+| entities／entity_id | configuration、state 保留规范化 LMCP 字段；position 显式经纬度／高度／基准，attitude 保留源角度；simulation_time_ms、current_command_id、current_waypoint_id、associated_task_ids |
+| tasks／task_id | kind=point／line／area，definition 保留完整几何和参数，eligible_entity_ids；initialized、assignments、active、backend_completed 与 completed_entity_ids／completed_time_ms 分开 |
+| routes／entity_id | planned_mission 为当前完整规划，含航点、关联任务、动作、下一航点及源高度基准；不随分段命令缩短完整规划 |
+| commands／entity_id:mission 或 entity_id:action | 当前 message、command_id、received；execution_observed 仅由同实体、同命令的实际状态确认；任务是否完成由 tasks 表达 |
+| zones／zone_id 或 region:region_id | 原几何和参数在 definition，kind 区分 KeepInZone／KeepOutZone／OperatingRegion |
+| simulation | simulation_time_ms、start_time_ms、源 State 枚举和 real_time_multiple；不通过墙钟自行外推 |
+
+对象 source 保存来源实体／服务／组、已提交日志 event_id（shard、row_id）及 source_time_ms；这些字段与业务 entity_id 分开。保留的 LMCP 字段沿用原 PascalCase，嵌套对象用 `_type` 标明类型；int64／uint64 已递归转换为字符串，枚举保留模型整数值。TaskAssignment 的预测时间属于规划，不作为真实 TaskComplete。
+
+状态重建以本次日志提交顺序为准，重复分片／行号不重复应用，持久记录还必须摘要一致。实体源时间回退不覆盖较新状态；删除墓碑保留到本次运行结束，不接受相同运行内旧配置或迟到状态将对象复活。G4 固定场景若需重新使用已删除 ID，须新运行；动态重置／场景切换归 G6。当前集合和墓碑各限 4096 项，命令每实体每类只保留当前对象，全部事件另在磁盘持久保留。

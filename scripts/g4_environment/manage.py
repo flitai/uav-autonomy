@@ -60,17 +60,31 @@ def verify_handoff(root, baseline_id, policy=None):
         require(load(stage / name)['status'] == 'passed', 'G3 stage is not accepted: ' + name)
     verify_files(root, handoff['configurations'])
     pointer = load(root / 'out/artifacts/uxas/current.json')
-    require(pointer == handoff['formalUxas'], 'Current UxAS differs from stage handoff')
+    require(pointer == baseline['pointer'], 'Qualification refers to a different current UxAS package')
+    expected_artifacts = dict(handoff['artifacts'])
+    revision = policy.get('uxasRevision')
+    if revision:
+        require(revision['parentFormalUxas'] == handoff['formalUxas'] and revision['formalUxas'] == pointer,
+                'UxAS revision is not descended from the G3 handoff')
+        verify_files(root, revision['sources'])
+        verify_files(root, revision['receipts'])
+        for receipt in revision['receipts']:
+            require(load(root / receipt['path'])['status'] == 'passed', 'UxAS revision receipt failed')
+        require(revision['formalUxas']['buildRunId'] != handoff['formalUxas']['buildRunId'], 'Revision did not rebuild UxAS')
+        expected_artifacts['uxasSHA256'] = revision['uxasSHA256']
+    else:
+        require(pointer == handoff['formalUxas'], 'Current UxAS differs from stage handoff')
     uxas = root / 'out/artifacts/uxas' / pointer['path']
     require(uxas.resolve().is_relative_to((root / 'out/artifacts/uxas').resolve()), 'Invalid UxAS package path')
     artifacts = {'uxasSHA256': uxas / 'uxas.exe', 'amaseSHA256': root / 'out/artifacts/amase/OpenAMASE.jar',
                  'lmcpSHA256': root / 'out/artifacts/lmcp/java/lmcplib.jar'}
     for key, path in artifacts.items():
-        require(sha(path) == handoff['artifacts'][key].lower(), 'Current formal artifact differs: ' + key)
+        require(sha(path) == expected_artifacts[key].lower(), 'Current formal artifact differs: ' + key)
     generation = load(root / 'out/generated/lmcp/generation-info.json')
     require(generation['runId'] == handoff['lmcpGenerationRunId'], 'Mixed LMCP generations')
     return {'baselineRunId': baseline_id, 'baselineSHA256': sha(directory / 'baseline.json'),
             'g3StageRunId': policy['g3StageRunId'], 'g3HandoffSHA256': sha(stage / 'handoff.json'),
+            'uxasRevision': revision,
             'artifacts': {key: sha(path) for key, path in artifacts.items()}}
 
 

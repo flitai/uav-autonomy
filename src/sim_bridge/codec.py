@@ -98,7 +98,7 @@ class Cursor:
 class ModelSchema:
     def __init__(self, root, factory):
         self.factory = factory
-        self.structs, self.enums, self.identities = {}, set(), {}
+        self.structs, self.enums, self.identities, self.enum_values = {}, set(), {}, {}
         lock = json.loads((root / 'config/lmcp-models.json').read_text(encoding='utf-8-sig'))
         for model in lock['models']:
             path = root / 'OpenUxAS/mdms' / model['file']
@@ -106,6 +106,8 @@ class ModelSchema:
             tree = ET.parse(path)
             series = tree.findtext('SeriesName')
             self.enums.update((series, node.get('Name')) for node in tree.findall('EnumList/Enum'))
+            for enum in tree.findall('EnumList/Enum'):
+                self.enum_values[(series, enum.get('Name'))] = {entry.get('Name') for entry in enum.findall('Entry')}
             for node in tree.findall('StructList/Struct'):
                 key = (series, node.get('Name'))
                 obj = factory.createObjectByName(*key)
@@ -151,7 +153,7 @@ class ModelSchema:
             if field.get('Optional') == 'false':
                 require(all(value is not None for value in values), 'Required LMCP object is null')
             result[field['Name']] = values if array else values[0]
-        if key == ('CMASI', 'Location3D'):
+        if self.derived_from(key, ('CMASI', 'Location3D')):
             require(-90 <= result['Latitude'] <= 90 and -180 <= result['Longitude'] <= 180, 'Invalid geographic location')
         return result
 
