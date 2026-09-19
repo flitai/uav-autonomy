@@ -1,6 +1,6 @@
 # G3 实施方案：WaterwaySearch 系统运行闭环
 
-日期：2026-09-19，Asia/Shanghai。**G3-T01～T05 已完成，T06 可执行、尚未启动，T07 等待前置任务；G3 尚未完成。** 原规划交付不计作实现完成；T01 已另行完成实际资格复查，见 [输入基线报告](g3-input-baseline-validation.md)。当前状态见 [status](status.md)，完整任务卡见 [backlog](backlog.md#6-g3-顺序与任务卡)，过程见根级 [worklog](../worklog.md)。
+日期：2026-09-19，Asia/Shanghai。**G3-T01～T06 已完成，T07 可执行、尚未启动；G3 尚未完成。** 原规划交付不计作实现完成；T01 已另行完成实际资格复查，见 [输入基线报告](g3-input-baseline-validation.md)。当前状态见 [status](status.md)，完整任务卡见 [backlog](backlog.md#6-g3-顺序与任务卡)，过程见根级 [worklog](../worklog.md)。
 
 ## 1. 目标、输入与边界
 
@@ -10,7 +10,7 @@
 - 覆盖率使用 AMASE `SearchTaskAnalysis`、20 米栅格和完整任务范围，如实记录实际结果。仅为功能兼容、任务正常执行和统计正确性作必要修复／配置调整，保留原示例与差异；覆盖率高低本身不阻塞 G3。
 - 本阶段包括双向协议、受控初始化、规划执行、任务完成、覆盖率、基础断线处理和整组重启；自动重连、初始化快照补齐及完整恢复矩阵归 G4。
 - 浏览器控制、重置分段与场景切换归 G6；Cesium、训练、实机、真实地形校准及第二机器／离线部署不纳入本阶段。当前零高程缺省条件必须随结果披露，不能把仿真覆盖率解释为实地覆盖保证。
-- 一次推进一个主要实现任务；T01 已落地独立只读资格检查，T02 已完成通信边界修复、正式发布及独立协议验收，见 [协议报告](g3-protocol-validation.md)；T03 已完成受控初始化和规划响应验收，见 [启动报告](g3-startup-validation.md)，T04 已通过两模式分段命令实际执行及内部导航／轨迹关联，见 [执行报告](g3-execution-validation.md)；T05 已完成正式两模式完整任务、可靠 TaskComplete 与覆盖统计独立复算，新 AMASE／UxAS 交接发布及当前资格通过，见 [完成报告](g3-completion-validation.md)。
+- 一次推进一个主要实现任务；T01 已落地独立只读资格检查，T02 已完成通信边界修复、正式发布及独立协议验收，见 [协议报告](g3-protocol-validation.md)；T03 已完成受控初始化和规划响应验收，见 [启动报告](g3-startup-validation.md)，T04 已通过两模式分段命令实际执行及内部导航／轨迹关联，见 [执行报告](g3-execution-validation.md)；T05 已完成正式两模式完整任务、可靠 TaskComplete 与覆盖统计独立复算，新 AMASE／UxAS 交接发布及当前资格通过，见 [完成报告](g3-completion-validation.md)；T06 已完成连续短程实际执行、路径／故障、残包断线清理和新编号整组恢复，见 [稳定性报告](g3-stability-validation.md)。
 
 ### 规划期输入与源码复核
 
@@ -92,8 +92,8 @@ G3 插件只承担本地编排、事件观测、分析导出和关闭。仿真�
 
 以下是运行、验收及 GUI 收尾的接口约定，**T03 的运行、自动验收及 GUI 正常收尾入口已验证，见 [启动报告](g3-startup-validation.md)；T02 协议入口见 [报告](g3-protocol-validation.md)**。T01 的独立输入资格命令已通过，见 [基线报告](g3-input-baseline-validation.md#1-本轮交付与复用入口)：
 
-- 已提供 run-g3.ps1、g3-startup.tests.ps1、finish-g3-gui.ps1。运行输入包含模式、配置、明确 Python 路径和运行编号；收尾绑定运行编号。当前 scope=startup、仅消费合格正式包，1 倍速且保留原 785 秒场景；取得非空规划响应即收尾。T04 另提供 run-g3-execution.ps1／g3-execution.tests.ps1 和 config/g3-execution.json，实际命令与局部任务航段已通过；T05 另提供 run-g3-completion.ps1／g3-completion.tests.ps1 和 config/g3-completion.json，已通过正式完整执行与统计正确性对照；不能把短程入口用于阶段完成声明。
-- 当前输出包含运行状态、来源、配置快照、消息与事件及进程退出证据；完整任务及覆盖统计已由 T05 验证，稳定性／故障和阶段人工确认仍待 T06～T07；int64 实体／任务／命令 ID 用十进制字符串。人工确认只对本次运行有效，不能复用 G1 的历史确认。
+- 已提供 run-g3.ps1、g3-startup.tests.ps1、finish-g3-gui.ps1。运行输入包含模式、配置、明确 Python 路径和运行编号；收尾绑定运行编号。当前 scope=startup、仅消费合格正式包，1 倍速且保留原 785 秒场景；取得非空规划响应即收尾。T04 另提供 run-g3-execution.ps1／g3-execution.tests.ps1 和 config/g3-execution.json，实际命令与局部任务航段已通过；T05 另提供 run-g3-completion.ps1／g3-completion.tests.ps1 和 config/g3-completion.json，已通过正式完整执行与统计正确性对照；T06 提供 run-g3-stability.ps1／g3-stability.tests.ps1、config/g3-stability.json，绑定合格 CompletionRunId，独立运行与故障矩阵已通过；不能把短程入口用于阶段完成声明。
+- 当前输出包含运行状态、来源、配置快照、消息与事件及进程退出证据；完整任务及覆盖统计已由 T05 验证，稳定性／故障已由 T06 验证，最终全程及阶段人工确认仍待 T07；int64 实体／任务／命令 ID 用十进制字符串。人工确认只对本次运行有效，不能复用 G1 的历史确认。
 - 编排优先使用已验证的 Python 标准库和消息代码，协议解析复用 [G1 严格解析器](../scripts/validation/sentinel.py)的规则；扩展时单独登记输入，避免无意改变旧构建来源。不能将 Python 原始 LMCP 直接当作完整 Java／C++ TCP 帧。
 - G3 编排／插件位于 scripts/g3_integration，测试位于 tests/g3_integration，默认配置为 config/g3-startup.json；具体已验证命令见 T03 报告。现有 G1／G2 接口及原示例保留，MDM／生成代码不因编排而改变。
 - 每次运行使用独立 `out/runs/<run-id>/`；编译插件等候选放在独立 `out/build/`。正式产物通过既有资格解析入口消费，不直接读指针后绕过来源检查。

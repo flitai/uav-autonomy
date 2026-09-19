@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "scope": "stability",
+  "startupConfiguration": "config/g3-startup.json",
+  "executionConfiguration": "config/g3-execution.json",
+  "completionConfiguration": "config/g3-completion.json",
+  "simulationRate": 1,
+  "consecutiveExecutions": 3,
+  "disconnectRelayPort": 5557,
+  "disconnectTimeoutSeconds": 10,
+  "wholeRunSeconds": 2700
+}
