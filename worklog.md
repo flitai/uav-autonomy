@@ -1185,3 +1185,5 @@ GUI 审查观察点：17:56:40 生成本轮 gui-ready.json，result.status=await
 交付与边界：G3-T07 已完成，G3 阶段通过；新交付 docs/g3-stage-validation.md、docs/g3-g4-handoff.md 及独立阶段验收／收尾入口。唯一连接配置仍为 config/g3-startup.json，执行／完成／阶段配置各有独立职责，合格 handoff 绑定四份摘要和同批产物。T02～T04 明确为旧 AMASE 的历史记录，本轮实际全程消费 T05 修复后正式版本，没有改写历史。G4 待细化、未实施；观察工具不是网关，在线重连／快照归 G4，重置分段归 G6，零地形、Unicode 字段与第二机器部署边界保持。同步 AGENTS、status、backlog、阶段方案及总体计划；按持续授权完成最终范围复核后提交、普通推送，真实归档结果随后追加。
 
 提交前复核：本任务 16 个文件、377 处本地文档链接、UTF-8、Python／PowerShell 语法、git diff --check、历史日志前缀及旧实现／报告保护通过。out 原始证据与辅助脚本受忽略规则保护，未纳入生成物、依赖缓存或本机用户绝对路径。远程 main 与本地起点仍为 6c0294e3b86c0519d4752b8b8ea8404962cc6c16；只暂存这 16 个任务文件，随后普通提交／推送并核对远程。
+
+归档结果：主提交 c12590cfad13fe4993715b39832096b33b5bd997（test: complete G3 stage acceptance and G4 handoff）包含已核对的本任务 16 文件；git push origin main 退出 0。2026-09-19T18:02:30.6556440+08:00 核对本地 HEAD 与远程 main 一致、工作区干净，收据 out/tmp/g3-t07-push.json。随后仅补齐本段与 status 的真实归档说明，以独立文档提交收尾；正式包、阶段实现、功能配置和原始证据保持不变。G3-T07 及 G3 已完成；G4 待细化、尚未启动。
