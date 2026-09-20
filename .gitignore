@@ -6,6 +6,11 @@
 # User-provided geographic inputs are read-only; derived files belong in out.
 /tiles/
 /tiles.zip
+
+# User-provided model originals; converted candidates belong in out.
+/models/**/*.osgb
+/models/**/.DS_Store
+
 /apps/cesium_viewer/node_modules/
 /apps/cesium_viewer/dist/
 
