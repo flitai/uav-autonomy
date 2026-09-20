@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "task": "G5-T04",
+  "mapBuildRunId": "g5-t03-build-20260920-184439-778",
+  "mapValidationRunId": "g5-t03-test-20260920-184747-248",
+  "geographyBuildRunId": "g5-t02-prepare-20260920-174145-970",
+  "geographyValidationRunId": "g5-t02-test-20260920-174558-688",
+  "scenarioBufferMeters": 5000,
+  "minimumClearanceMeters": 100,
+  "simulationRate": 1,
+  "durationSeconds": 1800,
+  "wholeRunSecondsPerMode": 2700,
+  "smallKinds": ["line", "point", "area"],
+  "smallEntityIds": ["400", "500", "600"],
+  "modes": {
+    "Headless": {"amasePort": 5556, "observerPort": 9999, "entityPorts": {"400": 19400, "500": 19500, "600": 19600}},
+    "Gui": {"amasePort": 5555, "observerPort": 9999, "entityPorts": {"400": 9400, "500": 9500, "600": 9600}}
+  },
+  "sourceHeightDatum": "EPSG:5773",
+  "negativeDtedSupported": false,
+  "sourceMutationPermitted": false,
+  "stageQualified": false
+}
