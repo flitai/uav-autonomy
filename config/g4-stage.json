@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "scope": "gateway-stage-qualification",
+  "captureRunId": "g4-t08-capture-20260920-085508-125483",
+  "captureSHA256": "a0a11e9838202278bd2955107c82d90d9e9a593d8cdf64eb700c9b2eb0c778fc",
+  "auditRunId": "g4-t08-audit-20260920-100537-000770",
+  "auditSHA256": "5bc6b6aec6bd40c6b789f6804ff0a81aff3b328700045e2e8c263e4df788336b",
+  "finalOriginalModes": ["Headless", "Gui"],
+  "finalMixedMode": "Gui",
+  "finalMixedSeconds": 785,
+  "manualGuiConfirmationRequired": true,
+  "workspaceQualifiedDeployment": true
+}

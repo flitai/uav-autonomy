@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "scope": "same-version-controlled-finalization",
+  "visualRunId": "g4-t09-mixed-20260920-104409-452486",
+  "visualResultSHA256": "f0c20224910814c3179a4cd2e66dca5c03a39f0ef76b619e0ff9724547652f25",
+  "visualCaseSHA256": "506f8d04228c81f083163c8ce3067eec18fc95af48610c3ea3d90a1cc64a992f",
+  "visualReviewSHA256": "f35edaae0fe97d6ae2842d8424302f3a8bff2fb2ef1f314789a83cf20919d567",
+  "packageSHA256": "dcc6b6294ff0687ae690f6518780b2ba563339b177ba7c79b22b3aa9ff41689e",
+  "pausedSimulationTimeMs": "785569",
+  "postReviewFinalTimeMs": "786599",
+  "originalRunId": "g4-t09-original-20260920-104409-452486",
+  "reason": "Current GUI was confirmed by the user after a recorded 1030 ms post-review advance; preserve the failed freeze check, bind visual acceptance to that GUI, and require an unchanged-package complete controlled GUI rerun and normal exit."
+}
