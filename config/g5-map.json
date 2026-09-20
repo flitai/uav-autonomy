@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "geographyBuildRunId": "g5-t02-prepare-20260920-174145-970",
+  "geographyValidationRunId": "g5-t02-test-20260920-174558-688",
+  "geographyManifestSHA256": "f0f6372b16cda86811750f83df44560ec345097fbcd695ad6fb6dffa7854a8c0",
+  "geographyAcceptanceSHA256": "3294d503ef172afd3f123a0a67a6393ef3b535f2eda1247b2fd6bdb57ff22c9a",
+  "host": "127.0.0.1",
+  "productionPort": 8080,
+  "developmentPort": 5173,
+  "gatewayPort": 8000,
+  "outsideRegion": "reference-ellipsoid-unqualified",
+  "terrainTileSize": 65,
+  "terrainMaximumLevel": 14,
+  "limits": {"rangeBytes": 4194304, "terrainCacheTiles": 64},
+  "satellite": {
+    "url": "https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer",
+    "enabledByDefault": false,
+    "credit": "Source: Esri, Vantor, Earthstar Geographics, and the GIS User Community",
+    "creditPolicy": "ArcGIS provider metadata and per-view tile credits"
+  },
+  "font": {
+    "sourceCommit": "f8d157532fbfaeda587e826d4cd5b21a49186f7c",
+    "files": [
+      {"filename": "NotoSansCJKsc-Regular.otf", "url": "https://raw.githubusercontent.com/notofonts/noto-cjk/f8d157532fbfaeda587e826d4cd5b21a49186f7c/Sans/OTF/SimplifiedChinese/NotoSansCJKsc-Regular.otf", "bytes": 16437364, "sha256": "2c76254f6fc379fddfce0a7e84fb5385bb135d3e399294f6eeb6680d0365b74b"},
+      {"filename": "OFL.txt", "url": "https://raw.githubusercontent.com/notofonts/noto-cjk/f8d157532fbfaeda587e826d4cd5b21a49186f7c/Sans/LICENSE", "bytes": 4301, "sha256": "6a73f9541c2de74158c0e7cf6b0a58ef774f5a780bf191f2d7ec9cc53efe2bf2"}
+    ]
+  }
+}
