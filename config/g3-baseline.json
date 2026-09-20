@@ -166,7 +166,7 @@
     },
     {
       "path": "OpenUxAS/src/cpp/Tasks/TaskManagerService.cpp",
-      "sha256": "5677935F22F1239473041E646126055BEA9331403C49A71801348948B96B3BD9"
+      "sha256": "E750E0E8D8F3DC8DDB22C813236FCB4FB9FED58B1E3641C4F9708CB404D7C211"
     },
     {
       "path": "OpenUxAS/src/cpp/Tasks/TaskServiceBase.cpp",
@@ -303,45 +303,25 @@
   "acceptanceRevisionDate": "2026-09-19",
   "supersedesAcceptanceFromRunId": "g3-t01-check-20260919-093348-422",
   "acceptanceRevisionReason": "User prioritizes system integration and correct coverage calculation; coverage improvement is deferred.",
-  "inputRevision": 4,
+  "inputRevision": 5,
   "inputRevisionDate": "2026-09-20",
-  "inputRevisionParentRunId": "g3-t01-check-20260919-233710-372",
-  "inputRevisionReason": "G4-T07 qualified point/area statistics and concurrent TCP observer repair",
+  "inputRevisionParentRunId": "g3-t01-check-20260920-081222-593",
+  "inputRevisionReason": "G4-T08 bound explicit CMASI search-service initialization to eligible entities in worlds larger than sixteen",
   "inputRevisionChanges": [
     {
-      "path": "OpenAMASE/OpenAMASE/src/Amase/avtas/amase/analysis/AreaSearchHighlight.java",
-      "before": null,
-      "after": "D0B3E6A5840063B9095D183493D26BBDE132C2D3842ACF1DADDDECA3CD7C5158",
-      "priorBuildSourceSHA256": "D544B0D158A6BB38275995A06BE91C726488964A7EDC938688816931F16C7AC0"
-    },
-    {
-      "path": "OpenAMASE/OpenAMASE/src/Amase/avtas/amase/analysis/PointSearchHighlight.java",
-      "before": null,
-      "after": "1D0A6DE1C5C578347238B54AA5E12455ABF56C927B023753E6FE0AD7591BE99C",
-      "priorBuildSourceSHA256": "BD15B46936B8FE89DB89DC5743705323303F5B954E17F8060C4DD44BF6520F48"
-    },
-    {
-      "path": "OpenAMASE/OpenAMASE/src/Amase/avtas/amase/analysis/SearchTaskAnalysis.java",
-      "before": "28B99E8BB16EE97ACA8221FBCD157BCD1767187EACFF0812C80081481B1BF76B",
-      "after": "B467424BAB6C691657071AFC0AFEAB0E2CA427E4AD98496E9FB1148B39F56D5D",
-      "priorBuildSourceSHA256": "28B99E8BB16EE97ACA8221FBCD157BCD1767187EACFF0812C80081481B1BF76B"
-    },
-    {
-      "path": "OpenAMASE/OpenAMASE/src/Amase/avtas/amase/network/TcpServer.java",
-      "before": "B5CD8A7A0171325A697D81D5B32788AF3078BCB6815D61FC244722DFD9D56750",
-      "after": "C9429BDBB2E75CF57F08348FB0092B26577EDED8E1726FC964E9C72CE96C78B7",
-      "priorBuildSourceSHA256": "B5CD8A7A0171325A697D81D5B32788AF3078BCB6815D61FC244722DFD9D56750"
+      "path": "OpenUxAS/src/cpp/Tasks/TaskManagerService.cpp",
+      "before": "5677935F22F1239473041E646126055BEA9331403C49A71801348948B96B3BD9",
+      "after": "E750E0E8D8F3DC8DDB22C813236FCB4FB9FED58B1E3641C4F9708CB404D7C211"
     }
   ],
   "inputRevisionEvidence": {
-    "report": "docs/g4-mixed-validation.md",
-    "amaseBuildRunId": "g1-t04-build-20260920-024628-136806",
-    "amaseAutomaticRunId": "g1-t04-automatic-20260920-024736-508525",
-    "amaseFinalizeRunId": "g1-t04-finalize-20260920-080752-574040",
-    "captureRunId": "g4-t07-capture-20260920-025046-760714",
-    "auditRunId": "g4-t07-audit-20260920-032048-023253",
-    "uxasReleaseRunId": "g2-t07-test-20260920-080804-302",
-    "uxasPublishRunId": "g2-t07-publish-20260920-081057-422"
+    "report": "docs/g4-scale-validation.md",
+    "uxasBuildRunId": "g2-t05-build-20260920-082330-977",
+    "uxasValidationRunId": "g2-t05-test-20260920-082558-938",
+    "helloWorldRunId": "g2-t06-test-20260920-082835-289",
+    "uxasReleaseRunId": "g2-t07-test-20260920-083019-966",
+    "uxasPublishRunId": "g2-t07-publish-20260920-083245-918",
+    "minimalFailureRunId": "g4-t08-diagnostic-20260920-082105-760256"
   },
   "inputRevisionHistory": [
     {
@@ -458,6 +438,48 @@
         "helloWorldRunId": "g2-t06-test-20260919-102042-847",
         "uxasReleaseRunId": "g2-t07-test-20260919-154235-410",
         "uxasPublishRunId": "g2-t07-publish-20260919-154459-188"
+      }
+    },
+    {
+      "inputRevision": 4,
+      "inputRevisionDate": "2026-09-20",
+      "inputRevisionParentRunId": "g3-t01-check-20260919-233710-372",
+      "inputRevisionReason": "G4-T07 qualified point/area statistics and concurrent TCP observer repair",
+      "inputRevisionChanges": [
+        {
+          "path": "OpenAMASE/OpenAMASE/src/Amase/avtas/amase/analysis/AreaSearchHighlight.java",
+          "before": null,
+          "after": "D0B3E6A5840063B9095D183493D26BBDE132C2D3842ACF1DADDDECA3CD7C5158",
+          "priorBuildSourceSHA256": "D544B0D158A6BB38275995A06BE91C726488964A7EDC938688816931F16C7AC0"
+        },
+        {
+          "path": "OpenAMASE/OpenAMASE/src/Amase/avtas/amase/analysis/PointSearchHighlight.java",
+          "before": null,
+          "after": "1D0A6DE1C5C578347238B54AA5E12455ABF56C927B023753E6FE0AD7591BE99C",
+          "priorBuildSourceSHA256": "BD15B46936B8FE89DB89DC5743705323303F5B954E17F8060C4DD44BF6520F48"
+        },
+        {
+          "path": "OpenAMASE/OpenAMASE/src/Amase/avtas/amase/analysis/SearchTaskAnalysis.java",
+          "before": "28B99E8BB16EE97ACA8221FBCD157BCD1767187EACFF0812C80081481B1BF76B",
+          "after": "B467424BAB6C691657071AFC0AFEAB0E2CA427E4AD98496E9FB1148B39F56D5D",
+          "priorBuildSourceSHA256": "28B99E8BB16EE97ACA8221FBCD157BCD1767187EACFF0812C80081481B1BF76B"
+        },
+        {
+          "path": "OpenAMASE/OpenAMASE/src/Amase/avtas/amase/network/TcpServer.java",
+          "before": "B5CD8A7A0171325A697D81D5B32788AF3078BCB6815D61FC244722DFD9D56750",
+          "after": "C9429BDBB2E75CF57F08348FB0092B26577EDED8E1726FC964E9C72CE96C78B7",
+          "priorBuildSourceSHA256": "B5CD8A7A0171325A697D81D5B32788AF3078BCB6815D61FC244722DFD9D56750"
+        }
+      ],
+      "inputRevisionEvidence": {
+        "report": "docs/g4-mixed-validation.md",
+        "amaseBuildRunId": "g1-t04-build-20260920-024628-136806",
+        "amaseAutomaticRunId": "g1-t04-automatic-20260920-024736-508525",
+        "amaseFinalizeRunId": "g1-t04-finalize-20260920-080752-574040",
+        "captureRunId": "g4-t07-capture-20260920-025046-760714",
+        "auditRunId": "g4-t07-audit-20260920-032048-023253",
+        "uxasReleaseRunId": "g2-t07-test-20260920-080804-302",
+        "uxasPublishRunId": "g2-t07-publish-20260920-081057-422"
       }
     }
   ]

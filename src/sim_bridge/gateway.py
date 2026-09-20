@@ -46,6 +46,7 @@ class Gateway:
         self.main = self.manifest.get('main_connection')
         self.log_offset, self.log_tail = 0, b''
         self.boundary = []
+        self.boundary_observed_at = None
 
     def check_identity(self):
         require(hashlib.sha256(self.manifest_path.read_bytes()).hexdigest() == self.manifest_sha256, 'Runtime identity changed')
@@ -132,6 +133,10 @@ class Gateway:
 
     def consume(self, rebuild=False):
         boundary = self.journal.boundary()
+        # A rebuild can take longer than the missing-event deadline. Only
+        # this captured boundary, not the time replay finishes, proves how
+        # far the committed log has actually been inspected.
+        boundary_observed_at = time.monotonic()
         available = {int(item['shard']): int(item['row_id']) for item in boundary}
         require(all(available.get(shard, -1) >= count for shard, count in self.store.boundaries().items()),
                 'Source journal is behind the durable record')
@@ -155,6 +160,26 @@ class Gateway:
                     if len(self.committed) > 4096:
                         self.committed.popitem(last=False)
         self.boundary = boundary
+        self.boundary_observed_at = boundary_observed_at
+
+    def critical_evidence_ready(self):
+        with self.evidence_lock:
+            pending = list(self.pending.items())
+        # Recent hashes are bounded in RAM. Replayed configurations and
+        # commands may already be durable but have left that cache.
+        for checksum, _ in pending:
+            if self.store.has_message(checksum):
+                with self.evidence_lock:
+                    self.pending.pop(checksum, None)
+        with self.evidence_lock:
+            if not self.pending:
+                return True
+            oldest = min(self.pending.values())
+        require(self.boundary_observed_at is None or self.boundary_observed_at - oldest <= 10,
+                'A captured critical event is absent from the committed journal')
+        # Remain recovering while the reader catches up; elapsed replay
+        # time alone cannot establish that an event is missing.
+        return time.monotonic() - oldest <= 10
 
     def ready(self):
         state = self.publication.state
@@ -168,9 +193,8 @@ class Gateway:
         if not paused and not all(c.last_received is not None and time.monotonic() - c.last_received <= self.config['staleAfterSeconds']
                                   for c in self.captures.values()):
             return False
-        with self.evidence_lock:
-            require(not self.pending or time.monotonic() - min(self.pending.values()) <= 10,
-                    'A captured critical event is absent from the committed journal')
+        if not self.critical_evidence_ready():
+            return False
         capture = self.captures['amase']
         with capture.lock:
             samples = list(capture.latest.values())

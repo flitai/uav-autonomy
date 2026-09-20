@@ -188,5 +188,92 @@
         "sha256": "d64f1157cd7c5909d981c5528a05dd10f0abbb17d5aa66f0250f14a316c4b648"
       }
     ]
+  },
+  "uxasScaleRevision": {
+    "reason": "G4-T08 bound explicit CMASI search-service initialization to eligible entities in worlds larger than sixteen",
+    "parentFormalUxas": {
+      "schemaVersion": 1,
+      "status": "passed",
+      "path": "g2-t05-build-20260919-232557-986/g2-t07-test-20260920-080804-302/g2-t07-publish-20260920-081057-422",
+      "buildRunId": "g2-t05-build-20260919-232557-986",
+      "validationRunId": "g2-t05-test-20260919-232811-379",
+      "releaseRunId": "g2-t07-test-20260920-080804-302",
+      "publishRunId": "g2-t07-publish-20260920-081057-422",
+      "buildInfoSHA256": "11183D203BD2248DD87AADDDC81F2F51DC287A7050E72DE38D397BFDFEDDE015"
+    },
+    "formalUxas": {
+      "schemaVersion": 1,
+      "status": "passed",
+      "path": "g2-t05-build-20260920-082330-977/g2-t07-test-20260920-083019-966/g2-t07-publish-20260920-083245-918",
+      "buildRunId": "g2-t05-build-20260920-082330-977",
+      "validationRunId": "g2-t05-test-20260920-082558-938",
+      "releaseRunId": "g2-t07-test-20260920-083019-966",
+      "publishRunId": "g2-t07-publish-20260920-083245-918",
+      "buildInfoSHA256": "BD0E2B8B2FF809BE0F32D18CDDA0D46E9231B14DCD092658C4F753070C93076C"
+    },
+    "uxasSHA256": "9a7b6985bd4a7a9afa32bf97733d6ddb94e73e917c6fce6457a493cb0c348400",
+    "sourceChanges": [
+      {
+        "path": "OpenUxAS/src/cpp/Tasks/TaskManagerService.cpp",
+        "before": "5677935F22F1239473041E646126055BEA9331403C49A71801348948B96B3BD9",
+        "after": "e750e0e8d8f3dc8ddb22c813236fcb4fb9fed58b1e3641c4f9708cb404d7c211"
+      }
+    ],
+    "sources": [
+      {
+        "path": "OpenUxAS/src/cpp/Tasks/TaskManagerService.cpp",
+        "sha256": "e750e0e8d8f3dc8ddb22c813236fcb4fb9fed58b1e3641c4f9708cb404d7c211"
+      }
+    ],
+    "receipts": [
+      {
+        "path": "out/runs/g2-t05-build-20260920-082330-977/entry-result.json",
+        "sha256": "63e130883c510288c8fdba92a49f6b8352c4e29dad5c2e30b687be9fa88062c5"
+      },
+      {
+        "path": "out/runs/g2-t05-test-20260920-082558-938/result.json",
+        "sha256": "f6425f1a7db2f196a3348f4f7b7e28a22a0ff006346c60e10647852d58065c01"
+      },
+      {
+        "path": "out/runs/g2-t05-test-20260920-082558-938/entry-result.json",
+        "sha256": "777af10124063a28fe850b5213071202cc588efa0d0b2bc4a0ef9eaed0464157"
+      },
+      {
+        "path": "out/runs/g2-t05-test-20260920-082558-938/acceptance.json",
+        "sha256": "ac7cbdde067c6e88dfad38293da7076bfb79921330b71907285f4ed2cffd4cad"
+      },
+      {
+        "path": "out/runs/g2-t06-test-20260920-082835-289/result.json",
+        "sha256": "d61fc4f859367d21d74c74ac5c9612b721f10aa036130472da0e8acd7cfc5957"
+      },
+      {
+        "path": "out/runs/g2-t06-test-20260920-082835-289/entry-result.json",
+        "sha256": "2da64633110d06f8ca8240961c7c32e3649c7feb4838698e7680894600f2c462"
+      },
+      {
+        "path": "out/runs/g2-t06-test-20260920-082835-289/acceptance.json",
+        "sha256": "d6dfb88230475066578fe33ffd5cbf4e26fee958d30ed6b715817f594017edad"
+      },
+      {
+        "path": "out/runs/g2-t07-test-20260920-083019-966/result.json",
+        "sha256": "cf9217a4f714b3b7d05bea4e30a13f8c3a0a8c8a97b41f620e8d03089e1ee7ec"
+      },
+      {
+        "path": "out/runs/g2-t07-test-20260920-083019-966/entry-result.json",
+        "sha256": "3df7bb928899b1131a392e625fd08bf46f510fe7058ea6d1cdae8a7e766c76c0"
+      },
+      {
+        "path": "out/runs/g2-t07-test-20260920-083019-966/acceptance.json",
+        "sha256": "0d589a230118bd856dbabba999de2c741adb2f7334c0f9b643158dbb2c6545aa"
+      },
+      {
+        "path": "out/runs/g2-t07-publish-20260920-083245-918/result.json",
+        "sha256": "b1fdde01662855ea74125f714debd524329333f70b5e599c588f4c7c23de453f"
+      },
+      {
+        "path": "out/runs/g2-t07-publish-20260920-083245-918/entry-result.json",
+        "sha256": "987b9a5dd05f5cb2eaa9b3eda31edcee9eb6266a440ed556b367448c90b431da"
+      }
+    ]
   }
 }

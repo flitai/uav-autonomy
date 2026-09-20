@@ -118,6 +118,8 @@ def verify_handoff(root, baseline_id, policy=None):
     expected_artifacts = dict(handoff['artifacts'])
     revision = policy.get('uxasRevision')
     amase_revision = policy.get('amaseRevision')
+    scale_revision = policy.get('uxasScaleRevision')
+    amase_pointer = scale_revision['parentFormalUxas'] if scale_revision else pointer
     parent_pointer = amase_revision['parentFormalUxas'] if amase_revision else pointer
     if revision:
         require(revision['parentFormalUxas'] == handoff['formalUxas'] and revision['formalUxas'] == parent_pointer,
@@ -131,7 +133,23 @@ def verify_handoff(root, baseline_id, policy=None):
     else:
         require(parent_pointer == handoff['formalUxas'], 'Current UxAS differs from stage handoff')
     if amase_revision:
-        expected_artifacts['amaseSHA256'] = verify_amase_revision(root, amase_revision, parent_pointer, pointer, expected_artifacts)
+        expected_artifacts['amaseSHA256'] = verify_amase_revision(root, amase_revision, parent_pointer, amase_pointer, expected_artifacts)
+    if scale_revision:
+        require(amase_revision and scale_revision['parentFormalUxas'] == amase_revision['formalUxas'] and
+                scale_revision['formalUxas'] == pointer and pointer['buildRunId'] != amase_pointer['buildRunId'],
+                'Scale UxAS revision is not a rebuilt descendant')
+        verify_files(root, scale_revision['sources'])
+        verify_files(root, scale_revision['receipts'])
+        for receipt in scale_revision['receipts']:
+            require(load(root / receipt['path'])['status'] == 'passed', 'Scale UxAS revision receipt failed')
+        expected_artifacts['uxasSHA256'] = scale_revision['uxasSHA256']
+        current_package = root / 'out/artifacts/uxas' / pointer['path']
+        require(current_package.resolve().is_relative_to((root / 'out/artifacts/uxas').resolve()), 'Invalid scale UxAS path')
+        require(sha(current_package / 'build-info.json') == pointer['buildInfoSHA256'].lower(), 'Scale package metadata differs')
+        current_info = load(current_package / 'build-info.json')
+        verify_files(current_package, current_info['files'])
+        require(load(current_package / 'handoff.json')['amase']['buildInfoSHA256'].lower() == amase_revision['buildInfoSHA256'].lower(),
+                'Scale UxAS changed the accepted AMASE handoff')
     uxas = root / 'out/artifacts/uxas' / pointer['path']
     require(uxas.resolve().is_relative_to((root / 'out/artifacts/uxas').resolve()), 'Invalid UxAS package path')
     artifacts = {'uxasSHA256': uxas / 'uxas.exe', 'amaseSHA256': root / 'out/artifacts/amase/OpenAMASE.jar',
@@ -142,7 +160,7 @@ def verify_handoff(root, baseline_id, policy=None):
     require(generation['runId'] == handoff['lmcpGenerationRunId'], 'Mixed LMCP generations')
     return {'baselineRunId': baseline_id, 'baselineSHA256': sha(directory / 'baseline.json'),
             'g3StageRunId': policy['g3StageRunId'], 'g3HandoffSHA256': sha(stage / 'handoff.json'),
-            'uxasRevision': revision, 'amaseRevision': amase_revision,
+            'uxasRevision': revision, 'amaseRevision': amase_revision, 'uxasScaleRevision': scale_revision,
             'artifacts': {key: sha(path) for key, path in artifacts.items()}}
 
 

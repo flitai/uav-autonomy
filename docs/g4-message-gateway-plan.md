@@ -1,6 +1,6 @@
 # G4 实施方案：消息网关、观察链路恢复与 20 实体混合任务
 
-日期：2026-09-19，Asia/Shanghai。用户已确认本方案。**G4 已细化；实现与验收状态以 [status](status.md) 和 [任务卡](backlog.md#8-g4-顺序与任务卡) 为准。** G3 历史结果见 [阶段报告](g3-stage-validation.md) 与 [交接](g3-g4-handoff.md)。
+日期：2026-09-19，Asia/Shanghai。用户已确认本方案。**G4 已细化；实现与验收状态以 [status](status.md) 和 [任务卡](backlog.md#8-g4-顺序与任务卡) 为准。** 截至 2026-09-20，T01～T08 已完成，T09 可执行，见 [二十实体报告](g4-scale-validation.md)。G3 历史结果见 [阶段报告](g3-stage-validation.md) 与 [交接](g3-g4-handoff.md)。
 
 ## 1. 目标与边界
 

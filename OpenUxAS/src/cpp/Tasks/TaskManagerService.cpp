@@ -254,16 +254,34 @@ TaskManagerService::processReceivedLmcpMessage(std::unique_ptr<uxas::communicati
         uxas::common::StringUtil::ReplaceAll(xmlConfigStr, ">", "&gt;");
         createNewServiceMessage->setXmlConfiguration(xmlConfigStr);
 
-        // add all existing entities for new service initialization
+        // CreateNewService has a sixteen-entity wire bound. The three CMASI
+        // search services only plan for EligibleEntities; when the world is
+        // larger, seed these services with that explicit eligible subset.
+        // Preserve the original initialization for other task types and for
+        // smaller worlds (some task types need non-eligible target states).
+        const auto taskType = baseTask->getFullLmcpTypeName();
+        const bool scopedSearch = !baseTask->getEligibleEntities().empty()
+            && (m_idVsEntityConfiguration.size() > 16 || m_idVsEntityState.size() > 16)
+            && (taskType == "afrl.cmasi.PointSearchTask" || taskType == "afrl.cmasi.LineSearchTask"
+                || taskType == "afrl.cmasi.AreaSearchTask");
+        const std::set<int64_t> eligible(baseTask->getEligibleEntities().begin(), baseTask->getEligibleEntities().end());
         for (auto& entityConfiguration : m_idVsEntityConfiguration)
         {
+            if (scopedSearch && eligible.count(entityConfiguration.first) == 0) continue;
             createNewServiceMessage->getEntityConfigurations().push_back(entityConfiguration.second->clone());
         }
         
         // add all existing entities for new service initialization
         for (auto& entityState : m_idVsEntityState)
         {
+            if (scopedSearch && eligible.count(entityState.first) == 0) continue;
             createNewServiceMessage->getEntityStates().push_back(entityState.second->clone());
+        }
+        if (createNewServiceMessage->getEntityConfigurations().size() > 16
+            || createNewServiceMessage->getEntityStates().size() > 16)
+        {
+            isGoodTask = false;
+            CERR_FILE_LINE_MSG("ERROR:: Task[" << taskId << "] initialization exceeds the sixteen-entity message bound")
         }
 
         for (auto kiz : m_idVsKeepInZone)

@@ -179,6 +179,7 @@ class EventStore:
         self.connection.execute('CREATE TABLE IF NOT EXISTS metadata (id INTEGER PRIMARY KEY, binding TEXT NOT NULL)')
         self.connection.execute('CREATE TABLE IF NOT EXISTS events (shard INTEGER, row_id INTEGER, sha256 TEXT NOT NULL, '
                                 'event TEXT NOT NULL, PRIMARY KEY(shard,row_id))')
+        self.connection.execute("CREATE INDEX IF NOT EXISTS event_message_hash ON events(json_extract(event,'$.message.rawSHA256'))")
         existing = self.connection.execute('SELECT binding FROM metadata WHERE id=1').fetchone()
         require(existing is None or existing[0] == canonical(binding), 'Event store belongs to another run/source')
         self.connection.execute('INSERT OR IGNORE INTO metadata VALUES(1,?)', (canonical(binding),))
@@ -201,6 +202,16 @@ class EventStore:
             event = json.loads(data)
             require(digest(event) == checksum, 'Normalized record is corrupt')
             yield event
+
+    def has_message(self, checksum):
+        row = self.connection.execute(
+            "SELECT sha256,event FROM events WHERE json_extract(event,'$.message.rawSHA256')=? LIMIT 1",
+            (checksum,)).fetchone()
+        if row is None:
+            return False
+        event = json.loads(row[1])
+        require(digest(event) == row[0] and event['run_id'] == self.run_id, 'Normalized record is corrupt')
+        return True
 
     def boundaries(self):
         return {int(shard): int(row) for shard, row in self.connection.execute(
