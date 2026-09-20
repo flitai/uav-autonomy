@@ -367,7 +367,7 @@ G4-T08 已完成，见 [稳定性报告](docs/g4-scale-validation.md)。固定 8
 - **OpenUxAS**：自主任务、分配、规划与消息服务。
 - **LMCP／MDM**：跨语言后端消息契约。
 - **消息网关**：协议适配、快照与增量、时间映射、记录和浏览器接口。
-- **CesiumJS**：三维显示和用户交互；当前为 T01 最小工程，业务显示仍待后续。浏览器掉帧、相机操作或底图变化不能改变仿真结果。
+- **CesiumJS**：三维显示和用户交互；T03 本地矢量、区域地形与在线影像已通过地图资源验收，真实业务接入、实体和时间仍待 T05／T06。浏览器掉帧、相机操作或底图变化不能改变仿真结果。
 - **训练适配（后续）**：复用协议和进程控制核心，不另建一套不一致的消息解析与时间语义。
 
 优先从“Windows 构建与协议验证 → 原有示例闭环 → 网关 → Cesium 显示 → 控制／回放 → 打包验收”推进。模拟消息可用于独立前端开发，但不能作为端到端联调通过的证据。
@@ -396,6 +396,9 @@ G4-T08 已完成，见 [稳定性报告](docs/g4-scale-validation.md)。固定 8
 - `AltitudeType.MSL` 的本地注释存在基准歧义。追踪实际计算和数据来源后再转换高度，不能统一盲加高程修正。
 - 姿态需要校核真北航向、机体系、Cesium 参考系和模型轴，不能直接复用一组欧拉角。
 - AMASE 地形可能参与仿真与视线计算；替换显示不等于替换地形计算。WorldWind 还被 Shapefile 代码使用，确认依赖后再移除。
+- G5 使用原矢量＋USGS 区域主地形，Copernicus 只作对照；WGS84／EGM96 共同正高网格派生 AMASE DTED 与 Cesium 椭球高，按固定配置改正一次。旧 Terrarium 归档，区域外仅作未验收参考椭球浏览；见 [修订方案](docs/g5-cesium-display-plan.md)。
+- 正式 AMASE 的 DTED 负值误读和十倍间距元数据缺陷仍未修复；当前区域非负数据的两类读取通过不代表所有调用安全。T04 必须追踪飞行、传感器和分析的实际影响，必要源码修复按来源规则重建复验，修复前继续拒绝负高程。
+- models/ 的 16 个 OSGB 仅已登记原件；T06 转换选用资产并校准单位／模型轴／原点，资产修正与后端姿态分开。显示模型不改变实体仿真能力；未选用资产不增加场景验收范围。
 
 字段定义以 [CMASI.xml](OpenUxAS/mdms/CMASI.xml) 为依据；时间行为检查 [SimTimer.java](OpenAMASE/OpenAMASE/src/Amase/avtas/amase/util/SimTimer.java) 与 [EntityModel.java](OpenAMASE/OpenAMASE/src/Amase/avtas/amase/entity/EntityModel.java)。
 
@@ -480,7 +483,7 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\windows\start-
 
 scripts/g4_stage 保存最终取证／包发布入口，scripts/g4_finalize 保存本次具体失败前驱的受控收尾规则，scripts/g4_session 保存日常独立运行。不要修改旧收据或生成输出绕过来源检查；新的源码修改按影响重建或复验。第二机器部署归 G8，开发工作区的已验证环境与生成模型仍是前提。
 
-G5 用户已确认现有本地全球矢量／DEM 加在线卫星影像，Cesium 与 AMASE 同源地形；G4 零高程历史结果不替代真实地形验收。地理数据只读且不入 Git，地形来源／基准／覆盖缺失不能静默使用零高程。T01 已复查来源并完成隔离工具及最小页面，地形资格归 T02、后端真实地形计算及统计归 T04；工具探针不能替代地形资格。查询／图层／视角操作归 G5，控制与重置归 G6，历史回放归 G7，第二机器和离线卫星影像包归 G8。
+G5 用户后续决定采用原全球矢量＋USGS 区域主地形、Copernicus 对照，Esri 按切换加载；T01～T03 已通过，T04 可执行，当前方案及十一张卡已同步实际证据和已知限制。G4 零高程历史结果不替代真实地形任务验收；来源／基准／覆盖缺失不能静默使用零高程。T03 代理采用协议夹具，真实接入与故障隔离另由 T05／T08 验证；模型归 T06，最终人工确认及正式前端发布归 T11。查询／图层／视角操作归 G5，控制与重置归 G6，历史回放归 G7，第二机器和离线卫星影像包归 G8。
 
 ## G5-T03 地图与本地资源服务
 
@@ -509,6 +512,6 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\windows\run-g5
 
 首次准备省略 VerifyOnly；入口自行复查正式后端、网关和日常入口资格，可选 BaselineRunId 仍会重查来源。构建在 out 独立副本进行，可加 ChinesePath；运行复查候选，输出 8080 地址及本组 request-stop 文件位置，创建该文件正常退出。开发端口 5173；端口冲突明确失败，验收临时使用 CDP 9223。普通／中文空格路径、不同工作目录、实际 Edge、四类 Cesium 资源、刷新、拒绝矩阵及正常退出通过。
 
-此时只有工具环境指针 .tools/g5/current.json；没有正式前端指针，候选 stageQualified=false。页面为椭球与工程样片，真实消息、PMTiles、地形、卫星及模型仍待后续。T01 的原始输入登记不代表地形资格。后续 T02 已完成，见 [地理检查报告](docs/g5-geography-validation.md)：原始 z10 异常保留历史；用户选定原矢量底图＋USGS 区域主地形，Copernicus 用于对照。经纬度统一为 WGS84，标准化 EGM96 正高派生 AMASE DTED 与 Cesium 椭球高度场。完整矢量摘要／索引、区域来源和转换网格、独立数值及八组正式验收通过；T03 可执行。源 NAD83／NAVD88 与 Copernicus EGM2008 必须按固定链转换，禁止仅重标 CRS、混合补值或使用合成输出代替真实资格。后端飞行、传感器和统计归 T04，全球地形不随区域自动合格。
+T01 交付时只有工具环境指针 .tools/g5/current.json，页面为椭球与工程样片，候选 stageQualified=false；这一历史入口不代表当前地图能力。后续 T02 已完成，见 [地理检查报告](docs/g5-geography-validation.md)：原始 z10 异常保留历史；用户选定原矢量底图＋USGS 区域主地形，Copernicus 对照，WGS84／EGM96 标准化正高派生 AMASE DTED 与 Cesium 椭球高。完整矢量摘要／索引、区域来源／网格、独立数值及八组验收通过。T03 后续地图资格见上节，当前下一卡为 T04；正式前端仍未发布。源 NAD83／NAVD88 与 Copernicus EGM2008 按固定链转换，禁止重标 CRS、混合补值或用合成输出代替真实资格；全球地形不随区域自动合格。
 
 T02 入口为 `scripts/windows/prepare-g5-geography.ps1 -PythonExecutable <已核查解释器>`，输出新准备编号后使用 `tests/windows/g5-geography.tests.ps1 -PythonExecutable <已核查解释器> -BuildRunId <本次准备编号>`。两入口自行核查当前后端、网关和工具，候选与独立 acceptance 成对交接；具体批次和命令见报告第 9 节。`config/g5-terrain.json`、`config/g5-regional-sources.json` 与 `config/g5-usgs-operation.json` 为当前区域契约；`g5-terrarium-legacy.json` 仅作历史异常回归。来源、网格或实现变化须重新准备／验收，不改写旧收据；T01 资源登记和下载 manifest 不能代替区域地形资格。
