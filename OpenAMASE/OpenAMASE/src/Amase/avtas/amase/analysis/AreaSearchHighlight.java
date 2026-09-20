@@ -41,9 +41,8 @@ public class AreaSearchHighlight extends MapScaledImage implements SearchGraphic
     //static float[] FILL_ARRAY = FILL_COLOR.getRGBComponents(null);
     AreaSearchTask task;
     double cellSize;
-    // if the search area is too large for the requested resolution, it sets the number 
-    // of divisions to the max value
-    static int MAXDIVISIONS = 50;
+    // Refuse an excessive allocation instead of silently changing resolution.
+    static int MAXCELLS = 1000000;
 
     /**
      * Constructs a new area search highlighter for the specified search task with
@@ -52,6 +51,9 @@ public class AreaSearchHighlight extends MapScaledImage implements SearchGraphic
      * @param task The search task to manage.
      */
     public AreaSearchHighlight(double cellSize, AreaSearchTask task) {
+        if (!Double.isFinite(cellSize) || cellSize <= 0) {
+            throw new IllegalArgumentException("Area search grid resolution must be positive and finite");
+        }
         this.task = task;
         this.cellSize = cellSize;
         shape = CmasiUtils.convertPoly(task.getSearchArea());
@@ -64,19 +66,12 @@ public class AreaSearchHighlight extends MapScaledImage implements SearchGraphic
 
         Rectangle2D bounds = shape.getBounds2D();
         double dlat = Math.toDegrees(cellSize / NavUtils.EARTH_EQ_RADIUS_M);
-        double dlon = dlat * Math.cos(Math.toRadians(bounds.getCenterY()));
+        double dlon = dlat / Math.cos(Math.toRadians(bounds.getCenterY()));
 
-        numLons = (int) ((bounds.getWidth()) / dlon) + 1;
-        numLats = (int) ((bounds.getHeight()) / dlat) + 1;
-
-        if (numLats > MAXDIVISIONS) {
-            numLats = MAXDIVISIONS;
-            dlat = bounds.getHeight() / numLats;
-        }
-
-        if (numLons > MAXDIVISIONS) {
-            numLons = MAXDIVISIONS;
-            dlon = bounds.getWidth() / numLons;
+        numLons = (int) Math.ceil(bounds.getWidth() / dlon);
+        numLats = (int) Math.ceil(bounds.getHeight() / dlat);
+        if (!Double.isFinite(dlon) || numLons <= 0 || numLats <= 0 || (long)numLons * numLats > MAXCELLS) {
+            throw new IllegalArgumentException("Invalid or oversized area search grid");
         }
 
         pixelMap = new SearchPixel[numLons][numLats];
@@ -87,12 +82,10 @@ public class AreaSearchHighlight extends MapScaledImage implements SearchGraphic
 
         for (int i = 0; i < numLons; i++) {
             for (int j = 0; j < numLats; j++) {
-                double pixLat = bounds.getMaxY() - dlat * (j - 0.5);
+                double pixLat = bounds.getMaxY() - dlat * (j + 0.5);
                 double pixLon = bounds.getMinX() + dlon * (i + 0.5);
-                Rectangle2D r = new Rectangle2D.Double();
-                r.setFrameFromCenter(pixLon, pixLat, pixLon + dlon / 2., pixLat + dlat / 2.);
-
-                if (shape.contains(r)) {
+                // The center is the sampled coverage location, as for line search.
+                if (shape.contains(pixLon, pixLat)) {
                     pixelMap[i][j] = new SearchPixel(pixLat, pixLon);
                 }
             }
@@ -132,7 +125,7 @@ public class AreaSearchHighlight extends MapScaledImage implements SearchGraphic
 
         // don't do any further testing if the wavelength band doesn't match
         if (!task.getDesiredWavelengthBands().contains(model.getCameraConfig().getSupportedWavelengthBand()) 
-            || task.getDesiredWavelengthBands().contains(WavelengthBand.AllAny)) {
+            && !task.getDesiredWavelengthBands().contains(WavelengthBand.AllAny)) {
             return;
         }
 

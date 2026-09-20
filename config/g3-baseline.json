@@ -29,12 +29,20 @@
       "sha256": "C04679C598FFF2CAB623D6D5828905725DE7887E70C6FEA2251A04B96304429B"
     },
     {
+      "path": "OpenAMASE/OpenAMASE/src/Amase/avtas/amase/analysis/AreaSearchHighlight.java",
+      "sha256": "D0B3E6A5840063B9095D183493D26BBDE132C2D3842ACF1DADDDECA3CD7C5158"
+    },
+    {
       "path": "OpenAMASE/OpenAMASE/src/Amase/avtas/amase/analysis/LinearSearchHighlight.java",
       "sha256": "13716FA1CECCB16459D451A0D47233D003D71EA3E5B00806B7CCE34E841B2DC5"
     },
     {
+      "path": "OpenAMASE/OpenAMASE/src/Amase/avtas/amase/analysis/PointSearchHighlight.java",
+      "sha256": "1D0A6DE1C5C578347238B54AA5E12455ABF56C927B023753E6FE0AD7591BE99C"
+    },
+    {
       "path": "OpenAMASE/OpenAMASE/src/Amase/avtas/amase/analysis/SearchTaskAnalysis.java",
-      "sha256": "28B99E8BB16EE97ACA8221FBCD157BCD1767187EACFF0812C80081481B1BF76B"
+      "sha256": "B467424BAB6C691657071AFC0AFEAB0E2CA427E4AD98496E9FB1148B39F56D5D"
     },
     {
       "path": "OpenAMASE/OpenAMASE/src/Amase/avtas/amase/entity/EntityModel.java",
@@ -50,7 +58,7 @@
     },
     {
       "path": "OpenAMASE/OpenAMASE/src/Amase/avtas/amase/network/TcpServer.java",
-      "sha256": "B5CD8A7A0171325A697D81D5B32788AF3078BCB6815D61FC244722DFD9D56750"
+      "sha256": "C9429BDBB2E75CF57F08348FB0092B26577EDED8E1726FC964E9C72CE96C78B7"
     },
     {
       "path": "OpenAMASE/OpenAMASE/src/Amase/avtas/amase/scenario/ConstructiveControl.java",
@@ -295,44 +303,45 @@
   "acceptanceRevisionDate": "2026-09-19",
   "supersedesAcceptanceFromRunId": "g3-t01-check-20260919-093348-422",
   "acceptanceRevisionReason": "User prioritizes system integration and correct coverage calculation; coverage improvement is deferred.",
-  "inputRevision": 3,
-  "inputRevisionDate": "2026-09-19",
-  "inputRevisionParentRunId": "g3-t01-check-20260919-130929-695",
-  "inputRevisionReason": "G3-T05 terminal marker arrival, line-search AllAny and true 20 m sampling, native count/cell export and headless analysis; original scenario and planning parameters unchanged",
+  "inputRevision": 4,
+  "inputRevisionDate": "2026-09-20",
+  "inputRevisionParentRunId": "g3-t01-check-20260919-233710-372",
+  "inputRevisionReason": "G4-T07 qualified point/area statistics and concurrent TCP observer repair",
   "inputRevisionChanges": [
     {
-      "path": "OpenAMASE/OpenAMASE/src/Amase/avtas/amase/analysis/AnalysisManager.java",
-      "before": "17CB66EFA94C35F66A0A20E18AAB9F3FC711E042E07DCF2D66DBD131EF8B8A4D",
-      "after": "C04679C598FFF2CAB623D6D5828905725DE7887E70C6FEA2251A04B96304429B"
+      "path": "OpenAMASE/OpenAMASE/src/Amase/avtas/amase/analysis/AreaSearchHighlight.java",
+      "before": null,
+      "after": "D0B3E6A5840063B9095D183493D26BBDE132C2D3842ACF1DADDDECA3CD7C5158",
+      "priorBuildSourceSHA256": "D544B0D158A6BB38275995A06BE91C726488964A7EDC938688816931F16C7AC0"
     },
     {
-      "path": "OpenAMASE/OpenAMASE/src/Amase/avtas/amase/analysis/LinearSearchHighlight.java",
-      "before": "A51D3832B0D52E8ADDDED8518CD20A972644AD2BC1D7CF63F0656177F42A3C34",
-      "after": "13716FA1CECCB16459D451A0D47233D003D71EA3E5B00806B7CCE34E841B2DC5"
+      "path": "OpenAMASE/OpenAMASE/src/Amase/avtas/amase/analysis/PointSearchHighlight.java",
+      "before": null,
+      "after": "1D0A6DE1C5C578347238B54AA5E12455ABF56C927B023753E6FE0AD7591BE99C",
+      "priorBuildSourceSHA256": "BD15B46936B8FE89DB89DC5743705323303F5B954E17F8060C4DD44BF6520F48"
     },
     {
       "path": "OpenAMASE/OpenAMASE/src/Amase/avtas/amase/analysis/SearchTaskAnalysis.java",
-      "before": "A41EF9E5F823ABEE7368E900222F76749B9CB446C8ADD53529B5E8A8A852D39B",
-      "after": "28B99E8BB16EE97ACA8221FBCD157BCD1767187EACFF0812C80081481B1BF76B"
+      "before": "28B99E8BB16EE97ACA8221FBCD157BCD1767187EACFF0812C80081481B1BF76B",
+      "after": "B467424BAB6C691657071AFC0AFEAB0E2CA427E4AD98496E9FB1148B39F56D5D",
+      "priorBuildSourceSHA256": "28B99E8BB16EE97ACA8221FBCD157BCD1767187EACFF0812C80081481B1BF76B"
     },
     {
-      "path": "OpenAMASE/OpenAMASE/src/Amase/avtas/amase/entity/modules/WaypointFollower.java",
-      "before": "CE653F01EB482A18235FC84CDFD92126A31E9F10AA7702772EE9F1075BB5A1CD",
-      "after": "E628F9F785FBD3907CD73AD7CA4A0FF89DA9CAB8F700A6E1FB845AF71E54EB35"
+      "path": "OpenAMASE/OpenAMASE/src/Amase/avtas/amase/network/TcpServer.java",
+      "before": "B5CD8A7A0171325A697D81D5B32788AF3078BCB6815D61FC244722DFD9D56750",
+      "after": "C9429BDBB2E75CF57F08348FB0092B26577EDED8E1726FC964E9C72CE96C78B7",
+      "priorBuildSourceSHA256": "B5CD8A7A0171325A697D81D5B32788AF3078BCB6815D61FC244722DFD9D56750"
     }
   ],
   "inputRevisionEvidence": {
-    "report": "docs/g3-completion-validation.md",
-    "amaseBuildRunId": "g1-t04-build-20260919-132521-005392",
-    "amaseAutomaticRunId": "g1-t04-automatic-20260919-132647-813805",
-    "amaseFinalizeRunId": "g1-t04-finalize-20260919-154103-934413",
-    "coverageAndTerminalControls": "g3-t05-candidate-checks-20260919-132900",
-    "sameEventReplay": "g3-t05-replay-original-events-20260919-133000",
-    "uxasBuildRunId": "g2-t05-build-20260919-101514-494",
-    "uxasValidationRunId": "g2-t05-test-20260919-101831-478",
-    "helloWorldRunId": "g2-t06-test-20260919-102042-847",
-    "uxasReleaseRunId": "g2-t07-test-20260919-154235-410",
-    "uxasPublishRunId": "g2-t07-publish-20260919-154459-188"
+    "report": "docs/g4-mixed-validation.md",
+    "amaseBuildRunId": "g1-t04-build-20260920-024628-136806",
+    "amaseAutomaticRunId": "g1-t04-automatic-20260920-024736-508525",
+    "amaseFinalizeRunId": "g1-t04-finalize-20260920-080752-574040",
+    "captureRunId": "g4-t07-capture-20260920-025046-760714",
+    "auditRunId": "g4-t07-audit-20260920-032048-023253",
+    "uxasReleaseRunId": "g2-t07-test-20260920-080804-302",
+    "uxasPublishRunId": "g2-t07-publish-20260920-081057-422"
   },
   "inputRevisionHistory": [
     {
@@ -408,6 +417,47 @@
         "candidateProtocolRunId": "g3-t02-verify-20260919-102900-997",
         "uxasReleaseRunId": "g2-t07-test-20260919-103739-909",
         "uxasPublishRunId": "g2-t07-publish-20260919-104007-031"
+      }
+    },
+    {
+      "inputRevision": 3,
+      "inputRevisionDate": "2026-09-19",
+      "inputRevisionParentRunId": "g3-t01-check-20260919-130929-695",
+      "inputRevisionReason": "G3-T05 terminal marker arrival, line-search AllAny and true 20 m sampling, native count/cell export and headless analysis; original scenario and planning parameters unchanged",
+      "inputRevisionChanges": [
+        {
+          "path": "OpenAMASE/OpenAMASE/src/Amase/avtas/amase/analysis/AnalysisManager.java",
+          "before": "17CB66EFA94C35F66A0A20E18AAB9F3FC711E042E07DCF2D66DBD131EF8B8A4D",
+          "after": "C04679C598FFF2CAB623D6D5828905725DE7887E70C6FEA2251A04B96304429B"
+        },
+        {
+          "path": "OpenAMASE/OpenAMASE/src/Amase/avtas/amase/analysis/LinearSearchHighlight.java",
+          "before": "A51D3832B0D52E8ADDDED8518CD20A972644AD2BC1D7CF63F0656177F42A3C34",
+          "after": "13716FA1CECCB16459D451A0D47233D003D71EA3E5B00806B7CCE34E841B2DC5"
+        },
+        {
+          "path": "OpenAMASE/OpenAMASE/src/Amase/avtas/amase/analysis/SearchTaskAnalysis.java",
+          "before": "A41EF9E5F823ABEE7368E900222F76749B9CB446C8ADD53529B5E8A8A852D39B",
+          "after": "28B99E8BB16EE97ACA8221FBCD157BCD1767187EACFF0812C80081481B1BF76B"
+        },
+        {
+          "path": "OpenAMASE/OpenAMASE/src/Amase/avtas/amase/entity/modules/WaypointFollower.java",
+          "before": "CE653F01EB482A18235FC84CDFD92126A31E9F10AA7702772EE9F1075BB5A1CD",
+          "after": "E628F9F785FBD3907CD73AD7CA4A0FF89DA9CAB8F700A6E1FB845AF71E54EB35"
+        }
+      ],
+      "inputRevisionEvidence": {
+        "report": "docs/g3-completion-validation.md",
+        "amaseBuildRunId": "g1-t04-build-20260919-132521-005392",
+        "amaseAutomaticRunId": "g1-t04-automatic-20260919-132647-813805",
+        "amaseFinalizeRunId": "g1-t04-finalize-20260919-154103-934413",
+        "coverageAndTerminalControls": "g3-t05-candidate-checks-20260919-132900",
+        "sameEventReplay": "g3-t05-replay-original-events-20260919-133000",
+        "uxasBuildRunId": "g2-t05-build-20260919-101514-494",
+        "uxasValidationRunId": "g2-t05-test-20260919-101831-478",
+        "helloWorldRunId": "g2-t06-test-20260919-102042-847",
+        "uxasReleaseRunId": "g2-t07-test-20260919-154235-410",
+        "uxasPublishRunId": "g2-t07-publish-20260919-154459-188"
       }
     }
   ]

@@ -224,7 +224,7 @@ public class SearchTaskAnalysis implements AnalysisClient, ContextListener {
                 el.add(subNode);
                 subNode.setAttribute("ID", String.valueOf(sg.getTask().getTaskID()));
                 subNode = (Element) subNode.add(new Element("TimeSeenSec"));
-                subNode.setText(String.valueOf(format.format(timeSeen)));
+                subNode.setText(format.format(timeSeen / 1000.0));
             }
         }
         return el;

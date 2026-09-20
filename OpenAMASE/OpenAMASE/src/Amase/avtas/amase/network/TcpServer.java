@@ -38,8 +38,7 @@ import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import avtas.xml.Element;
-import java.util.ArrayList;
-import java.util.ListIterator;
+import java.util.concurrent.CopyOnWriteArrayList;
 import javax.swing.JMenuBar;
 import javax.swing.JOptionPane;
 
@@ -53,7 +52,9 @@ public class TcpServer extends AmasePlugin {
     protected static int default_port = 5555;
     //private ServerPanel serverPanel = new ServerPanel(server);
     protected ServerStatus statusPanel = new ServerStatus();
-    protected ArrayList<SocketThread> socketList = new ArrayList<>();
+    // Accept, receive and simulation threads can change the clients while a
+    // message is being broadcast. Each fan-out uses a stable client snapshot.
+    protected CopyOnWriteArrayList<SocketThread> socketList = new CopyOnWriteArrayList<>();
     protected ServerSocket serverSocket;
     protected int port = default_port;
 
@@ -114,10 +115,10 @@ public class TcpServer extends AmasePlugin {
      */
     protected void sendToOthers(LMCPObject o, SocketThread src) {
 
-        for (ListIterator<SocketThread> it = socketList.listIterator(); it.hasNext();) {
-            SocketThread s = it.next();
+        for (SocketThread s : socketList) {
             if (!s.isRunning()) {
-                it.remove();
+                socketList.remove(s);
+                continue;
             }
             if (s != src) {
                 s.sendMessage(o);
@@ -155,7 +156,11 @@ public class TcpServer extends AmasePlugin {
     protected void sendMessage(LMCPObject obj) {
         if (!socketList.isEmpty()) {
             for (SocketThread s : socketList) {
-                s.sendMessage(obj);
+                if (s.isRunning()) {
+                    s.sendMessage(obj);
+                } else {
+                    socketList.remove(s);
+                }
             }
         }
     }

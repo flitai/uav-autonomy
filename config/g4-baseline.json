@@ -88,5 +88,105 @@
         "sha256": "b68388cfa75c9fb924584ce75f2c4003f61f3d66f3b3e7e44122b64faab342f9"
       }
     ]
+  },
+  "amaseRevision": {
+    "buildRunId": "g1-t04-build-20260920-024628-136806",
+    "guiRunId": "g1-t04-run-20260920-024650-070740",
+    "automaticRunId": "g1-t04-automatic-20260920-024736-508525",
+    "sourceChanges": [
+      {
+        "path": "OpenAMASE/OpenAMASE/src/Amase/avtas/amase/analysis/AreaSearchHighlight.java",
+        "before": "D544B0D158A6BB38275995A06BE91C726488964A7EDC938688816931F16C7AC0",
+        "after": "D0B3E6A5840063B9095D183493D26BBDE132C2D3842ACF1DADDDECA3CD7C5158"
+      },
+      {
+        "path": "OpenAMASE/OpenAMASE/src/Amase/avtas/amase/analysis/PointSearchHighlight.java",
+        "before": "BD15B46936B8FE89DB89DC5743705323303F5B954E17F8060C4DD44BF6520F48",
+        "after": "1D0A6DE1C5C578347238B54AA5E12455ABF56C927B023753E6FE0AD7591BE99C"
+      },
+      {
+        "path": "OpenAMASE/OpenAMASE/src/Amase/avtas/amase/analysis/SearchTaskAnalysis.java",
+        "before": "28B99E8BB16EE97ACA8221FBCD157BCD1767187EACFF0812C80081481B1BF76B",
+        "after": "B467424BAB6C691657071AFC0AFEAB0E2CA427E4AD98496E9FB1148B39F56D5D"
+      },
+      {
+        "path": "OpenAMASE/OpenAMASE/src/Amase/avtas/amase/network/TcpServer.java",
+        "before": "B5CD8A7A0171325A697D81D5B32788AF3078BCB6815D61FC244722DFD9D56750",
+        "after": "C9429BDBB2E75CF57F08348FB0092B26577EDED8E1726FC964E9C72CE96C78B7"
+      }
+    ],
+    "reason": "G4-T07 qualified point/area statistics and concurrent TCP observer repair",
+    "parentFormalUxas": {
+      "schemaVersion": 1,
+      "status": "passed",
+      "path": "g2-t05-build-20260919-232557-986/g2-t07-test-20260919-233237-819/g2-t07-publish-20260919-233516-550",
+      "buildRunId": "g2-t05-build-20260919-232557-986",
+      "validationRunId": "g2-t05-test-20260919-232811-379",
+      "releaseRunId": "g2-t07-test-20260919-233237-819",
+      "publishRunId": "g2-t07-publish-20260919-233516-550",
+      "buildInfoSHA256": "BF0FC4F7D29FF58030C0B0B87FDCBDBA6A0AD88D3734532300C188466931138C"
+    },
+    "formalUxas": {
+      "schemaVersion": 1,
+      "status": "passed",
+      "path": "g2-t05-build-20260919-232557-986/g2-t07-test-20260920-080804-302/g2-t07-publish-20260920-081057-422",
+      "buildRunId": "g2-t05-build-20260919-232557-986",
+      "validationRunId": "g2-t05-test-20260919-232811-379",
+      "releaseRunId": "g2-t07-test-20260920-080804-302",
+      "publishRunId": "g2-t07-publish-20260920-081057-422",
+      "buildInfoSHA256": "11183D203BD2248DD87AADDDC81F2F51DC287A7050E72DE38D397BFDFEDDE015"
+    },
+    "parentAmaseSHA256": "4c96daf2d72deb826940294b1566037f0b500940958352ccfe6dbcd77a0dbac7",
+    "amaseSHA256": "1ef4a6da82717cf070e63818cafdc94895c021b359a1f682840003b5bfd74237",
+    "buildInfoSHA256": "752fee3c501f93fcd9ace4bbf38171ae99bff22f1b2c50c212064d685b8535b2",
+    "finalizeRunId": "g1-t04-finalize-20260920-080752-574040",
+    "sources": [
+      {
+        "path": "OpenAMASE/OpenAMASE/src/Amase/avtas/amase/analysis/AreaSearchHighlight.java",
+        "sha256": "d0b3e6a5840063b9095d183493d26bbde132c2d3842acf1dadddeca3cd7c5158"
+      },
+      {
+        "path": "OpenAMASE/OpenAMASE/src/Amase/avtas/amase/analysis/PointSearchHighlight.java",
+        "sha256": "1d0a6de1c5c578347238b54aa5e12455abf56c927b023753e6fe0ad7591be99c"
+      },
+      {
+        "path": "OpenAMASE/OpenAMASE/src/Amase/avtas/amase/analysis/SearchTaskAnalysis.java",
+        "sha256": "b467424bab6c691657071afc0afeab0e2ca427e4ad98496e9fb1148b39f56d5d"
+      },
+      {
+        "path": "OpenAMASE/OpenAMASE/src/Amase/avtas/amase/network/TcpServer.java",
+        "sha256": "c9429bdbb2e75cf57f08348fb0092b26577eded8e1726fc964e9c72ce96c78b7"
+      }
+    ],
+    "receipts": [
+      {
+        "path": "out/runs/g1-t04-run-20260920-024650-070740/result.json",
+        "sha256": "b5f4163cdff0994a017604abe19074cb6df4cbf1aa49884b52c57523d63be3c8"
+      },
+      {
+        "path": "out/runs/g1-t04-automatic-20260920-024736-508525/result.json",
+        "sha256": "e24124646dc2e3f57ea363bead45712a691f72cab94db8df60f4556a08238a4c"
+      },
+      {
+        "path": "out/runs/g1-t04-finalize-20260920-080752-574040/result.json",
+        "sha256": "2a3c60c065effd80c77daa3b5b2b2d320640f2f718c3b79af5741c3a86999ff0"
+      },
+      {
+        "path": "out/runs/g2-t07-test-20260920-080804-302/result.json",
+        "sha256": "ba817e6b25ef93957ed681b66b10751cdb8f1d1103aae1ff2d443041ea90e2c0"
+      },
+      {
+        "path": "out/runs/g2-t07-test-20260920-080804-302/entry-result.json",
+        "sha256": "8845f85cfd056168c81b87997af32e0c807065710f4817f7eb9f598ab4a36087"
+      },
+      {
+        "path": "out/runs/g2-t07-publish-20260920-081057-422/result.json",
+        "sha256": "b53cdc4cc967ba49a78b414151e5acc79f66386905c5d170b4e92d675987d1d4"
+      },
+      {
+        "path": "out/runs/g2-t07-publish-20260920-081057-422/entry-result.json",
+        "sha256": "d64f1157cd7c5909d981c5528a05dd10f0abbb17d5aa66f0250f14a316c4b648"
+      }
+    ]
   }
 }

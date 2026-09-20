@@ -43,6 +43,60 @@ def verify_files(root, rows):
         require(path.is_file() and sha(path) == item['sha256'].lower(), 'Source differs: ' + item['path'])
 
 
+def verify_amase_revision(root, revision, parent_pointer, pointer, artifacts):
+    """Accept an explicit, normally finalized AMASE revision and UxAS handoff."""
+    require(revision['parentFormalUxas'] == parent_pointer and revision['formalUxas'] == pointer,
+            'AMASE revision UxAS lineage differs')
+    require(all(pointer[key] == parent_pointer[key] for key in ('buildRunId', 'validationRunId')),
+            'AMASE handoff unexpectedly changed the UxAS build')
+    require(revision['parentAmaseSHA256'].lower() == artifacts['amaseSHA256'].lower(),
+            'AMASE revision parent artifact differs')
+    verify_files(root, revision['sources'])
+    verify_files(root, revision['receipts'])
+    info_path = root / 'out/artifacts/amase/build-info.json'
+    require(sha(info_path) == revision['buildInfoSHA256'].lower(), 'AMASE publication metadata differs')
+    info = load(info_path)
+    accepted = info['acceptance']
+    require(info['status'] == accepted['status'] == 'passed' and
+            info['runId'] == accepted['buildRunId'] == revision['buildRunId'] and
+            accepted['guiRunId'] == revision['guiRunId'] and
+            accepted['validationRunId'] == revision['automaticRunId'] and
+            accepted['manualConfirmation'].strip() and accepted['guiExitCode'] == 0 and accepted['portsReleased'],
+            'AMASE current manual acceptance differs')
+    verify_files(root, info['inputs'])
+    require(info['artifact']['sha256'].lower() == revision['amaseSHA256'].lower(), 'AMASE published artifact differs')
+    bound = {row['path'] for row in revision['receipts']}
+    def receipt(run_id, filename='result.json'):
+        require(re.fullmatch(r'[A-Za-z0-9-]+', run_id), 'Invalid revision receipt identity')
+        path = 'out/runs/' + run_id + '/' + filename
+        require(path in bound, 'Unbound revision receipt')
+        return load(root / path)
+    automatic = receipt(revision['automaticRunId'])
+    gui = receipt(revision['guiRunId'])
+    final = receipt(revision['finalizeRunId'])
+    require(automatic['status'] == gui['status'] == 'automatic-passed' and
+            automatic['buildRunId'] == gui['buildRunId'] == revision['buildRunId'] and
+            automatic['guiRunId'] == revision['guiRunId'] and len(automatic['cases']) == 11 and
+            all(c['status'] == 'passed' for c in automatic['cases']) and gui['exitCode'] == 0 and gui['portReleased'],
+            'AMASE automatic or normal GUI exit evidence differs')
+    require(final['status'] == 'passed' and final['buildRunId'] == revision['buildRunId'] and
+            final['guiRunId'] == revision['guiRunId'] and final['validationRunId'] == revision['automaticRunId'] and
+            final['manualConfirmation'] == accepted['manualConfirmation'] and final['guiExitCode'] == 0 and final['portsReleased'],
+            'AMASE finalization receipt differs')
+    for run_id in (pointer['releaseRunId'], pointer['publishRunId']):
+        for name in ('result.json', 'entry-result.json'):
+            require(receipt(run_id, name)['status'] == 'passed', 'UxAS handoff publication failed')
+    uxas = root / 'out/artifacts/uxas' / pointer['path']
+    require(uxas.resolve().is_relative_to((root / 'out/artifacts/uxas').resolve()), 'Invalid UxAS package path')
+    require(sha(uxas / 'build-info.json') == pointer['buildInfoSHA256'].lower(), 'UxAS handoff metadata differs')
+    package_info = load(uxas / 'build-info.json')
+    verify_files(uxas, package_info['files'])
+    handoff = load(uxas / 'handoff.json')['amase']
+    require(handoff['buildRunId'] == info['runId'] and handoff['acceptance'] == accepted and
+            handoff['buildInfoSHA256'].lower() == sha(info_path), 'Published UxAS AMASE handoff differs')
+    return revision['amaseSHA256']
+
+
 def verify_handoff(root, baseline_id, policy=None):
     policy = policy or load(root / 'config/g4-baseline.json')
     require(re.fullmatch(r'g3-t01-check-[0-9-]+', baseline_id), 'Invalid baseline run identity')
@@ -63,8 +117,10 @@ def verify_handoff(root, baseline_id, policy=None):
     require(pointer == baseline['pointer'], 'Qualification refers to a different current UxAS package')
     expected_artifacts = dict(handoff['artifacts'])
     revision = policy.get('uxasRevision')
+    amase_revision = policy.get('amaseRevision')
+    parent_pointer = amase_revision['parentFormalUxas'] if amase_revision else pointer
     if revision:
-        require(revision['parentFormalUxas'] == handoff['formalUxas'] and revision['formalUxas'] == pointer,
+        require(revision['parentFormalUxas'] == handoff['formalUxas'] and revision['formalUxas'] == parent_pointer,
                 'UxAS revision is not descended from the G3 handoff')
         verify_files(root, revision['sources'])
         verify_files(root, revision['receipts'])
@@ -73,7 +129,9 @@ def verify_handoff(root, baseline_id, policy=None):
         require(revision['formalUxas']['buildRunId'] != handoff['formalUxas']['buildRunId'], 'Revision did not rebuild UxAS')
         expected_artifacts['uxasSHA256'] = revision['uxasSHA256']
     else:
-        require(pointer == handoff['formalUxas'], 'Current UxAS differs from stage handoff')
+        require(parent_pointer == handoff['formalUxas'], 'Current UxAS differs from stage handoff')
+    if amase_revision:
+        expected_artifacts['amaseSHA256'] = verify_amase_revision(root, amase_revision, parent_pointer, pointer, expected_artifacts)
     uxas = root / 'out/artifacts/uxas' / pointer['path']
     require(uxas.resolve().is_relative_to((root / 'out/artifacts/uxas').resolve()), 'Invalid UxAS package path')
     artifacts = {'uxasSHA256': uxas / 'uxas.exe', 'amaseSHA256': root / 'out/artifacts/amase/OpenAMASE.jar',
@@ -84,7 +142,7 @@ def verify_handoff(root, baseline_id, policy=None):
     require(generation['runId'] == handoff['lmcpGenerationRunId'], 'Mixed LMCP generations')
     return {'baselineRunId': baseline_id, 'baselineSHA256': sha(directory / 'baseline.json'),
             'g3StageRunId': policy['g3StageRunId'], 'g3HandoffSHA256': sha(stage / 'handoff.json'),
-            'uxasRevision': revision,
+            'uxasRevision': revision, 'amaseRevision': amase_revision,
             'artifacts': {key: sha(path) for key, path in artifacts.items()}}
 
 
