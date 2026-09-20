@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "qualification": "registered-only",
+  "rawDataReadOnly": true,
+  "derivedRoot": "out/geography",
+  "vector": {
+    "path": "tiles/tiles/planet.pmtiles",
+    "format": "PMTiles-v3-MVT",
+    "observedBytes": 137370745450,
+    "observedZoom": [0, 15],
+    "source": "https://build.protomaps.com/20260817.pmtiles",
+    "sourceBasis": "User-provided archive; observed Protomaps metadata, not a verified download receipt",
+    "attribution": "© OpenStreetMap contributors; Protomaps",
+    "integrityQualified": false
+  },
+  "dem": {
+    "path": "tiles/dem",
+    "format": "Terrarium-PNG-RGB",
+    "observedZoom": [0, 10],
+    "observedTileSize": [256, 256],
+    "source": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png",
+    "downloader": "https://github.com/flitai/Airports/blob/main/download_offline_maps.py",
+    "sourceBasis": "User confirmed Airports downloader; no complete per-tile download receipt",
+    "verticalDatum": null,
+    "acceptanceRegion": null,
+    "integrityQualified": false,
+    "terrainQualified": false
+  },
+  "archive": { "path": "tiles.zip", "observedBytes": 136820956561 },
+  "auxiliaryVector": {
+    "path": "tiles/tiles/global-z9.pmtiles",
+    "observedBytes": 1557952591,
+    "observedZoom": [0, 9],
+    "integrityQualified": false
+  },
+  "satellite": {
+    "provider": "Esri World Imagery",
+    "enabledByDefault": false,
+    "implementationTask": "G5-T03"
+  }
+}

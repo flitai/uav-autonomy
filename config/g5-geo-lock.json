@@ -1,0 +1,95 @@
+{
+  "schemaVersion": 1,
+  "python": "3.14.7",
+  "platform": "win_amd64",
+  "packages": [
+    {
+      "name": "affine",
+      "version": "3.0.1",
+      "url": "https://files.pythonhosted.org/packages/3d/87/e62f55c956b583380e7d2a71705dfd431ee32dd1689d50491ba0c610fc11/affine-3.0.1-py3-none-any.whl",
+      "filename": "affine-3.0.1-py3-none-any.whl",
+      "sha256": "cda3b303325e7bf2bf34817e68753a0d1c4cacbdd451fe67c4878dc2ecbaa540",
+      "metadataUrl": "https://pypi.org/pypi/affine/3.0.1/json"
+    },
+    {
+      "name": "attrs",
+      "version": "26.1.0",
+      "url": "https://files.pythonhosted.org/packages/64/b4/17d4b0b2a2dc85a6df63d1157e028ed19f90d4cd97c36717afef2bc2f395/attrs-26.1.0-py3-none-any.whl",
+      "filename": "attrs-26.1.0-py3-none-any.whl",
+      "sha256": "c647aa4a12dfbad9333ca4e71fe62ddc36f4e63b2d260a37a8b83d2f043ac309",
+      "metadataUrl": "https://pypi.org/pypi/attrs/26.1.0/json"
+    },
+    {
+      "name": "certifi",
+      "version": "2026.7.22",
+      "url": "https://files.pythonhosted.org/packages/0b/a7/71ac2cff56fec219ed242bb11b8efb69fcc4bec75db06fb7bfe35de520e6/certifi-2026.7.22-py3-none-any.whl",
+      "filename": "certifi-2026.7.22-py3-none-any.whl",
+      "sha256": "62f22742b58a1a33014a2b6b706588a8d7e2a88ae7bd1a6ebe8c992928483775",
+      "metadataUrl": "https://pypi.org/pypi/certifi/2026.7.22/json"
+    },
+    {
+      "name": "click",
+      "version": "8.5.0",
+      "url": "https://files.pythonhosted.org/packages/58/50/6c0d534c5f134586a8e1ba4e330569e32f057e33372ae556463212fb4cd3/click-8.5.0-py3-none-any.whl",
+      "filename": "click-8.5.0-py3-none-any.whl",
+      "sha256": "255bc9599cf7748b4b1a446ccc735421bd08a2ae529a8b88597d3de5664ee360",
+      "metadataUrl": "https://pypi.org/pypi/click/8.5.0/json"
+    },
+    {
+      "name": "numpy",
+      "version": "2.5.3",
+      "url": "https://files.pythonhosted.org/packages/a4/73/d2c08231e4fde7e415501fd02c715d96e98599b2d8384445933944152984/numpy-2.5.3-cp314-cp314-win_amd64.whl",
+      "filename": "numpy-2.5.3-cp314-cp314-win_amd64.whl",
+      "sha256": "2c25dfa72943e4336ddb6b0ee4277b47a0c85bede0807530ec68103bf58e2c10",
+      "metadataUrl": "https://pypi.org/pypi/numpy/2.5.3/json"
+    },
+    {
+      "name": "pillow",
+      "version": "12.3.0",
+      "url": "https://files.pythonhosted.org/packages/f1/e0/492879f69d94f91f60fc8cd05ba03650e9520afebb2fb7aa12777d7c7f38/pillow-12.3.0-cp314-cp314-win_amd64.whl",
+      "filename": "pillow-12.3.0-cp314-cp314-win_amd64.whl",
+      "sha256": "fdafc9cce40277e0f7a0feabce0ee50dd2fa1800f3b38015e51296b5e814048d",
+      "metadataUrl": "https://pypi.org/pypi/pillow/12.3.0/json"
+    },
+    {
+      "name": "pip",
+      "version": "26.2.1",
+      "url": "https://files.pythonhosted.org/packages/f3/6e/1736e5b4ae2b778ef2f81c47d797de9f891d4d8acb047a24ca37a60294dd/pip-26.2.1-py3-none-any.whl",
+      "filename": "pip-26.2.1-py3-none-any.whl",
+      "sha256": "71138adf1f4ca900cdb7d289c21b7494329f2332b6d85f0e1c42108c0384ed3e",
+      "metadataUrl": "https://pypi.org/pypi/pip/26.2.1/json"
+    },
+    {
+      "name": "pyparsing",
+      "version": "3.3.2",
+      "url": "https://files.pythonhosted.org/packages/10/bd/c038d7cc38edc1aa5bf91ab8068b63d4308c66c4c8bb3cbba7dfbc049f9c/pyparsing-3.3.2-py3-none-any.whl",
+      "filename": "pyparsing-3.3.2-py3-none-any.whl",
+      "sha256": "850ba148bd908d7e2411587e247a1e4f0327839c40e2e5e6d05a007ecc69911d",
+      "metadataUrl": "https://pypi.org/pypi/pyparsing/3.3.2/json"
+    },
+    {
+      "name": "pyproj",
+      "version": "3.8.0",
+      "url": "https://files.pythonhosted.org/packages/f9/26/058eaa656d4e4c43a2528b51a39f6d4b3082e6eb38731ddab4088a744bc1/pyproj-3.8.0-cp314-cp314-win_amd64.whl",
+      "filename": "pyproj-3.8.0-cp314-cp314-win_amd64.whl",
+      "sha256": "653b49e2d5aa87c22c1c32520700ed8f394583a0174a6e69ceb280bdbee1b4e6",
+      "metadataUrl": "https://pypi.org/pypi/pyproj/3.8.0/json"
+    },
+    {
+      "name": "rasterio",
+      "version": "1.5.1",
+      "url": "https://files.pythonhosted.org/packages/f6/82/cc05ee6ae639801f79c35667bf0b1b163819625483b3231fb70858c1155f/rasterio-1.5.1-cp314-cp314-win_amd64.whl",
+      "filename": "rasterio-1.5.1-cp314-cp314-win_amd64.whl",
+      "sha256": "546ca44c4417772a48c5224b037f10330a75cde74b429f07ac43838e20f9b2c9",
+      "metadataUrl": "https://pypi.org/pypi/rasterio/1.5.1/json"
+    },
+    {
+      "name": "websockets",
+      "version": "17.1",
+      "url": "https://files.pythonhosted.org/packages/d0/0f/9e7ac63c5d7cb642952200814f584318e65146df008b7d375d5d9c6b2c97/websockets-17.1-cp314-cp314-win_amd64.whl",
+      "filename": "websockets-17.1-cp314-cp314-win_amd64.whl",
+      "sha256": "2a4dc6ef83f4559e0d05f313a375cb38f63c986096a9da99fe94fdd779d313e5",
+      "metadataUrl": "https://pypi.org/pypi/websockets/17.1/json"
+    }
+  ]
+}

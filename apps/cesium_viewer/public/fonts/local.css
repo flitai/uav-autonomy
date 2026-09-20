@@ -1,0 +1,6 @@
+/* T01 uses Windows system fonts; no font download or redistribution. */
+@font-face {
+  font-family: "Microsoft YaHei";
+  src: local("Microsoft YaHei");
+  font-display: swap;
+}

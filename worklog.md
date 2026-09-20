@@ -1494,3 +1494,29 @@ T09 入口复核与纠正：首轮 g4-t09-stage-20260920-103431-086805 已真实
 最终文档核查：7 份修改 Markdown 的 UTF-8、代码围栏、388 个本地链接、31 个标题锚点、11 张任务卡及状态一致性全部通过；历史 worklog 前缀与 Git 基线一致且本次追加保留原文件字节，git diff --check 通过。未创建前端目录，原始数据保留，提交范围限定上述 7 份文档。按持续授权进入提交、普通推送及远程核对；实际提交号和远程结果见本轮交付及 Git 记录。
 
 归档补记：主文档提交 5ee6471 已生成，git commit 最终退出 0；其自动 maintenance 触发 geometric-repack，扫描到约 19.6 万个已有松散对象，长时间未结束。只读核对父子 PID 与命令后，仅停止本次提交启动的 pack-objects 子进程；维护报告 geometric-repack failed，原提交有效。未删除对象／临时文件，未结束其他既有 Git 进程。后续归档命令单次使用 -c maintenance.auto=false -c gc.auto=0，避免再次触发该维护，不修改持久 Git 配置；仓库整体维护另行处理，不扩展本次文档任务。
+
+
+## WL-20260920-009｜G5-T01 环境与输入基线
+
+时间／时区：2026-09-20，Asia/Shanghai。
+关联任务与状态：G5-T01 已完成；T02 可执行，尚未启动。本轮用户明确要求执行 T01，范围为隔离工具、最小前端工程、数据登记及资格验证，不进入真实地形转换或仿真显示联调。
+
+背景与输入：起点 Git 7ca739b5c88798edb5398a9b01924423ac9c125c，跟踪文件干净，用户原始 tiles/ 和 tiles.zip 未跟踪。读取根 AGENTS、状态、任务卡、G5 方案、最近日志、G4 环境及正式包／日常入口代码，确认没有子目录说明。保留正式 AMASE／UxAS、七模型和 G4 来源。重新执行只读 G3 资格，g3-t01-check-20260920-143951-894 与 g3-t01-check-20260920-144822-482 均 passed；G4 正式包、环境、日常入口收据和当前文件完整复核通过。
+
+工具选择与准备：从 Node 官方发布／SHASUMS256、npm registry 与 PyPI 元数据固定来源及摘要，Node 24.21.0 LTS／npm 11.19.0、TypeScript 7.0.2／Vite 8.3.0／Cesium 1.145.0，前端 lockfile v3 共 91 个包条目。独立 Python 3.14.7 venv 固定 11 个包，实际 Rasterio 1.5.1／GDAL 3.12.4、PyProj 3.8.0／PROJ 9.8.1、NumPy 2.5.3／Pillow 12.3.0；WebSockets 用于独立浏览器探针。未更改 G4 环境、系统 Python 包或持久 PATH。锁定清单先形成，再通过固定摘要下载／离线 wheel 安装与 npm ci 消费。准备 g5-t01-setup-20260920-143951-653 passed，补齐基础 Python 摘要及发布前复核后，新准备 g5-t01-setup-20260920-144636-058 passed；.tools/g5/current.json 指向后者，4609 个工具文件摘要固定，旧批次保留。
+
+成果与修改文件：新增 apps/cesium_viewer 最小 TypeScript／Vite 工程，生产包包含全部 Cesium Workers／ThirdParty／Assets／Widgets 及许可，397 个候选文件；中文界面明确“环境验证”“尚未连接仿真”，显示椭球、异步几何样片和中文标签。字体用 Windows 本地 Microsoft YaHei，不下载字体。新增 config/g5-* 工具／资源／运行清单、scripts/g5_environment、tests/g5_environment、Windows 准备／构建／运行／验收入口。原始目录及压缩包加入忽略规则；只读登记主／辅助 PMTiles、DEM 样本与压缩包的大小、有限头部和时间，仍为 registered-only，无全量摘要或地形资格。
+
+验证与证据：在仓库根执行 setup-g5.ps1，随后从中文空格工作目录及系统临时目录调用绝对入口。最终完整矩阵 g5-t01-test-20260920-145253-581 passed，14 组覆盖声明端口、独立地理能力、普通／中文空格工程干净构建、两次生产页面、重复启停、中文开发页面、缺依赖／修改来源／非白名单 npm 源／错误下载摘要拒绝、8080／5173 冲突拒绝。GeoTIFF 与 1201×1201 DTED Level 1 合成往返、正负 Terrarium 高程、无效值、网格位置、WGS84→ECEF、缺转换网格拒绝均通过；PROJ 网络关闭。实际 Edge 153.0.4234.32 加载工作线程、四类资源、中文标签及刷新通过；实际渲染器为 NVIDIA RTX 4000 SFF Ada 的 ANGLE／D3D11，未通过显卡型号推断。外部域名解析禁用，截图只作为资源探针旁证。
+
+公开入口：g5-t01-build-20260920-144822-264 从 out/tmp/G5 入口 中文 调用，自动新建后端资格和中文工程，passed；最终来源的 g5-t01-build-20260920-145303-771 从系统临时目录调用，passed。VerifyOnly g5-t01-verify-20260920-144934-494 passed。最终公开运行 g5-t01-serve-20260920-145331-517 从系统临时目录调用，独立 Edge 再次加载／刷新通过，创建本组 request-stop 正常退出；result、entry-result 及 public-entry-edge 收据均 passed、退出 0。各入口参数均显式 PythonExecutable，可选 BaselineRunId 仍重查当前来源；build 可选 ChinesePath，run 必须绑定 BuildRunId。具体命令与证据见 [环境报告](docs/g5-environment-validation.md)。
+
+问题、失败尝试与修复：g5-t01-test-20260920-144246-503 因 Cesium 类型没有 VERSION 导出而编译失败，改从固定 package 元数据注入版本；g5-t01-test-20260920-144359-705 浏览器因 favicon 404 失败，新增本地 SVG；g5-t01-test-20260920-144453-990 的两种生产路径通过，但开发中缺失资源被 Vite SPA 返回 HTML，修复资源中间件明确 404 后 g5-t01-test-20260920-144710-554 首次完整 passed。完善调用目录记录及使用说明后，g5-t01-test-20260920-144934-494 再次 passed。公开运行补测 g5-t01-serve-20260920-145008-280 的服务正常退出，浏览器相对用户目录导致 Edge 在就绪前退出 21；探针统一解析绝对路径，同样相对输出参数在最终运行通过，完整矩阵按最终源码再次通过。所有 failed 收据、候选和日志保留，不改写旧记录或忽略缺资源错误。
+
+重要决定与边界：T01 工具资格和最小页面资格分开，candidate.stageQualified=false，没有正式 Cesium 指针；G4 指针保持。静态 8080 与开发 5173 只承担 T01 资源验证，8000 代理／Range／地图／卫星／真实地形由 T03，模型由 T06，业务状态接入由 T05；没有提前启动这些任务。地理环境可处理 DTED 不代表用户 DEM 完整、垂直基准合格或 AMASE 已加载真实地形。所有合成地理产物仅为探针。没有启动后端仿真，没有修改或转换原始数据，没有宣称 FPS、任务统计或人工 Cesium 验收通过。
+
+文档与收尾：新增 [环境报告](docs/g5-environment-validation.md)，同步 [当前状态](docs/status.md)、[任务清单](docs/backlog.md#9-g5-顺序与任务卡)、[G5 方案](docs/g5-cesium-display-plan.md)、[G4 交接](docs/g4-g5-handoff.md)、[总体计划](04.项目总体实施计划与阶段验收.md) 和 [AGENTS](AGENTS.md)。接下来完成最终语法／链接／来源／端口／Git 范围复查，并按持续授权提交、普通推送和核对远程；归档命令使用单次 -c maintenance.auto=false -c gc.auto=0，避免再次触发 WL-20260920-008 记录的仓库维护问题，不处理历史对象或修改持久 Git 配置。
+
+遗留与下一步：T02 核验 PMTiles 内容和 DEM、固定验收区域、查明实际高程来源及垂直基准、选择并验证转换网格，生成同源标准化栅格和派生物。未知基准／缺覆盖／缺转换资源仍停止资格流程；不自动进入 T02。
+
+最终复查：g5-t01-final-check-20260920 passed；5 个 Python AST、9 份 Markdown／414 个本地链接、历史日志前缀、最终 14 组来源清单与当前字节、4609 个工具文件、原始数据登记及正式后端／网关身份全部一致。另有 5 个 PowerShell 入口和 3 个 JavaScript 模块语法检查通过，git diff --check 通过；8000／8080／5173／9223 均可独占绑定。原始地图、工具、候选、浏览器配置和日志均被忽略，未纳入提交。按持续授权进行本卡提交、普通推送及远程核对，实际提交号和归档结果见本轮交付及 Git 记录。

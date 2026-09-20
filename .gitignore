@@ -3,6 +3,12 @@
 /out/
 /CMakeUserPresets.json
 
+# User-provided geographic inputs are read-only; derived files belong in out.
+/tiles/
+/tiles.zip
+/apps/cesium_viewer/node_modules/
+/apps/cesium_viewer/dist/
+
 # Upstream Java projects: default Ant/NetBeans local outputs only
 /LmcpGen/build/
 /LmcpGen/dist/

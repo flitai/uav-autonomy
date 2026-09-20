@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "browserProtocolVersion": 1,
+  "host": "127.0.0.1",
+  "gatewayPort": 8000,
+  "viewerPort": 8080,
+  "developmentPort": 5173,
+  "portConflictPolicy": "fail",
+  "geographicResources": "config/g5-resources.json",
+  "stage": "G5-T01-environment-only",
+  "gatewayProxyImplemented": false,
+  "simulationConnected": false,
+  "cesiumBaseUrl": "/cesium/"
+}
