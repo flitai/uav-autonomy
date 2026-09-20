@@ -1,0 +1,184 @@
+{
+  "schemaVersion": 1,
+  "decision": "Original PMTiles + USGS regional primary terrain; Copernicus comparison only",
+  "sourceDownload": {
+    "path": "out/geography/sources/g5-t02-dem-download-20260920-160406/verified-manifest.json",
+    "sha256": "fb5fd93f1494a02b501fa2cdada707ad8589ee4a6a61d233a371b5a12d635e35"
+  },
+  "files": [
+    {
+      "path": "out/geography/sources/g5-t02-dem-download-20260920-160406/copernicus-glo30/Copernicus_DSM_COG_10_N44_00_W120_00_DEM.tif",
+      "bytes": 40862132,
+      "sha256": "10e86e8ac09188854371d0967c25d4a3bc2da735217ad69aefe6825ae473be44",
+      "dataset": "copernicus-glo30",
+      "kind": "tif",
+      "url": "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_N44_00_W120_00_DEM/Copernicus_DSM_COG_10_N44_00_W120_00_DEM.tif"
+    },
+    {
+      "path": "out/geography/sources/g5-t02-dem-download-20260920-160406/copernicus-glo30/Copernicus_DSM_COG_10_N44_00_W121_00_DEM.tif",
+      "bytes": 40858713,
+      "sha256": "3a990738061b631ba3407290582e4b6d6f4344f1812a98a16b66704577e6f6b0",
+      "dataset": "copernicus-glo30",
+      "kind": "tif",
+      "url": "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_N44_00_W121_00_DEM/Copernicus_DSM_COG_10_N44_00_W121_00_DEM.tif"
+    },
+    {
+      "path": "out/geography/sources/g5-t02-dem-download-20260920-160406/copernicus-glo30/Copernicus_DSM_COG_10_N44_00_W122_00_DEM.tif",
+      "bytes": 40308648,
+      "sha256": "a1ea3e285fb900e9b2a785c720aca358e5e954deb218bf25f577bf43be854a7a",
+      "dataset": "copernicus-glo30",
+      "kind": "tif",
+      "url": "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_N44_00_W122_00_DEM/Copernicus_DSM_COG_10_N44_00_W122_00_DEM.tif"
+    },
+    {
+      "path": "out/geography/sources/g5-t02-dem-download-20260920-160406/copernicus-glo30/Copernicus_DSM_COG_10_N45_00_W120_00_DEM.tif",
+      "bytes": 40846520,
+      "sha256": "4615921b38662dfee1d43eaf45fb6d648a6d4e5eefb0554620872834c177465c",
+      "dataset": "copernicus-glo30",
+      "kind": "tif",
+      "url": "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_N45_00_W120_00_DEM/Copernicus_DSM_COG_10_N45_00_W120_00_DEM.tif"
+    },
+    {
+      "path": "out/geography/sources/g5-t02-dem-download-20260920-160406/copernicus-glo30/Copernicus_DSM_COG_10_N45_00_W121_00_DEM.tif",
+      "bytes": 41828636,
+      "sha256": "d573daf4d735fb328c22538ab007bb481cb3ecdef4c09de4ba6231e8350e5565",
+      "dataset": "copernicus-glo30",
+      "kind": "tif",
+      "url": "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_N45_00_W121_00_DEM/Copernicus_DSM_COG_10_N45_00_W121_00_DEM.tif"
+    },
+    {
+      "path": "out/geography/sources/g5-t02-dem-download-20260920-160406/copernicus-glo30/Copernicus_DSM_COG_10_N45_00_W122_00_DEM.tif",
+      "bytes": 42866593,
+      "sha256": "49fa7a9dcbc9307da968920434f1dd5b420cb2cc3501ac25cc99a21f8f3afd77",
+      "dataset": "copernicus-glo30",
+      "kind": "tif",
+      "url": "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_N45_00_W122_00_DEM/Copernicus_DSM_COG_10_N45_00_W122_00_DEM.tif"
+    },
+    {
+      "path": "out/geography/sources/g5-t02-dem-download-20260920-160406/usgs-3dep-13arcsec/USGS_13_n46w121.gpkg",
+      "bytes": 864256,
+      "sha256": "b5c92f8895cb4f0b8d35b0f5eb6c56cf61859fecdf1cdd080d11a1de194783a4",
+      "dataset": "usgs-3dep-13arcsec",
+      "kind": "gpkg",
+      "url": "https://prd-tnm.s3.amazonaws.com/StagedProducts/Elevation/13/TIFF/current/n46w121/USGS_13_n46w121.gpkg"
+    },
+    {
+      "path": "out/geography/sources/g5-t02-dem-download-20260920-160406/usgs-3dep-13arcsec/USGS_13_n46w121.tif",
+      "bytes": 447960442,
+      "sha256": "7a744328b6fe9530124f705faf8f09301acdf0ed5ee72d9c21550336bac3cbe3",
+      "dataset": "usgs-3dep-13arcsec",
+      "kind": "tif",
+      "url": "https://prd-tnm.s3.amazonaws.com/StagedProducts/Elevation/13/TIFF/current/n46w121/USGS_13_n46w121.tif"
+    },
+    {
+      "path": "out/geography/sources/g5-t02-dem-download-20260920-160406/usgs-3dep-13arcsec/USGS_13_n46w121.xml",
+      "bytes": 13564,
+      "sha256": "e0a60dfa725d0b2d0497bd79ace33426ba7c64c5ad2096625b9563cbb811ec34",
+      "dataset": "usgs-3dep-13arcsec",
+      "kind": "xml",
+      "url": "https://prd-tnm.s3.amazonaws.com/StagedProducts/Elevation/13/TIFF/current/n46w121/USGS_13_n46w121.xml"
+    },
+    {
+      "path": "out/geography/sources/g5-t02-dem-download-20260920-160406/usgs-3dep-13arcsec/USGS_13_n46w122.gpkg",
+      "bytes": 1404928,
+      "sha256": "8d9627e08a53a4ff696f5374c63e57ee4504cbfc55fb3c41bb2c5f79bc4f4de3",
+      "dataset": "usgs-3dep-13arcsec",
+      "kind": "gpkg",
+      "url": "https://prd-tnm.s3.amazonaws.com/StagedProducts/Elevation/13/TIFF/current/n46w122/USGS_13_n46w122.gpkg"
+    },
+    {
+      "path": "out/geography/sources/g5-t02-dem-download-20260920-160406/usgs-3dep-13arcsec/USGS_13_n46w122.tif",
+      "bytes": 448644793,
+      "sha256": "a05756ba7ee345873528a9229d3df235239f6de245573425c72e5b6d127b9448",
+      "dataset": "usgs-3dep-13arcsec",
+      "kind": "tif",
+      "url": "https://prd-tnm.s3.amazonaws.com/StagedProducts/Elevation/13/TIFF/current/n46w122/USGS_13_n46w122.tif"
+    },
+    {
+      "path": "out/geography/sources/g5-t02-dem-download-20260920-160406/usgs-3dep-13arcsec/USGS_13_n46w122.xml",
+      "bytes": 13565,
+      "sha256": "a81a7b8757090194693422a0ae44a0d059c8d1078464856bcd24b0eec2322ab5",
+      "dataset": "usgs-3dep-13arcsec",
+      "kind": "xml",
+      "url": "https://prd-tnm.s3.amazonaws.com/StagedProducts/Elevation/13/TIFF/current/n46w122/USGS_13_n46w122.xml"
+    }
+  ],
+  "documents": [
+    {
+      "path": "out/geography/sources/g5-t02-dem-download-20260920-160406/documents/copernicus-readme.html",
+      "bytes": 8536,
+      "sha256": "922461d55070e3c7e0cf2903ec54190d69e3773da2dc9e776a3f03566cfd56d2",
+      "url": "https://copernicus-dem-30m.s3.amazonaws.com/readme.html"
+    },
+    {
+      "path": "out/geography/sources/g5-t02-dem-download-20260920-160406/documents/License-COPDEM-30.pdf",
+      "bytes": 113786,
+      "sha256": "9cd37d37ea654bbcaf0a2e059e6a3a5b5f76072824d8dd860ccf274ada8951bd",
+      "url": "https://documentation.dataspace.copernicus.eu/APIs/SentinelHub/Data/DEM/resources/license/License-COPDEM-30.pdf"
+    },
+    {
+      "path": "out/geography/sources/g5-t02-dem-download-20260920-160406/documents/usgs-tm11B9.pdf",
+      "bytes": 4078541,
+      "sha256": "2faf2fbaddb9f2217dd18a2c907f22a33609294a963725a3a0067ccefb34000e",
+      "url": "https://pubs.usgs.gov/tm/11b9/tm11B9.pdf"
+    }
+  ],
+  "grids": [
+    {
+      "filename": "us_nga_egm08_25.tif",
+      "url": "https://cdn.proj.org/us_nga_egm08_25.tif",
+      "bytes": 80585622,
+      "sha256": "4191d471eefebf24091b56dbc604353cb3b8cf8cc70e448bb9ae56a272bef17a",
+      "digestSource": "https://cdn.proj.org/files.geojson",
+      "sourceCRS": "EPSG:4979",
+      "targetCRS": "EPSG:3855"
+    },
+    {
+      "filename": "us_nga_egm96_15.tif",
+      "url": "https://cdn.proj.org/us_nga_egm96_15.tif",
+      "bytes": 2710815,
+      "sha256": "db493027562c9b004d7220fa881f5603adada4e1c5029b933fa7de4547b0e78d",
+      "digestSource": "https://cdn.proj.org/files.geojson",
+      "sourceCRS": "EPSG:4979",
+      "targetCRS": "EPSG:5773"
+    },
+    {
+      "filename": "us_noaa_g1999u01.tif",
+      "url": "https://cdn.proj.org/us_noaa_g1999u01.tif",
+      "bytes": 2635842,
+      "sha256": "0024a06903adf1d28f369071dae83b42ccb8acf2003cedea66a810ca42ef374e",
+      "digestSource": "https://cdn.proj.org/files.geojson",
+      "sourceCRS": "EPSG:4269",
+      "targetCRS": "EPSG:5703"
+    },
+    {
+      "filename": "us_noaa_nadcon5_nad83_1986_nad83_harn_conus.tif",
+      "url": "https://cdn.proj.org/us_noaa_nadcon5_nad83_1986_nad83_harn_conus.tif",
+      "bytes": 3522682,
+      "sha256": "e12ac2e886edafe616e0994c610ad3daa01db17c00d0e9938145d956f249fc2f",
+      "digestSource": "https://cdn.proj.org/files.geojson",
+      "sourceCRS": "EPSG:4269",
+      "targetCRS": "EPSG:4152"
+    }
+  ],
+  "operation": {
+    "path": "config/g5-usgs-operation.json",
+    "sha256": "add2573104b5101d2fea46dd9290e6013935de1b0828ba1735e0f96e0a96c96d",
+    "pipeline": "proj=pipeline step proj=unitconvert xy_in=deg xy_out=rad step proj=gridshift grids=us_noaa_nadcon5_nad83_1986_nad83_harn_conus.tif step proj=vgridshift grids=us_noaa_g1999u01.tif multiplier=1 step proj=cart ellps=GRS80 step proj=helmert x=-0.991 y=1.9072 z=0.5129 rx=-0.0257899075194932 ry=-0.0096500989602704 rz=-0.0116599432323421 s=0 convention=coordinate_frame step inv proj=cart ellps=WGS84 step proj=unitconvert xy_in=rad xy_out=deg",
+    "sourceCRS": "EPSG:4269+5703",
+    "targetCRS": "EPSG:4979",
+    "epsgDatabase": "v12.029",
+    "reportedModelAccuracyMeters": 1.1,
+    "rationale": "Highest-ranked available non-ballpark PROJ operation for declared NAD83/NAVD88 and the region; no unsupported NAD83(2011) relabelling."
+  },
+  "comparison": {
+    "sourceCRS": "EPSG:4326+3855",
+    "targetCRS": "EPSG:4326+5773",
+    "formula": "H96=H2008+N2008-N96",
+    "sourceIsDSM": true,
+    "groundTruthClaimed": false,
+    "usedToFillPrimary": false
+  },
+  "globalTerrainQualified": false,
+  "oldTerrariumUsedForPrimary": false
+}

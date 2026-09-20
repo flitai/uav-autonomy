@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "regionId": "oregon-waterway-mixed20-egm96-z10-v1",
+  "bounds": {
+    "west": -122,
+    "south": 45,
+    "east": -120,
+    "north": 46
+  },
+  "queryBoundary": "west/south inclusive, east/north exclusive; outer grid posts retained for interpolation",
+  "sourceZoom": 10,
+  "tileSize": 256,
+  "normalizedArcSeconds": 3,
+  "scenarioBufferMeters": 5000,
+  "sourceCRS": "EPSG:4326+5773",
+  "normalizedCRS": "EPSG:4326+5773",
+  "cesiumCRS": "EPSG:4979",
+  "verticalRule": "h = H + N; exactly one EGM96 to WGS84 ellipsoid conversion",
+  "normalization": "bilinear Terrarium RGB pixel centers in global Web Mercator pixel coordinates",
+  "dtedQuantization": "nearest integer meter, ties to even; DTED signed magnitude",
+  "cesiumLayout": "little-endian float32, rows north to south, columns west to east; geographic posts",
+  "coverageStatisticsGridMeters": 20,
+  "absoluteSurveyAccuracyClaimed": false,
+  "globalSimulationQualified": false,
+  "demCacheTiles": 48,
+  "amaseSupportedHeights": "nonnegative for current formal DTED reader; negative input explicitly refused",
+  "backendTerrainExecutionTask": "G5-T04"
+}

@@ -1520,3 +1520,93 @@ T09 入口复核与纠正：首轮 g4-t09-stage-20260920-103431-086805 已真实
 遗留与下一步：T02 核验 PMTiles 内容和 DEM、固定验收区域、查明实际高程来源及垂直基准、选择并验证转换网格，生成同源标准化栅格和派生物。未知基准／缺覆盖／缺转换资源仍停止资格流程；不自动进入 T02。
 
 最终复查：g5-t01-final-check-20260920 passed；5 个 Python AST、9 份 Markdown／414 个本地链接、历史日志前缀、最终 14 组来源清单与当前字节、4609 个工具文件、原始数据登记及正式后端／网关身份全部一致。另有 5 个 PowerShell 入口和 3 个 JavaScript 模块语法检查通过，git diff --check 通过；8000／8080／5173／9223 均可独占绑定。原始地图、工具、候选、浏览器配置和日志均被忽略，未纳入提交。按持续授权进行本卡提交、普通推送及远程核对，实际提交号和归档结果见本轮交付及 Git 记录。
+## WL-20260920-010｜G5-T02 数据资格检查与 DEM 异常复核
+
+时间／时区：2026-09-20，Asia/Shanghai。
+关联任务与状态：G5-T02 部分完成／受阻，未验收通过，T03 不启动。用户要求执行 T02；发现数据问题后用户要求“不会吧？再检查一下”，本轮已独立复核，没有取得修复或更换数据路线的确认，没有擅自补值或切换来源。
+
+背景与范围：起点 Git 0bdbd0f7f83625fabab0142af907a4be64c99573，跟踪文件干净；后续出现用户 models/ 未跟踪文件，保持不动。读取根 AGENTS、当前状态、任务卡、G5 方案、T01 工具与 G4 场景来源。原始 tiles/、tiles.zip、正式后端／网关及已发布收据只读。T01 VerifyOnly g5-t01-verify-20260920-150718-453 passed，绑定 g3-t01-check-20260920-150718-681，独立工具／正式来源核查通过。
+
+实施与调查：新增 scripts/g5_geography、tests/g5_geography、Windows 准备／检查入口及 config/g5-geography-lock.json、config/g5-terrain.json。PMTiles 两文件完成完整 SHA-256 和全部索引检查，主包 177280509 条记录、135393326 个独立内容、2918 个目录，辅助包 179074 条记录、97590 个独立内容、45 个目录；区段／计数／去重引用一致，各层级代表性 MVT 解码通过。全量摘要 g5-t02-full-digest-20260920 和索引 g5-t02-index-investigation 独立留存，正式入口再次核验。索引检查使用磁盘映射，主包约 1.08 GB 临时索引；不声称全部 MVT payload 都已解码或原始下载已获外部签名证明。
+
+区域与基准：根据原 WaterwaySearch 及 G4 原场景生成器构造只读来源副本，912 个位置／任务几何点及 5 km 外围包络包含于经度 [-122,-120]、纬度 [45,46]。包括插值边缘需 z10 的 x=164～170、y=364～368，共 35 个瓦片。本地全文件摘要均与上游一致，锁定 S3 version-id／来源头。GMTED 文档明确保留来源垂直基准，不能直接视为全球 EGM96；查到 USGS 官方 Spatial Metadata ZIP 后完整下载、固定摘要，流式检查区域 12 个完整来源矩形及连续覆盖，全部为 SRTM DTED2 Void Filled、WGS84／EGM96／米。固定 PROJ 发布的 NGA EGM96 15 分钟网格及摘要，关闭 PROJ 网络；基准核实只适用于本区域。
+
+主要问题与复核：首次完整网格派生发现 91 个负高程节点，最低约 -3718.70 m，纠正了此前尚未完成全网格检查便称区域为正值的口头判断。最低原始像素在 tiles/dem/10/170/365.png，第 53 列、第 80 行（从 0 开始），RGB=(112,59,0)，Terrarium 手算为 -4037 m，坐标约经度 -120.16090393066405、纬度 45.75171424271876。用户要求再查后，另写不依赖 Pillow 的 PNG CRC／滤波解码，与 Pillow、GDAL 的全部 65536 个像素逐值一致，PROJ 独立核对像素中心。S3 两种 URL（含固定版本）重新下载仍与本地逐字节一致；原文件 SHA-256 为 95e12d588026d764119078a56a1df4ca95096b24ab008fbd9ba48704332992c6。USGS 同点查询返回约 144.54 m，z11／z12 约 143.66／144.08 m，但来源为 NED、基准与分辨率另需核实，全部仅作旁证，未拿来补值。独立标量插值再次得到 -3718.70297766 m，排除本轮 RGB 解码、XYZ 顺序及重采样算法产生该低点。异常上游成因未确认，不直接断言 NoData 污染。证据在 g5-t02-independent-recheck-20260920、g5-t02-anomaly-investigation、g5-t02-recheck。
+
+实现验证：g5-t02-core-20260920-03 的 25 项实现检查 passed，明确 dataQualified=false。包括格式损坏、缺数据、未知基准、重复改正、经纬度交换、越界与坏转换网格拒绝；真实异常三路径解码及标量复算；中文空格路径中合成完整正高／DTED／Cesium 派生。2883601 个合成节点的 GDAL 往返通过，独立 geoid 数值最大差约 0.000025 m；正式 AMASE JAR 最近邻误差 0、双线性误差约 4.6e-13 m；实际固定 Cesium HeightmapTerrainData 与独立三顶点平面求解五样点误差约 6.6e-12 m。合成数据不构成真实地形资格或后端任务运行。原 AMASE 负高程读取问题实测：标准 DTED -100 m 被解成 -32668 m；间距元数据亦有十倍问题。当前工具明确拒绝负值，不修改正式 JAR；后续必要修复须遵守后端重建／复验规则。
+
+失败尝试与修正：core-01 因 Pillow CRC 错误抛 SyntaxError 而测试异常分类不符，生产解码统一转成明确 ValueError 后修正。core-02 的独立地球水准面检验发现显式 multiplier=1 与 inverse 同用，符号反转；改为正向 h=H+N，依据 PROJ 参数说明并用 GDAL 网格独立复验，core-03 全部通过。原失败目录保留，这两个实现问题均不改变原始像素或正高插值异常。正式准备之前冻结最终源码，后续检查其 15 项来源摘要一致。
+
+真实入口与停止证据：从 C:/Windows/Temp 调用 prepare-g5-geography.ps1，运行 g5-t02-prepare-20260920-154127-213；重新生成 g3-t01-check-20260920-154127-456，后端／网关／工具 passed。全球 DEM 1398101 个期望 XYZ 文件名、类型及非空长度齐全；仅区域及各层级样本做解码，不宣称全球高程合格。35 个区域上游版本再次匹配；完整 PMTiles 摘要、索引、代表性解码及区域来源核查通过。完整真实网格遇异常后明确拒绝，result／worker-result／entry-result 均 failed，退出 1；同名 out/geography/terrain-rejection.json 保存全部 91 个负值节点，automaticFillApplied=false，没有生成合格 manifest。环境和调用目录保持，未启动仿真或修改原始数据。再以失败编号调用 g5-geography.tests.ps1，g5-t02-test-20260920-154638-284 明确 Candidate entry did not pass、退出 1，没有 acceptance 或正式指针。
+
+文档与收尾：新增 docs/g5-geography-validation.md，同步 status、backlog、G5 方案、G4 交接、总体计划与 AGENTS，均标明部分完成／受阻。8 个 Python AST、3 个 PowerShell 解析、1 个 JavaScript 语法、7 份 Markdown／297 个本地链接、冻结来源摘要与 git diff --check 已检查通过；本条追加后继续核对日志历史前缀及最终范围。实际 Java／Node 探针正常退出；无仿真、浏览器或页面服务待关闭。
+
+重要决定与下一步：来源一致、文件完整、垂直基准已知不能代替高程数值可用性。保持 T02 地形资格失败，不把负值归零，不静默改用高 zoom／其他数据源，不削减二十实体场景范围，不发布合格地形。须先明确异常数据处理依据和差异清单，再重做真实标准化栅格／DTED／Cesium 及区域接缝／边界资格。用户本次仅要求重新核查，修复／替换路线尚未确定。按 AGENTS 第 10 节，部分完成不触发“完成后自动提交／推送”；本轮改动留在工作区，原始证据、失败目录和用户 models/ 保留。
+
+## WL-20260920-011｜G5-T02 替代 DEM 调查
+
+时间／时区：2026-09-20，Asia/Shanghai。
+关联任务与状态：G5-T02 受阻期间的补充调查，替代数据候选已找到；任务卡仍未通过。用户确认原 DEM 源有问题，随后询问“有无替代的数据”，本轮范围为候选比较与只读可获取性／局部数值检查，不执行数据替换。
+
+过程与成果：核查 USGS 3DEP 无缝裸地 DEM、Copernicus GLO-30 DSM、NASADEM_HGT 的官方产品文档。明确美国本土 3DEP 为 NAVD88、Copernicus 为 EGM2008、NASADEM merged HGT 为 EGM96；后者的 SRTM-only 浮点产品为椭球高，不可混用。对覆盖场景核心区的 USGS 两块和 Copernicus 两块进行匿名 HTTP HEAD，四个对象均 200、支持 Range；两组总大小分别为 896605235 和 84695229 字节。仅通过 GDAL /vsicurl/ 读取 GeoTIFF 元数据及 3×3 窗口，没有整包下载。USGS 实际水平 CRS 为 EPSG:4269，Copernicus 为 EPSG:4326；问题点原始像素分别约 144.5237274 m 和 142.8855591 m，邻域未复现数千米低点。未作跨基准转换或统一采样，不据单点推断整区资格或绝对精度。
+
+验证与证据：目录 out/runs/g5-t02-alternative-research-20260920，availability.json 保存 URL、文件长度、ETag／Last-Modified，metadata-samples.json 保存布局、CRS 与原始邻域。HEAD 与实际 Range 读取两条 Python 命令均退出 0。官方来源及比较追加至 docs/g5-geography-validation.md 第 6 节。没有修改 scripts、config、原始 tiles、正式指针或 T02 状态。
+
+问题、决定与边界：USGS 更适合当前美国区域的裸地仿真，Copernicus 更适合跨区域／全球统一来源但具有 DSM 语义；更换后均须重新核查垂直转换。Copernicus 公共 AWS 副本登记为 2021 release，区别于 CDSE 当前发布；两幅核心瓦片不等于覆盖派生全部边界，邻接输入需重新计算。NASADEM 本轮仅完成资料核查，未进行实际下载或样点检查。推荐优先评估 USGS 3DEP，但用户尚未选择替换路线，原始数据保持，T02 仍受阻。
+
+收尾与下一步：本次是未完成 T02 内的补充取证，记录调查结论和可获取性，不把资料／单点检查写成数据通过，不触发“任务卡完成后”自动提交推送。下一步在确定来源后完整下载、锁定版本及摘要、核查全区域及边界、完成转换链和同源派生验收。
+
+
+## WL-20260920-012｜G5-T02 双来源区域高程下载
+
+时间／时区：2026-09-20，Asia/Shanghai。
+关联任务与状态：用户明确要求“USGS 3DEP 和 Copernicus 都要，下载吧”；本次区域数据下载及完整性检查已完成，作为尚未完成 G5-T02 的补充输入。T02 仍未取得真实地形资格，不进入 T03。
+
+目标与范围：完整下载两套候选源，保存官方来源、版本线索、元数据和摘要；保留原始 tiles/、压缩包、地形配置、旧失败记录及正式后端／网关。没有安装工具、修改持久环境、运行仿真或进行数据转换。
+
+工作过程：读取当前状态、任务卡、日志和根说明，核对现有未提交 T02 改动，保持用户 models/ 不动。官方 S3 目录列出 USGS 源栅格、XML 与 GPKG；Copernicus 公共 COG 布局明确去掉东／南共享节点。因此按原 [-122,-120]×[45,46] 存储网格下载 USGS n46w122／n46w121 两幅，加各自 XML／GPKG；Copernicus 下载 N45／N44×W122／W121／W120 六幅，其中四幅供东／南外边界取样。磁盘余量足够，HEAD 冻结 12 个源文件共 1146472790 字节，GET 绑定 ETag，两个并发下载流写独立 .part，全部实际完成且没有数据文件重试。
+
+成果与修改文件：数据目录 out/geography/sources/g5-t02-dem-download-20260920-160406；USGS 栅格 896605235 字节，Copernicus 247571242 字节，另有 XML／GPKG 2296313 字节、三份说明／许可证 4200863 字节，总计 1150673653 字节。最终 verified-manifest.json 保存来源、版本、路径和 SHA-256；SHA256SUMS.txt 列出 15 个文件；integrity.json 为完整性通过收据。过程及本次一次性下载／检查脚本位于同编号 out/runs，全部受忽略规则保护。更新 docs/g5-geography-validation.md 第 7 节、docs/status.md、docs/backlog.md、AGENTS.md 和本条日志；没有新增正式下载入口或改动地理实现／配置。
+
+验证：工作目录为仓库根，使用 .tools/g5/current.json 对应的 Python 3.14.7 地理环境运行本次 download.py／verify.py；下载退出 0，最终完整验证退出 0。12 个源文件长度与固定 HEAD 一致，本地 SHA-256 独立重读匹配；USGS 两个大文件使用服务端 base64 MD5 元数据核对，未把 multipart ETag 当 MD5，其余十个文件核对普通单段 S3 MD5 ETag。8 幅 GeoTIFF 全分辨率逐块解码共 311558688 个像素并读取内部概览，无解码错误，基础栅格 NoData／非有限计数均为 0；两份 XML 明确 NAD83／NAVD88／米、发布日期 20260202，两份 GPKG 的 SQLite integrity_check 均 ok。三份文档长度／摘要和 PDF 文件头通过。异常位置本地原生像素仍为 USGS 144.5237274 m、Copernicus 142.8855591 m，未经基准转换，只作诊断。
+
+问题与处理：USGS 规范 PDF 的 Python 默认 HTTP 请求返回 403，首次完整检查在文档步骤退出 1，此时源文件均已通过。PowerShell HTTP 客户端使用常见 User-Agent 访问同一官方 URL，取得 200 和完整 PDF；单独保存 supplemental-documents.json，保留 download-manifest.json 中的原失败及 integrity-attempt-01.json，再完整复验通过。未跳过缺文件、修改源栅格或改写原失败收据。Copernicus 许可证及 README 正常下载。
+
+重要决定与影响：仅下载当前区域及必要边界邻接，不下载全球全集。USGS 来自 2026-02-02 current 对象，Copernicus 来自公共 2021 release COG；不把后者写成 CDSE 最新发布。两组分别为裸地／NAVD88 与 DSM／EGM2008，尚未统一水平或垂直基准，不据无坏像素和单点对照声明地形合格或精度优劣。所有收据保持 terrainQualified=false，旧 config/g5-terrain.json 仍是 Terrarium 配置，不能直接拿新路径代替旧锁。下载文件与旧原始数据、用户模型均不入 Git。
+
+遗留与收尾：下一步继续 T02 的候选来源选择、转换资源核实、同源标准化及 DTED／Cesium 派生和独立验收。本次只是未完成 T02 内的输入补充，按第 10 节保持部分完成状态，不触发任务卡完成后自动提交／推送；已有未提交 T02 改动保持。下载及检查进程正常退出，没有后台服务待关闭。收尾核对文档本地链接、UTF-8、日志历史前缀、下载目录忽略规则和 git diff --check，最终结果保存在本批 final-check.json。
+
+## WL-20260920-013｜G5-T02 新旧高程共用建议
+
+时间／时区：2026-09-20，Asia/Shanghai。
+关联任务与状态：G5-T02 未完成期间的方案说明；用户询问新下载的 USGS／Copernicus 是否能与原有数据共用，本轮只分析用途与边界，不执行替换、拼接或转换。
+
+过程与核查：读取 git status、当前地形配置、状态、双来源 verified-manifest 和最近日志。确认新下载只覆盖当前验收区域及邻接，terrainQualified=false，现有配置仍指向原 Terrarium 方案。查阅 Copernicus 官方产品说明和公共下载登记；USGS 产品网页本轮请求超时，使用已下载逐瓦片 XML 及此前来源记录，不把请求失败写成新验证通过。
+
+结论与建议：原 PMTiles 矢量底图与高程用途互补，继续使用；建议 USGS 3DEP 通过转换／验收后作为当前美国区域主地形，Copernicus 留作交叉对照和后续其他区域候选。原 DEM 在已替换区域不必参与仿真，保留原始归档；目前新数据不是全球全集，不能据区域下载宣布旧全球 DEM 已完全无用。若暂留旧 DEM 做区域外浏览，须隔离已知异常、标明未获仿真资格；后续可逐步扩展其他合格来源。按区域共存或拼接需先统一水平／垂直基准、采样规则和接缝处理；不直接混合或平均不同来源。同一次验收运行应以冻结的标准化地形同时派生 AMASE／Cesium 输入，Copernicus 对照不等于已具备独立测绘真值。
+
+成果、验证与边界：仅追加本条日志，未修改配置、源文件、派生产物、正式指针或任务卡状态；没有新增下载、仿真和运行验收。日志 UTF-8 与历史字节前缀核查、git diff --check 通过。上述为建议，尚未登记用户采用哪种替换方案；T02 继续等待转换及同源派生资格，未触发提交／推送。
+
+
+## WL-20260920-014｜G5-T02 USGS 主地形与 WGS84 同源派生验收
+
+时间／时区：2026-09-20，Asia/Shanghai。
+关联任务与状态：G5-T02 已完成；原始 z10 失败历史保留，区域同源地形通过独立资格，下一张任务为 G5-T03。用户明确采用原矢量底图＋USGS 区域主地形、Copernicus 对照并要求继续；工作中又询问“统一为 GSM84”，按上下文解释为 WGS84，已说明经纬度统一而正高／椭球高需要明确转换，不改 AMASE 既有高度语义。
+
+背景与范围：从 main 的 T01 提交 0bdbd0f7f83625fabab0142af907a4be64c99573 及先前未提交的 T02 工作继续。保留用户 models/、原始 tiles/ 和压缩包，正式 AMASE／UxAS／G4 及旧收据不变。读取说明、状态、任务卡和 WL-010～013，核查已下载 15 个源／附件文件、T01 工具与新数据定义。本轮只完成 T02，不启动仿真、浏览器或 T03 地图服务。
+
+来源与方案：USGS 文件明确为 NAD83／NAVD88，不能直接标作 WGS84 或套用旧 EGM96 网格。检查固定 PROJ／EPSG v12.029 非 ballpark 操作，并按官方摘要清单下载／复核 NADCON5、GEOID99、EGM96、EGM2008 四份网格；网络消费使用固定文件，PROJ 网络关闭。选定 NAD83→HARN（8556）、NAVD88→HARN 椭球高（9160 逆）、HARN→WGS84（1901），再减 EGM96 改正。较早 GEOID99 与框架近似的限制完整保留；未把 NAD83 擅自重标为 NAD83(2011) 以使用 GEOID18。登记复合模型精度 1.1 m、加 EGM96 后 2.1 m，明确与数值一致性≤1 m 判据不同，不宣称源 DEM 绝对精度。
+
+实现与交付：新增 config/g5-regional-sources.json、g5-usgs-operation.json 与 g5-terrarium-legacy.json，更新 g5-terrain.json 为 USGS 主源、Copernicus 对照，保留旧来源锁供矢量和异常回归。新增 scripts/g5_geography/regional.py、tests/g5_geography/regional_checks.py，接入已有 T02 Windows 准备／验收入口。所有经纬度标准化为 WGS84；3 角秒 2401×1201 float32 EGM96 正高是共同依据，DTED 两幅从该网格量化，Cesium 高度场从同一网格加一次 N96。固定西侧 USGS 优先，有界栅格窗口，无混合、补值、旧源或 Copernicus 回退；对照单独使用 H2008+N2008−N96。
+
+问题与解决：初次试派生 g5-t02-usgs-development-01 在严格 1e-10 度迭代收敛条件下失败。诊断确认 NADCON5 双二次插值邻域切换有厘米级跳变，八次迭代仍重复残差；未认定为 USGS 数值异常或重写输入。采用四次实际求值中最小残差，固定保守水平残差上限 0.05 m，超限仍拒绝。第二次试派生及正式全网格最大残差上界 0.0337182 m，29 个节点超过 0.00001 m，全部留证。独立 3×3 Lagrange、标量原生插值、ECEF／Helmert／椭球反算确认结果；开发失败目录及补录失败说明保留。一次只读 rg 命令误用了 PowerShell 的 ErrorAction 参数，未执行有效搜索或更改文件，后续使用正确命令读取配置。
+
+实际验证：开发独立 regional-checks-01、real-numeric-01 及 core-usgs-01 通过后，从 out/tmp/G5 T02 中文 调用 执行 prepare-g5-geography.ps1，正式准备 g5-t02-prepare-20260920-174145-970 passed；从系统临时目录执行 g5-geography.tests.ps1，正式验收 g5-t02-test-20260920-174558-688 passed。两者均显式使用已核查基础 Python，result／worker-result／entry-result 全部 passed、退出 0，环境与调用目录保持。各自新建后端资格 g3-t01-check-20260920-174146-201／g3-t01-check-20260920-174558-917，正式后端、网关、入口、七模型及工具重新复查通过。20 项实现／配置输入严格绑定，未用历史来源状态代替本次检查。
+
+正式结果：两份 PMTiles 完整摘要、全部索引及代表性 MVT 再次通过；原例与 20 实体 912 个输入位置／几何顶点及 5 km 外围仍在既定范围。八组正式验收包含旧 25 项实现／异常回归、新 11 项来源／基准／边界拒绝、全部同源节点、独立坐标链、DTED 共边、AMASE 两类读取和实际 Cesium 插值。正高范围 2.0935845～3418.8381348 m，DTED 量化至多 0.5 m，全部 1201 个共边节点一致；原生 USGS 重叠区最大差约 0.0001044 m。5 个复合坐标样点独立 ECEF 最大差约 3.54e-8 m，10 个标准化节点最大高差约 0.00006455 m。正式 AMASE 最近邻误差 0、双线性约 6.71e-12 m，Cesium 三角插值约 1.63e-10 m，EGM96 网格独立差约 0.00003609 m。这些是数值实现误差，不是测绘精度。
+
+对照与边界：Copernicus 3321 个统一基准样点中位差约 0.404 m、绝对差 P95 25.033 m、最大 58.909 m，原始最大差点保留，DSM 与裸地语义不同，不拿差值直接判定精度或调整任务。正式 AMASE 负 DTED 与间距元数据限制仍保留，本区域非负数据通过两种实际查询，不扩展为全球资格。下载 manifest 保持 terrainQualified=false，其历史下载状态不回写；本次 acceptance 为 regionalTerrainQualified=true，globalSimulationQualified、backendTerrainExecutionQualified、stageQualified 均 false。没有 GUI 人工确认或正式指针切换，真实地形飞行／传感器／20 米统计归 T04。
+
+证据与文档：候选 out/geography/g5-t02-prepare-20260920-174145-970，manifest SHA-256 f0f6372b16cda86811750f83df44560ec345097fbcd695ad6fb6dffa7854a8c0；验收目录 out/runs/g5-t02-test-20260920-174558-688，acceptance SHA-256 3294d503ef172afd3f123a0a67a6393ef3b535f2eda1247b2fd6bdb57ff22c9a。详见 docs/g5-geography-validation.md 第 8～9 节；同步 G5 方案、status、backlog、总体计划、G4 交接和 AGENTS。前七节和 WL-010～013 保留历史。
+
+收尾与下一步：全部所属准备／验证／Java／Node 进程正常退出。最终检查冻结输入及候选摘要、文档本地链接／UTF-8、脚本语法、日志历史前缀、忽略规则和 Git 范围，记录在 out/runs/g5-t02-final-20260920-usgs。任务卡完成后按持续授权提交并普通推送本次 T02 工作，包括前述失败／调查文档，不夹带用户 models/、原始地理数据、工具或 out 产物；归档命令单次禁用自动 maintenance／gc，保留历史对象。下一卡为 T03，按候选和 acceptance 双编号消费，不把区域文件资格当成页面、全球地形或仿真完成。
