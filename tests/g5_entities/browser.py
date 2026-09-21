@@ -91,6 +91,21 @@ def motion_check(frames):
         maximumStepMilliseconds=max(steps),maximumRenderedPositionErrorMeters=max(errors),
         observedFramesPerSecond=(len(frames)-1)*1000/(frames[-1]['wall']-frames[0]['wall']))
 
+def follow_screen_check(frames):
+    result=motion_check(frames)
+    assert all(f['followed']=='400' and f['trailPoints']>=2 for f in frames)
+    jumps=[math.dist(a['screen'],b['screen']) for a,b in zip(frames,frames[1:])]
+    scale_errors=[abs(f['scale']/f['expectedScale']-1) for f in frames]
+    local_drift=max(math.dist(f['cameraLocal'],frames[0]['cameraLocal']) for f in frames)
+    direction_drift=max(math.dist(f['cameraDirection'],frames[0]['cameraDirection']) for f in frames)
+    assert max(jumps)<=.25,'Tracked anchor jumps on screen while trails update'
+    assert max(scale_errors)<=1e-5,'Model size used a different camera frame'
+    assert local_drift<=1e-4 and direction_drift<=1e-7,'Follow overwrote orbit/zoom'
+    result.update(maximumAnchorJumpPixels=max(jumps),maximumScaleRelativeError=max(scale_errors),
+        maximumCameraLocalDriftMeters=local_drift,maximumCameraDirectionDrift=direction_drift,
+        screenPixels=frames[-1]['screenPixels'],cameraRangeMeters=math.hypot(*frames[-1]['cameraLocal']))
+    return result
+
 async def verify(url,directory):
     directory=directory.resolve();directory.mkdir(parents=True)
     context=json.loads((directory.parent.parent/'context.json').read_text(encoding='utf-8'))
@@ -157,8 +172,20 @@ async def verify(url,directory):
             motion_expression=Path(__file__).with_name('motion.js').read_text(encoding='utf-8')
             frames=await evaluate(motion_expression);save(directory/'rendered-motion.json',frames);result['motion']=motion_check(frames)
             await click('entity-follow');await until(lambda s:s['entities']['followed']=='400')
-            frames=await evaluate(motion_expression);save(directory/'rendered-follow-motion.json',frames);result['followMotion']=motion_check(frames)
+            frames=await evaluate(motion_expression);save(directory/'rendered-follow-motion.json',frames);result['followMotion']=follow_screen_check(frames)
             assert all(f['followed']=='400' for f in frames)
+            for _ in range(4):await key('+')
+            await evaluate('window.__g5Map.viewer.camera.moveForward(195);true');await asyncio.sleep(.3)
+            frames=await evaluate(motion_expression);save(directory/'rendered-close-follow-motion.json',frames);result['closeFollowMotion']=follow_screen_check(frames)
+            assert frames[0]['screenPixels']==384 and result['closeFollowMotion']['cameraRangeMeters']<50
+            await evaluate('window.__g5Map.viewer.camera.rotateRight(.4);window.__g5Map.viewer.camera.rotateUp(.2);true');await asyncio.sleep(.3)
+            frames=await evaluate(motion_expression);save(directory/'rendered-orbit-follow-motion.json',frames);result['orbitFollowMotion']=follow_screen_check(frames)
+            # Detach and reattach before the next render must not reuse a world-space
+            # camera offset as a local tracking offset.
+            await evaluate('document.getElementById("entity-reset").click();document.getElementById("entity-follow").click();true');await asyncio.sleep(.3)
+            frames=await evaluate(motion_expression);save(directory/'rendered-reattach-follow-motion.json',frames);result['reattachFollowMotion']=follow_screen_check(frames)
+            assert abs(result['reattachFollowMotion']['cameraRangeMeters']-math.sqrt(120**2+180**2+100**2))<1e-4
+            await key('0')
             await click('entity-reset');await click('entity-locate')
             moved=await evaluate(EXPRESSION);assert math.dist(moved['entities']['objects']['400']['position'],loaded['entities']['objects']['400']['position'])>1
             result['movingPoseCheck']=pose_check(cdp.events,session,moved,grid)
