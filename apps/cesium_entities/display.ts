@@ -26,16 +26,28 @@ export function modelLighting(): CustomShader {
       vec3 n = normalize(fsInput.attributes.normalEC);
       if (!gl_FrontFacing) { n = -n; }
       vec3 view = normalize(-fsInput.attributes.positionEC);
-      vec3 key = normalize(vec3(-0.85, 0.35, 0.25));
-      vec3 fill = normalize(vec3(0.65, -0.35, 0.50));
-      float diffuse = max(dot(n, key), 0.0);
-      float specular = pow(max(dot(n, normalize(key + view)), 0.0), 24.0);
-      float brightness = 0.10 + 0.85 * diffuse + 0.12 * max(dot(n, fill), 0.0);
-      // Retain panel/cockpit texture detail with a floor so the original dark paint cannot hide the symbol.
-      float detail = 0.60 + 0.40 * smoothstep(0.0, 0.55, dot(material.diffuse, vec3(0.2126, 0.7152, 0.0722)));
-      material.diffuse = vec3(brightness * detail + 0.55 * specular * step(0.001, diffuse));
+      // Silver alloy; preserve panel/cockpit detail from the original texture.
+      float detail = 0.48 + 0.52 * smoothstep(0.0, 0.55, dot(material.diffuse, vec3(0.2126, 0.7152, 0.0722)));
+      vec3 base = vec3(0.66, 0.69, 0.73) * detail;
+      material.diffuse = base * 0.08;
+      material.specular = mix(vec3(0.04), base, 0.92);
+      material.roughness = 0.30;
+      material.normalEC = n;
+      vec3 key = normalize(vec3(-0.60, 0.75, 1.0));
+      vec3 fill = normalize(vec3(0.90, -0.20, 0.45));
+      vec3 direct = 3.5 * czm_pbrLighting(view, n, key, material)
+                  + 1.4 * czm_pbrLighting(view, n, fill, material);
+      // Analytic studio environment: broad reflected sky/ground and soft light panels.
+      // No external texture or changing simulation sun is needed for this display material.
+      vec3 reflection = reflect(-view, n);
+      vec3 environment = mix(vec3(0.12, 0.14, 0.17), vec3(0.85, 0.90, 1.0), smoothstep(-0.35, 0.65, reflection.y));
+      environment += vec3(2.5, 2.4, 2.3) * pow(max(dot(reflection, normalize(vec3(-0.45, 0.65, -0.60))), 0.0), 8.0);
+      environment += vec3(1.6) * pow(max(dot(reflection, normalize(vec3(-0.4, 0.65, 0.7))), 0.0), 14.0);
+      environment += vec3(0.7, 0.75, 0.85) * pow(max(dot(reflection, normalize(vec3(0.9, 0.1, 0.4))), 0.0), 10.0);
+      vec3 fresnel = material.specular + (vec3(1.0) - material.specular) * pow(1.0 - max(dot(n, view), 0.0), 5.0);
+      material.diffuse = czm_pbrNeutralTonemapping(direct + environment * fresnel);
     }
   `});
-  // Lighting is computed above from real mesh normals in eye space. UNLIT prevents
-  // Cesium applying a second sunlight pass; this is display fill, not simulated solar illumination.
+  // GGX direct light plus studio reflection is computed above. UNLIT prevents a
+  // second scene-light pass; this is a display material, not a physical sensor model.
 }

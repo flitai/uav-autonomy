@@ -27,10 +27,8 @@
     },
     "aliases": {"blue":"blue","blue team":"blue","蓝方":"blue","red":"red","red team":"red","红方":"red","neutral":"neutral","中立":"neutral","unknown":"unknown","未知":"unknown"},
     "entityDefaults": {"400":"blue","500":"blue","600":"red"},
-    "outlineColor":"#071a2c",
-    "selectedOutlineColor":"#f8ffff",
-    "outlinePixels":2,
-    "selectedOutlinePixels":3
+    "outlinePixels":1,
+    "selectedOutlinePixels":1.5
   },
   "supportedEntityHeightReference": "MSL/EGM96; other references explicitly refused",
   "positionToleranceMeters": 1,

@@ -29,7 +29,7 @@ export class EntityLayer {
   private outlines(): void {
     const config=this.config.affiliations;
     for (const [id,entity] of this.objects) {
-      entity.model!.silhouetteColor=new ConstantProperty(Color.fromCssColorString(id===this.selected?config.selectedOutlineColor:config.outlineColor));
+      entity.model!.silhouetteColor=new ConstantProperty(Color.fromCssColorString(this.affiliations.get(id)?.color ?? config.styles.unknown.color));
       entity.model!.silhouetteSize=new ConstantProperty(id===this.selected?config.selectedOutlinePixels:config.outlinePixels);
     }
     this.viewer.scene.requestRender();
@@ -39,8 +39,8 @@ export class EntityLayer {
     if (previous?.color===style.color && previous?.label===style.label && previous?.source===style.source && previous?.reported===style.reported) return;
     this.affiliations.set(id,style);
     const color=Color.fromCssColorString(style.color);
-    entity.model!.color=new ConstantProperty(color);
-    // Tint the normal-based lighting result, retaining bright/dark surfaces.
+    entity.model!.color=new ConstantProperty(Color.WHITE);
+    // Keep the silver material neutral; affiliation is carried by the outline and labels.
     entity.model!.colorBlendMode=new ConstantProperty(ColorBlendMode.HIGHLIGHT);
     entity.label!.fillColor=new ConstantProperty(color);
     entity.label!.text=new ConstantProperty('实体 '+id+' · '+style.label);

@@ -127,8 +127,10 @@ async def verify(url,directory):
                     await asyncio.sleep(.2)
                 save(directory/'timeout-state.json',last);raise AssertionError('Entity browser timeout')
             async def click(identity):await evaluate("document.getElementById("+json.dumps(identity)+").click();true")
-            async def shot(name):
-                image=await cdp.call('Page.captureScreenshot',{'format':'png'},session);png=base64.b64decode(image['data']);(directory/(name+'.png')).write_bytes(png);return png
+            async def shot(name,clip=None):
+                options={'format':'png'}
+                if clip:options['clip']=clip
+                image=await cdp.call('Page.captureScreenshot',options,session);png=base64.b64decode(image['data']);(directory/(name+'.png')).write_bytes(png);return png
             async def key(value):
                 for kind in ('keyDown','keyUp'):await cdp.call('Input.dispatchKeyEvent',dict(type=kind,key=value),session)
             await cdp.call('Page.navigate',{'url':url},session)
@@ -136,12 +138,13 @@ async def verify(url,directory):
             live=await until(lambda s:s.get('map')=='true' and s.get('business',{}).get('phase')=='live' and s.get('entities',{}).get('count')==3 and all(n>=5 for n in s['business']['sampleCounts'].values()) and len(s['business']['sampleCounts'])==3,150)
             assert not live['entities']['error'];result['initial']=live;result['initialPoseCheck']=pose_check(cdp.events,session,live,grid)
             await evaluate("document.querySelector('[data-entity-id=\"400\"]').click();true");await click('entity-locate')
-            loaded=await until(lambda s:len(s['models'])==3 and all(m['ready'] and m['textureBytes']>0 for m in s['models'].values()) and s['models']['400'].get('outlinePixels')==3)
+            loaded=await until(lambda s:len(s['models'])==3 and all(m['ready'] and m['textureBytes']>0 for m in s['models'].values()) and s['models']['400'].get('outlinePixels')==1.5)
             assert loaded['entities']['selected']=='400' and '1090.00' in loaded['detail'];result['loaded']=loaded
             for identity,expected in [('400','#00e5ff'),('500','#00e5ff'),('600','#ff4265')]:
-                assert loaded['models'][identity]['color']==expected and loaded['models'][identity]['colorBlendMode']==0
+                assert loaded['models'][identity]['color']=='#ffffff' and loaded['models'][identity]['colorBlendMode']==0
+                assert loaded['models'][identity]['outline']==expected
                 assert loaded['models'][identity]['customLighting'] and not loaded['entities']['objects'][identity]['pointFallback']
-                assert loaded['models'][identity]['outlinePixels']==(3 if identity=='400' else 2)
+                assert loaded['models'][identity]['outlinePixels']==(1.5 if identity=='400' else 1)
                 assert loaded['models'][identity]['silhouetteId']>0
                 assert loaded['entities']['objects'][identity]['affiliation']['source']=='display-config'
                 assert loaded['business']['state']['entities'][identity]['configuration']['Affiliation']=='Unknown'
@@ -163,7 +166,8 @@ async def verify(url,directory):
             paused=await until(lambda s:s.get('business',{}).get('phase')=='live' and s['business']['state']['simulation'].get('state')==2)
             await asyncio.sleep(1.5);paused=await evaluate(EXPRESSION);result['paused']=paused;result['pausedPoseCheck']=pose_check(cdp.events,session,paused,grid)
             assert all(p['trailPoints']>=2 for p in paused['entities']['objects'].values())
-            await asyncio.sleep(1.2);frozen=await evaluate(EXPRESSION);assert frozen['entities']['objects']==paused['entities']['objects'] and frozen['text']==paused['text']
+            await asyncio.sleep(1.2);frozen=await evaluate(EXPRESSION);result['frozen']=frozen
+            assert frozen['entities']['objects']==paused['entities']['objects'] and frozen['text']==paused['text']
             await key('+');await key('+');scaled=await evaluate(EXPRESSION);assert abs(scaled['entities']['modelScale']-2)<1e-10
             scaled=await until(lambda s:all(abs(m['scale']/paused['models'][identity]['scale']-2)<1e-6 for identity,m in s['models'].items()))
             for identity,pose in scaled['entities']['objects'].items():assert pose['position']==paused['entities']['objects'][identity]['position'] and pose['orientation']==paused['entities']['objects'][identity]['orientation']
@@ -180,23 +184,36 @@ async def verify(url,directory):
                 await click(control);assert not (await evaluate(EXPRESSION))['entities'][field];await click(control)
             await click('entity-locate');await until(lambda s:s['cameraHeight']<3000 and s['tilesLoaded']);await shot('real-model-paused')
             await click('label-toggle');await click('trail-toggle')
+            async def material_shot(name,red=False):
+                await click('entity-toggle');await until(lambda s:s['tilesLoaded'] and not s['entities']['visible']);await asyncio.sleep(.2)
+                background=await shot(name+'-background')
+                await click('entity-toggle');await asyncio.sleep(.2)
+                measurement=screen.measure(await shot(name),red=red,background=background)
+                assert measurement['neutralPixels']>measurement['pixels']*.55,measurement
+                assert measurement['affiliationPixels']>10,measurement
+                return measurement
             measures=[]
             for name,backward in [('near',0),('medium',1840),('far',48000)]:
                 await evaluate(f'window.__g5Map.viewer.camera.moveBackward({backward});window.__g5Map.viewer.scene.requestRender();true')
                 await asyncio.sleep(.7)
-                measurement=screen.measure(await shot('screen-size-'+name));measures.append(measurement)
+                measurement=await material_shot('screen-size-'+name);measures.append(measurement)
                 assert measurement['pixels']>300 and max(measurement['width'],measurement['height'])>35,measurement
             assert max(m['width'] for m in measures)/min(m['width'] for m in measures)<1.18,measures
             assert max(m['height'] for m in measures)/min(m['height'] for m in measures)<1.18,measures
             await key('+');await key('+');await asyncio.sleep(.7)
-            enlarged=screen.measure(await shot('screen-size-enlarged'))
+            enlarged=await material_shot('screen-size-enlarged')
             assert 1.8<enlarged['width']/measures[-1]['width']<2.2,(measures,enlarged)
-            assert enlarged['brightnessSpan']>=18 and enlarged['levels']>=25,enlarged
+            assert enlarged['bodyBrightnessSpan']>=18 and enlarged['bodyLevels']>=25,enlarged
             result['screenDisplay']=dict(status='passed',distancesMeters=[160,2000,50000],measurements=measures,enlarged=enlarged,geometryLighting=True)
+            clip=await evaluate('({x:innerWidth/2-220,y:innerHeight/2-220,width:440,height:440,scale:1})')
+            await shot('metal-blue-preview',clip)
             await key('0');await click('label-toggle');await click('trail-toggle')
             await evaluate("document.querySelector('[data-entity-id=\"600\"]').click();true");await click('entity-locate')
-            red=await until(lambda s:s['models'].get('600',{}).get('outline')=='#f8ffff' and s['models'].get('400',{}).get('outline')=='#071a2c' and s['tilesLoaded'])
-            assert red['models']['600']['color']=='#ff4265' and '红方' in red['detail'];await shot('red-model-paused')
+            red=await until(lambda s:s['models'].get('600',{}).get('outlinePixels')==1.5 and s['models'].get('400',{}).get('outlinePixels')==1 and s['tilesLoaded'])
+            assert red['models']['600']['color']=='#ffffff' and red['models']['600']['outline']=='#ff4265' and '红方' in red['detail'];await shot('red-model-paused')
+            await click('label-toggle');await click('trail-toggle');await key('+');await key('+');await asyncio.sleep(.3)
+            result['redMetalDisplay']=await material_shot('red-metal-enlarged',red=True);await shot('metal-red-preview',clip)
+            await key('0');await click('label-toggle');await click('trail-toggle')
             result['affiliationDisplay']=dict(status='passed',blue=['400','500'],red=['600'],backendValuesUnchanged=True,redSelected=red)
             result['interactionChecks']=dict(status='passed',locate=True,follow=True,reset=True,layers=True,frozenTime=True)
             origin=paused['timeOrigin'];await cdp.call('Page.reload',{'ignoreCache':True},session)

@@ -21,12 +21,12 @@ const store={generation:0,state:{simulation:{simulation_time_ms:'2000',state:1,r
 const connection={store,phase:'live',lastHealth:null};
 const layer=new EntityLayer(viewer,connection,config,()=>{},()=>wall);
 layer.update();assert.equal(layer.objects.size,1);assert.equal(layer.inspect().objects[id].trailPoints,0);
-assert.equal(layer.inspect().objects[id].color,'#00e5ff');assert.equal(layer.inspect().objects[id].outlinePixels,2);
-store.state.entities[id]={...row,configuration:{Affiliation:'Red'}};layer.update();assert.equal(layer.inspect().objects[id].color,'#ff4265');assert.equal(layer.inspect().objects[id].affiliation.source,'backend');
-store.state.entities[id]=row;layer.update();assert.equal(layer.inspect().objects[id].color,'#00e5ff');
+assert.equal(layer.inspect().objects[id].color,'#ffffff');assert.equal(layer.inspect().objects[id].outline,'#00e5ff');assert.equal(layer.inspect().objects[id].outlinePixels,1);
+store.state.entities[id]={...row,configuration:{Affiliation:'Red'}};layer.update();assert.equal(layer.inspect().objects[id].outline,'#ff4265');assert.equal(layer.inspect().objects[id].color,'#ffffff');assert.equal(layer.inspect().objects[id].affiliation.source,'backend');
+store.state.entities[id]=row;layer.update();assert.equal(layer.inspect().objects[id].outline,'#00e5ff');
 store.state.tasks['1000']={status:'backend_completed'};layer.update();assert.equal(layer.objects.size,1,'Completion removed a flying entity');
 layer.select(id);layer.follow();assert.equal(viewer.trackedEntity,layer.objects.get(id));
-assert.equal(layer.inspect().objects[id].outlinePixels,3);assert.equal(layer.inspect().objects[id].outline,'#f8ffff');
+assert.equal(layer.inspect().objects[id].outlinePixels,1.5);assert.equal(layer.inspect().objects[id].outline,'#00e5ff');
 delete store.state.entities[id];layer.update();assert.equal(layer.objects.size,0);assert.equal(layer.selected,null);assert.equal(viewer.trackedEntity,undefined);assert.equal(viewer.selectedEntity,undefined);
 store.state.entities[id]=row;layer.update();layer.select(id);layer.follow();store.generation++;store.state.entities={};layer.update();assert.equal(layer.objects.size,0);assert.equal(layer.selected,null);
 store.state.entities[id]=row;layer.update();connection.phase='recovering';layer.update();assert.equal(layer.objects.size,0);assert.equal(layer.poses.size,0);

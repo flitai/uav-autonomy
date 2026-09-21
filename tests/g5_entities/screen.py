@@ -30,14 +30,19 @@ def pixels(png):
     return width,height,channels,output
 
 
-def measure(png,red=False):
+def measure(png,red=False,background=None):
     width,height,channels,rows=pixels(png)
+    if background:
+        bw,bh,bc,back=pixels(background);assert (bw,bh,bc)==(width,height,channels)
     # Camera is centred on selected entity; controls, labels and trails excluded.
     points={}
     for y in range(max(0,height//2-260),min(height,height//2+260)):
         for x in range(max(0,width//2-260),min(width,width//2+260)):
             r,g,b=rows[y][x*channels:x*channels+3]
             match=(r>90 and r>g*1.6 and r>b*1.3) if red else (g>75 and b>90 and g>r*1.8 and b>r*1.8)
+            if background:
+                old=back[y][x*channels:x*channels+3]
+                match=max(abs(a-b) for a,b in zip((r,g,b),old))>12
             if match:points[(x,y)]=max(r,g,b)
     components=[]
     while points:
@@ -48,8 +53,14 @@ def measure(png,red=False):
             value=points.pop(p);part.append((*p,value));x,y=p
             todo.extend([(x-1,y),(x+1,y),(x,y-1),(x,y+1)])
         components.append(part)
-    assert components,'No coloured model pixels in view'
+    assert components,'No model pixels in view'
     part=max(components,key=len);values=sorted(p[2] for p in part)
     low,high=values[len(values)//10],values[len(values)*9//10]
+    rgb=[rows[y][x*channels:x*channels+3] for x,y,_ in part]
+    neutral_values=sorted(max(c) for c in rgb if max(c)-min(c)<35 and min(c)>40)
+    neutral=len(neutral_values)
+    body_low,body_high=(neutral_values[len(neutral_values)//10],neutral_values[len(neutral_values)*9//10]) if neutral else (0,0)
+    coloured=sum((r>90 and r>g*1.6 and r>b*1.3) if red else (g>75 and b>90 and g>r*1.8 and b>r*1.8) for r,g,b in rgb)
     return dict(pixels=len(part),width=max(p[0] for p in part)-min(p[0] for p in part)+1,height=max(p[1] for p in part)-min(p[1] for p in part)+1,
-                brightness10=low,brightness90=high,brightnessSpan=high-low,levels=len(set(values)))
+                brightness10=low,brightness90=high,brightnessSpan=high-low,levels=len(set(values)),neutralPixels=neutral,affiliationPixels=coloured,
+                bodyBrightness10=body_low,bodyBrightness90=body_high,bodyBrightnessSpan=body_high-body_low,bodyLevels=len(set(neutral_values)))
