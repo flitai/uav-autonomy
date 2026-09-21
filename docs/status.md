@@ -1,17 +1,17 @@
 # 项目实施状态
 
-更新日期：2026-09-20。依据：[总体实施计划](../04.项目总体实施计划与阶段验收.md)、[G0 报告](g0-baseline.md)、[Java 环境验收](g1-java-validation.md)、[T03 消息库验收](g1-lmcp-validation.md)、[T04 AMASE 验收](g1-amase-validation.md)、[T05 TCP 验收](g1-tcp-validation.md)、[G2 实施方案](g2-windows-uxas-plan.md)、[G3 实施方案](g3-system-integration-plan.md)、[任务清单](backlog.md)。过程记录见根级 [worklog.md](../worklog.md)。
+更新日期：2026-09-21。依据：[总体实施计划](../04.项目总体实施计划与阶段验收.md)、[G0 报告](g0-baseline.md)、[Java 环境验收](g1-java-validation.md)、[T03 消息库验收](g1-lmcp-validation.md)、[T04 AMASE 验收](g1-amase-validation.md)、[T05 TCP 验收](g1-tcp-validation.md)、[G2 实施方案](g2-windows-uxas-plan.md)、[G3 实施方案](g3-system-integration-plan.md)、[任务清单](backlog.md)。过程记录见根级 [worklog.md](../worklog.md)。
 
 ## 当前关卡
 
-**G0～G4 已完成；G4-T01～T09 验收通过，正式网关及日常入口已发布。G5-T01～T04 已完成；地图资源及真实地形后端三类小规模任务通过，T05 可执行，真实业务接入与态势显示待后续。** G5 见 [实施方案](g5-cesium-display-plan.md) 和 [十一张任务卡](backlog.md#9-g5-顺序与任务卡)。G4 方案见 [实施方案](g4-message-gateway-plan.md)；规划提交 `908fdfd` 已推送并核对远程。原生 UxAS 历史正式发布见 [T07 报告](g2-uxas-release-validation.md)。
+**G0～G4 已完成；G4-T01～T09 验收通过，正式网关及日常入口已发布。G5-T01～T05 已完成；地图、真实地形后端及前端真实状态接入通过，T06 可执行，实体模型／姿态和业务图层待后续。** G5 见 [实施方案](g5-cesium-display-plan.md) 和 [十一张任务卡](backlog.md#9-g5-顺序与任务卡)。G4 方案见 [实施方案](g4-message-gateway-plan.md)；规划提交 `908fdfd` 已推送并核对远程。原生 UxAS 历史正式发布见 [T07 报告](g2-uxas-release-validation.md)。
 
 | 项目 | 当前记录 |
 | --- | --- |
-| 最近完成的规划 | [G5 方案](g5-cesium-display-plan.md) 已落实 USGS 主源／Copernicus 对照和同源高度链，并按 T04 实测补充 DTED 调用、场景高度及传感器近似边界 |
-| 最近通过的实现任务 | G5-T04：两模式真实 1 倍完成三实体线／点／区域任务，独立地形、执行和统计验收通过；[报告](g5-backend-terrain-validation.md) |
+| 最近完成的规划 | [G5 方案](g5-cesium-display-plan.md) 已同步 T05 实际接入、缓存／轨迹上限、客户端重置隔离和 T06 交接；USGS／Copernicus 及同源高度链保持 |
+| 最近通过的实现任务 | G5-T05：TypeScript 状态／连接模块、32 项检查、两模式真实首次接入／晚加入／刷新、暂停快照对照及正常退出；[报告](g5-state-validation.md) |
 | 三维模型输入 | 用户提供 16 个 OSGB 原件，约 154.1 MB，文件摘要已登记；转换及显示校准归 G5-T06，见 [输入登记](g5-model-inputs.md) |
-| 当前执行结果 | 准备 g5-t04-prepare-20260920-195013-339、两模式运行 g5-t04-run-20260920-195027-645、独立验收 g5-t04-test-20260920-201626-019 均 passed；正式后端／网关和前端指针不变 |
+| 当前执行结果 | 中文候选 g5-t05-build-20260921-092811-412、普通候选 g5-t05-build-20260921-092813-768；两模式验收 g5-t05-test-20260921-092825-217、联合入口 g5-t05-session-20260921-092942-332 均 passed；正式指针不变 |
 | G3 历史基线 | T07 起点 `6c0294e3`，当时工作区干净；新增独立阶段验收，业务源码／XML／生成代码及 T03～T06 实现保持。inputRevision=3、43 项冻结输入复查通过 |
 | 已归档历史 | G1-T01～T03 为 `304def9`，G1-T04 为 `f2f73ab`，G1-T05 为 `d77dd78`；T04 `b8ccf72`／`68ed420`、T05 `0fe8553`／交接 `5c2d387` 已推送 origin/main |
 | 本轮变更 | G4 方案 `908fdfd`、T01 `ca21032`、T02 `22cacc6` 已归档；T03 `71c5906` 已归档并发布日志修复；T04 `f3b4d08` 已归档；T05 `a206fe5` 已归档；T06 `g4-t06-test-20260920-010936-703` 两模式全程及独立审计通过 |
@@ -20,8 +20,8 @@
 | 已确定的 G2 路线 | MSVC v143＋CMake 3.31、Release x64／动态 CRT；固定 vcpkg baseline／overlay；Zyre／串口关闭，CZMQ／TCP 保留 |
 | 已验证工具 | Temurin 11.0.32.1+1、Ant 1.10.18、Python 3.14.7 x64；Build Tools 17.14.41／cl 19.44.35229、SDK 工具 10.0.26100.7705、CMake 3.31.12、Ninja 1.13.2、固定 vcpkg 提交及工具；Node 24.21.0／npm 11.19.0、独立 Rasterio／GDAL 与 PyProj／PROJ，见 [G5-T01](g5-environment-validation.md) |
 | 已验证能力 | G0～G4；真实规划／执行／完成，20 米统计，严格协议、状态／持久记录、HTTP／WS、两路观察和网关恢复，20 实体两模式各 30 分钟及三客户端；当前 GUI 确认与正常退出 |
-| 尚未完成验收 | G5 Cesium 与同源真实地形；G6 控制／重置分段；G7 正式回放；G8 第二机器与离线部署 |
-| 下一动作 | 执行 G5-T05：前端状态归约器及真实 G4 接入，验证首次连接、晚加入和刷新；T06～T11 待前置 |
+| 尚未完成验收 | G5 完整态势显示与阶段发布；G6 控制／重置分段；G7 正式回放；G8 第二机器与离线部署 |
+| 下一动作 | 执行 G5-T06：选用模型转换与实体／姿态／轨迹／跟随，独立核对坐标、高度和后端时间；T07～T11 待前置 |
 | 当前边界 | G4 已发布；G5 用原矢量＋USGS 区域主地形，Copernicus 只作对照，旧 Terrarium 归档；西经 122～120／北纬 45～46 度外仅按未验收参考椭球浏览。无覆盖率／FPS 硬门槛，不开展寻优 |
 | 本轮实际倍率 | G4-T08 两模式各 3385 条 Running SessionStatus 均为 1.0，均到 1800009 ms；历史变速取证保持原记录 |
 | 已确定的 G3 验收 | GUI／无界面分别完成任务执行，AMASE 20 米栅格覆盖计算与报告正确，本轮 GUI 确认及正常退出；不设最低覆盖率，算法／参数寻优归后续 |
@@ -74,7 +74,7 @@ T03 新登记：旧 LMCP 字符串长度与 UTF-8 字节长度存在差异，当
 
 ## 下一次工作的起点
 
-先读 [G5 实施方案](g5-cesium-display-plan.md)、[十一张任务卡](backlog.md#9-g5-顺序与任务卡)、[地形后端报告](g5-backend-terrain-validation.md) 和工作日志 WL-20260920-018。T01～T04 已完成，T05 可执行，T06～T11 待前置。三份独立场景已按共同 EGM96 网格赋高，统一抬升 390 米；三实体两模式执行、完成、20 米统计与点观察时间通过，保留正式 DTED 缺陷的适用限制及传感器近似。下一步接入真实 G4 消息；本卡不代表 Cesium 业务、原两实体／20 实体完整联调或 G5 阶段发布通过。
+先读 [G5 实施方案](g5-cesium-display-plan.md)、[十一张任务卡](backlog.md#9-g5-顺序与任务卡)、[T05 状态接入报告](g5-state-validation.md)、[地形后端报告](g5-backend-terrain-validation.md) 和工作日志 WL-20260921-001。T01～T05 已完成，T06 可执行。T05 使用合格三实体地形场景和正式 G4，两模式真实快照／增量消费、晚加入／刷新与暂停对照通过；尚无实体模型和任务几何显示。日常使用 start-g5-state-session.ps1 联合入口，页面关闭不结束后端；观察恢复全矩阵和阶段发布仍归 T08／T11。
 
 G3 已完成，最终资格 `g3-t01-check-20260919-172312-180`、阶段验收 `g3-t07-test-20260919-173116-474` 及本轮 GUI 确认／正常退出已通过。先读 [T07 报告](g3-stage-validation.md)、[G4 交接](g3-g4-handoff.md) 与工作日志 WL-20260919-010。唯一连接配置为 config/g3-startup.json；execution／completion／acceptance 配置分别约束执行、完成和阶段验收，来源与摘要在合格 handoff 中绑定。
 

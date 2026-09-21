@@ -1,0 +1,10 @@
+{
+  "schemaVersion": 1,
+  "task": "G5-T05",
+  "backendBuildRunId": "g5-t04-prepare-20260920-195013-339",
+  "backendValidationRunId": "g5-t04-test-20260920-201626-019",
+  "backendAcceptanceSHA256": "7db8a7c587606cac8353acc49b3bdd20126e860c81915e3329d1a4a4d4f1d60a",
+  "protocolVersion": 1,
+  "limits": {"packetBytes": 8388608, "stateBytes": 33554432, "objectsPerCollection": 4096, "samplesPerEntity": 2048, "sampleEntities": 128, "trajectoryWindowMs": "600000"},
+  "stageQualified": false
+}

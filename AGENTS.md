@@ -1,6 +1,6 @@
 # uav-autonomy：AI 开发协作说明
 
-适用范围：本仓库及其子目录。最后核对日期：2026-09-20。
+适用范围：本仓库及其子目录。最后核对日期：2026-09-21。
 
 这是项目级工作约定。遵循当前会话中更高优先级的指令和用户明确要求；修改子目录前检查是否还有适用于该目录的说明。源码、构建配置和实际运行结果用于判断工程事实，规划文档不代表功能已实现。
 
@@ -17,7 +17,7 @@
 
 截至上述核对日期，G0、G1 已完成，G1-T01～T05 均已完成；G2-T01 已完成，原生工具链十组验收及 VS／Ninja 在两类路径下的 C/C++ 探针通过；T02 已完成固定依赖的源码重建、11 组验收与迁移发布；T03 已完成七模型 C++ 库、164 类型及三语言双向样本验收和发布，T04 已完成 UxAS 构建图与独立桥配置探针，T05 已完成两类路径的候选构建及平台／来源验收，T06 已完成 HelloWorld 内部双向消息、正常退出与真实配置拒绝，T07 已完成复验和正式发布，G2 已完成；G3-T01～T07 已完成，G3 已完成，见 [G3-T03 记录](docs/g3-startup-validation.md)、 [G3-T01 记录](docs/g3-input-baseline-validation.md)、 [T07 记录](docs/g2-uxas-release-validation.md)、[T06 记录](docs/g2-uxas-helloworld-validation.md)、 [T05 记录](docs/g2-uxas-build-validation.md)、[T01 记录](docs/g2-cpp-toolchain-validation.md)、[T02 记录](docs/g2-dependencies-validation.md)、[T03 记录](docs/g2-lmcp-cpp-validation.md)和 [T04 记录](docs/g2-uxas-cmake-validation.md)。G2 历史方案及任务卡见 [G2 实施方案](docs/g2-windows-uxas-plan.md)和 [G2 任务清单](docs/backlog.md#4-g2-顺序与任务卡)；G4 已按 [实施方案](docs/g4-message-gateway-plan.md)和 [九张任务卡](docs/backlog.md#8-g4-顺序与任务卡)完成；后续按 [G5 实施方案](docs/g5-cesium-display-plan.md)和 [十一张任务卡](docs/backlog.md#9-g5-顺序与任务卡)推进。项目内 Temurin JDK 11.0.32.1+1、Ant 1.10.18 已构建生成器、统一消息库和正式 AMASE；七模型已生成 Java／C++／Python 代码，Python 3.14.7 x64 的跨语言样本通过。T05 的 GUI／无界面真实 TCP 接收、十四组自动验收、GUI 人工确认、同版本受控复验及正常退出均完成；两层封装、分包、中文路径及故障处理已验证。证据见 [Java 验收](docs/g1-java-validation.md)、[T03 消息库验收](docs/g1-lmcp-validation.md)、[T04 AMASE 验收](docs/g1-amase-validation.md)和 [T05 TCP 验收](docs/g1-tcp-validation.md)。AMASE↔UxAS 双向协议及正式发布复验已通过；T05 已验证正式两模式完整任务、可靠 TaskComplete 与覆盖统计正确性，本轮新 AMASE GUI 确认／发布、UxAS 交接更新及来源修订通过；T06 稳定性、故障拒绝及整组重启矩阵已通过，G4 网关及观察恢复的当前结果见下文；Cesium 已完成 T01 环境及最小工程，真实接入与训练集成尚待后续；其他未登记的 Python 项目依赖未验证。继续工作时先读 [当前状态](docs/status.md) 与 [任务清单](docs/backlog.md)，并重新检查实际环境，不把历史快照当成永久结论。
 
-G3 终点为 GUI／无界面分别完成 WaterwaySearch 任务执行，实际执行链可靠、AMASE 20 米栅格覆盖计算与报告正确、本轮 GUI 人工确认及正常退出。用户已明确当前重点是调通程序和系统，不设最低覆盖率，不开展为达指标的算法／参数寻优；覆盖效果优化归后续。完整水道保留，允许必要的功能兼容和统计正确性修复。基础断线清理及整组重启归 G3，自动重连／快照补齐归 G4，重置分段归 G6。T01 独立输入资格入口已验证，T02 独立协议编排／探针及通信修复已完成正式自动验收、本轮 GUI 确认和复验发布，见 [T02 报告](docs/g3-protocol-validation.md)；T03 已通过两模式真实初始化、单次任务请求、非空规划响应和正常收尾，见 [启动报告](docs/g3-startup-validation.md)；T04 已通过两模式分段命令、内部导航与任务航段关联及正常退出，见 [执行报告](docs/g3-execution-validation.md)；T05 已完成正式两模式全程、可靠 TaskComplete、统计独立复算和正常退出，见 [T05 报告](docs/g3-completion-validation.md)；T06 已完成，见 [稳定性报告](docs/g3-stability-validation.md)；T07 已完成，见 [阶段报告](docs/g3-stage-validation.md)；G4-T01～T09 已完成，G4 已验收并发布；G5-T01～T04 已完成；地图资源及真实地形后端三类小规模任务通过，T05 可执行，真实业务接入与态势显示待后续。后续先读 [阶段报告](docs/g3-stage-validation.md)和 [G4 交接](docs/g3-g4-handoff.md)；[T01 输入基线](docs/g3-input-baseline-validation.md)中的风险为历史发现，处理结果以当前状态和各卡证据为准。
+G3 终点为 GUI／无界面分别完成 WaterwaySearch 任务执行，实际执行链可靠、AMASE 20 米栅格覆盖计算与报告正确、本轮 GUI 人工确认及正常退出。用户已明确当前重点是调通程序和系统，不设最低覆盖率，不开展为达指标的算法／参数寻优；覆盖效果优化归后续。完整水道保留，允许必要的功能兼容和统计正确性修复。基础断线清理及整组重启归 G3，自动重连／快照补齐归 G4，重置分段归 G6。T01 独立输入资格入口已验证，T02 独立协议编排／探针及通信修复已完成正式自动验收、本轮 GUI 确认和复验发布，见 [T02 报告](docs/g3-protocol-validation.md)；T03 已通过两模式真实初始化、单次任务请求、非空规划响应和正常收尾，见 [启动报告](docs/g3-startup-validation.md)；T04 已通过两模式分段命令、内部导航与任务航段关联及正常退出，见 [执行报告](docs/g3-execution-validation.md)；T05 已完成正式两模式全程、可靠 TaskComplete、统计独立复算和正常退出，见 [T05 报告](docs/g3-completion-validation.md)；T06 已完成，见 [稳定性报告](docs/g3-stability-validation.md)；T07 已完成，见 [阶段报告](docs/g3-stage-validation.md)；G4-T01～T09 已完成，G4 已验收并发布；G5-T01～T05 已完成；地图、真实地形后端及前端真实状态接入通过，T06 可执行，实体模型／姿态和业务图层待后续。后续先读 [阶段报告](docs/g3-stage-validation.md)和 [G4 交接](docs/g3-g4-handoff.md)；[T01 输入基线](docs/g3-input-baseline-validation.md)中的风险为历史发现，处理结果以当前状态和各卡证据为准。
 
 Windows 原生运行是目标；WSL／Linux 可作参考或过渡环境，其验证结果必须单独标注。总体计划已确定首期默认 Windows 11 x64、联网开发与指定场景的基础离线演示，并保留原场景编辑器；实体规模和具体地理资源按任务细化。G2 已选定 MSVC v143／CMake 3.31、Release x64／动态 CRT 和 vcpkg manifest；Zyre／串口默认关闭，TCP 所需 CZMQ 保留。T01 已验证 MSVC／SDK／CMake／Ninja／vcpkg，固定业务依赖组合已由 T02 验证；Python 网关及独立环境已通过 G4 验收，正式运行入口和限制见下文及 G5 交接。
 
@@ -50,7 +50,7 @@ Windows 原生运行是目标；WSL／Linux 可作参考或过渡环境，其验
    - [当前状态](docs/status.md)、[任务清单](docs/backlog.md)：当前关卡、缺口、下一任务及验收条件；历史基线见 [G0 报告](docs/g0-baseline.md)。
    - [G3 实施方案](docs/g3-system-integration-plan.md)：当前七卡顺序、双向连接、启动屏障、完整执行／覆盖统计正确性、后续优化及 G4 边界；T01 实际资格通过见 [输入基线](docs/g3-input-baseline-validation.md)，不等于闭环通过。
    - [G2 实施方案](docs/g2-windows-uxas-plan.md)：Windows 原生工具链、vcpkg 依赖、C++ 消息库、可选桥及 HelloWorld 的当前任务边界；规划入口不视为已实现命令。
-   - [G5 实施方案](docs/g5-cesium-display-plan.md)：本地全球矢量、USGS 区域主地形／Copernicus 对照、在线影像、Cesium／AMASE 同源地形及十一张显示任务卡；T01～T04 已完成，T05 可执行，实际资格见各卡报告。
+   - [G5 实施方案](docs/g5-cesium-display-plan.md)：本地全球矢量、USGS 区域主地形／Copernicus 对照、在线影像、Cesium／AMASE 同源地形及十一张显示任务卡；T01～T05 已完成，T06 可执行，实际资格见各卡报告。
    - [工作日志](worklog.md)：先读最近记录及当前任务关联的问题、尝试和决定，避免重复排查；新记录按第 10 节要求追加。
    - [总体实施计划与阶段验收](04.项目总体实施计划与阶段验收.md)：按用户主导、AI 逐项实施的方式推进，G0～G8 为任务细化与验收依据；首期采用联网开发、基础离线演示。
    - [目录分析与 Windows／Cesium 改造计划](03.项目目录分析与Windows_Cesium改造计划.md)：目录、技术方案及改造风险的参考。
@@ -154,7 +154,7 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\tests\windows\deps.tes
 
 构建只生成候选；验收包含 VS／Ninja、真实帧／数据库／XML／Boost 功能、CRT、中文空格路径、故障和迁移。成功后原子更新 `out/artifacts/deps/current.json`，保留旧批次和指针备份。后续脚本点入 `deps-common.ps1`，用 `Resolve-DepsPackage` 核对构建／验收身份及全部输入／安装哈希，再消费 `UxasDependencies`／`UxasDeps::*`；CMake 配置不隐式安装依赖。无 `-Rebuild` 时可复用匹配 ABI 的二进制缓存，不能将缓存恢复计作本次源码编译。
 
-依赖包只验收 Release x64／动态 CRT。CZMQ 旧 `snprintf` 宏和 CMake 3.31／Ninja 的中文响应文件处理见 T02 报告，固定依赖已通过 T05 的 UxAS 完整编译与候选验收。G2、G3 均已完成，见 [G3 阶段报告](docs/g3-stage-validation.md)；G4-T01～T09 已完成，G4 已验收并发布；G5-T01～T04 已完成；地图资源及真实地形后端三类小规模任务通过，T05 可执行，真实业务接入与态势显示待后续。完整任务与稳定性证据另见 [完成报告](docs/g3-completion-validation.md)和 [稳定性报告](docs/g3-stability-validation.md)。
+依赖包只验收 Release x64／动态 CRT。CZMQ 旧 `snprintf` 宏和 CMake 3.31／Ninja 的中文响应文件处理见 T02 报告，固定依赖已通过 T05 的 UxAS 完整编译与候选验收。G2、G3 均已完成，见 [G3 阶段报告](docs/g3-stage-validation.md)；G4-T01～T09 已完成，G4 已验收并发布；G5-T01～T05 已完成；地图、真实地形后端及前端真实状态接入通过，T06 可执行，实体模型／姿态和业务图层待后续。完整任务与稳定性证据另见 [完成报告](docs/g3-completion-validation.md)和 [稳定性报告](docs/g3-stability-validation.md)。
 
 ### Windows：统一 C++ LMCP 库
 
@@ -275,7 +275,7 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\tests\windows\g3-execu
 
 T05 已完成正式 GUI／无界面全程执行、可靠 TaskComplete、724 格逐格独立复算和 19 项完成／统计检查，正常退出与端口释放通过。入口为 run-g3-completion.ps1／g3-completion.tests.ps1，配置为 config/g3-completion.json，详见 [T05 报告](docs/g3-completion-validation.md)。原 90 点水道、20 米、785 秒、默认启动 1 倍及业务参数保持；两次实测均为 724／724，不设覆盖率门槛、不开展算法／参数寻优。本轮正式 GUI 实际 1→5→10 倍，用户已明确接受该单次差异，原始倍率和补充收据保持；后续仍须核对实际 SessionStatus，不能仅凭启动配置宣称全程 1 倍。
 
-本轮四项 AMASE 源码修复已重建，通过 11 组自动复验、用户真实 GUI 确认、正常退出和发布；未变更 UxAS 二进制按既有 T07 流程复验发布以更新 AMASE handoff。inputRevision=3 保留旧修订和摘要，当前资格与正式两模式收据见 T05 报告。T06 已完成，见 [稳定性报告](docs/g3-stability-validation.md)；T07 已完成，见 [阶段报告](docs/g3-stage-validation.md)；G4-T01～T09 已完成，G4 已验收并发布；G5-T01～T04 已完成；地图资源及真实地形后端三类小规模任务通过，T05 可执行，真实业务接入与态势显示待后续；G3 阶段全程 GUI 人工确认及正常退出已完成。
+本轮四项 AMASE 源码修复已重建，通过 11 组自动复验、用户真实 GUI 确认、正常退出和发布；未变更 UxAS 二进制按既有 T07 流程复验发布以更新 AMASE handoff。inputRevision=3 保留旧修订和摘要，当前资格与正式两模式收据见 T05 报告。T06 已完成，见 [稳定性报告](docs/g3-stability-validation.md)；T07 已完成，见 [阶段报告](docs/g3-stage-validation.md)；G4-T01～T09 已完成，G4 已验收并发布；G5-T01～T05 已完成；地图、真实地形后端及前端真实状态接入通过，T06 可执行，实体模型／姿态和业务图层待后续；G3 阶段全程 GUI 人工确认及正常退出已完成。
 
 ```powershell
 powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\windows\run-g3-completion.ps1 -PythonExecutable $pythonExe -Mode Headless
@@ -470,7 +470,7 @@ G4-T08 已完成，见 [稳定性报告](docs/g4-scale-validation.md)。固定 8
 
 ## G4 合格网关与 G5 入口
 
-G4-T01～T09 已完成：原两实体全程、点／线／区域资格、20 实体两模式各 30 分钟、三客户端、观察连接和网关恢复、当前 GUI 确认及正常退出均有独立证据。正式网关指针为 out/artifacts/gis-gateway/current.json，日常入口资格为同目录 session.json；来源、运行编号和本轮同版本受控收尾见 [阶段报告](docs/g4-stage-validation.md)。G5-T01～T04 已完成，T05 可执行；见 [实施方案](docs/g5-cesium-display-plan.md)和 [十一张任务卡](docs/backlog.md#9-g5-顺序与任务卡)。
+G4-T01～T09 已完成：原两实体全程、点／线／区域资格、20 实体两模式各 30 分钟、三客户端、观察连接和网关恢复、当前 GUI 确认及正常退出均有独立证据。正式网关指针为 out/artifacts/gis-gateway/current.json，日常入口资格为同目录 session.json；来源、运行编号和本轮同版本受控收尾见 [阶段报告](docs/g4-stage-validation.md)。G5-T01～T05 已完成，T06 可执行；见 [实施方案](docs/g5-cesium-display-plan.md)和 [十一张任务卡](docs/backlog.md#9-g5-顺序与任务卡)。
 
 日常运行使用下列入口；它自行复查正式包、独立环境、当前后端和入口资格。Scene 支持 Original／Mixed20，Mode 支持 Gui／Headless；完整说明见 [G5 交接](docs/g4-g5-handoff.md)。
 
@@ -483,7 +483,17 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\windows\start-
 
 scripts/g4_stage 保存最终取证／包发布入口，scripts/g4_finalize 保存本次具体失败前驱的受控收尾规则，scripts/g4_session 保存日常独立运行。不要修改旧收据或生成输出绕过来源检查；新的源码修改按影响重建或复验。第二机器部署归 G8，开发工作区的已验证环境与生成模型仍是前提。
 
-G5 用户后续决定采用原全球矢量＋USGS 区域主地形、Copernicus 对照，Esri 按切换加载；T01～T04 已通过，T05 可执行，当前方案及十一张卡已同步实际证据和已知限制。G4 零高程历史结果不替代真实地形任务验收；来源／基准／覆盖缺失不能静默使用零高程。T03 代理采用协议夹具，真实接入与故障隔离另由 T05／T08 验证；模型归 T06，最终人工确认及正式前端发布归 T11。查询／图层／视角操作归 G5，控制与重置归 G6，历史回放归 G7，第二机器和离线卫星影像包归 G8。
+G5 用户后续决定采用原全球矢量＋USGS 区域主地形、Copernicus 对照，Esri 按切换加载；T01～T05 已通过，T06 可执行，当前方案及十一张卡已同步实际证据和已知限制。G4 零高程历史结果不替代真实地形任务验收；来源／基准／覆盖缺失不能静默使用零高程。T03 代理采用协议夹具，T05 真实首次／晚加入／刷新已通过，完整故障隔离另由 T08 验证；模型归 T06，最终人工确认及正式前端发布归 T11。查询／图层／视角操作归 G5，控制与重置归 G6，历史回放归 G7，第二机器和离线卫星影像包归 G8。
+
+## G5-T05 前端状态与真实接入
+
+T05 已完成，见 [状态接入报告](docs/g5-state-validation.md)。apps/cesium_state 为独立 TypeScript 协议／归约器／只读连接模块，与未变的 T03 生产地图资产组合为新候选；不改写 T02～T04 或正式 G4 收据。32 项协议／缓存检查、两模式真实首次／晚加入／刷新、独立收到帧重放、暂停全量快照对照和正常退出通过。地图就绪与后端同步分开；实体模型和业务几何仍待 T06／T07。
+
+构建使用 `scripts/windows/build-g5-state.ps1`（可加 ChinesePath），验收使用 `tests/windows/g5-state.tests.ps1`，联合运行使用 `scripts/windows/start-g5-state-session.ps1`（Mode Gui／Headless）。均需 PythonExecutable，验收／运行需 BuildRunId，可省略 BaselineRunId 重新复查来源。联合入口启动 T04 三实体场景、正式 G4 和 8080 页面；创建输出根目录 request-stop 正常结束本组，浏览器关闭不结束后端。`run-g5-state.ps1` 仅启动页面服务；外部后端的地形身份不能据此自动合格。报告保存实际候选／验收／联合入口编号及当前验证范围。
+
+每次 WS 连接先快照后连续增量，ID／时间／序号保留字符串并用 BigInt 比较，完整 upsert／显式 delete。失配或重连清空业务和轨迹，只显示标为过期的最后时间；不拼接 HTTP snapshot，不外推时钟或发送业务控制。业务 JSON 单包 8 MiB、每集合 4096 对象、总计 32 MiB；轨迹最多 128 实体，每实体 2048 点／10 分钟，固定字段且按后端时间清理，完整规划独立保留。
+
+真实浏览器关闭暴露 T03 资源服务未处理客户端 ECONNRESET；T05 服务包装入口补充每个客户端套接字错误处理与有界计数，六次主动重置和实际断开后正常运行、正常退出通过，旧 T03 源码保持。独立浏览器使用绝对 profile，刷新和截图前激活受检页，地图与业务都就绪后取证，异常路径仍正常 Browser.close。T05 只登记 realStateConnectionQualified，完整显示、T08 恢复矩阵和 T11 人工确认／发布继续待后续。
 
 ## G5-T04 真实地形后端资格
 
@@ -491,11 +501,11 @@ T04 已完成，见 [后端地形报告](docs/g5-backend-terrain-validation.md)�
 
 入口为 `scripts/windows/prepare-g5-backend.ps1`、`scripts/windows/run-g5-backend.ps1`、`tests/windows/g5-backend.tests.ps1`，均需明确 PythonExecutable；run 需 BuildRunId，test 需 BuildRunId／FlightRunId。默认两模式，单模式只作诊断，独立资格要求两模式；完整命令及当前三编号见报告。每次核查上游资格、37 项输入和候选文件，新增实现不改写旧收据。固定端口及预算见 config/g5-backend-terrain.json；本卡不会切换任何正式指针。
 
-实际 DTED 读取来自正式 JAR，运行包装器只委托、取证并拒绝缺图／越界／负值；旧负数解码和十倍间距元数据缺陷未修复，当前非负区域的实际路径不消费错误间距字段。相机中心射线采样地形，四角仍为局部平面投影，零高度字段和 Centerpoint 不作精确地面高程依据；SearchTaskAnalysis 在导出时重放事件，使用飞机位置最近邻地形计算 AGL。保持这些限制，扩大区域或修改算法须重验。下一卡 T05 为真实 G4 前端接入；T09／T10 完整显示联调和 T11 人工确认／发布尚待后续。
+实际 DTED 读取来自正式 JAR，运行包装器只委托、取证并拒绝缺图／越界／负值；旧负数解码和十倍间距元数据缺陷未修复，当前非负区域的实际路径不消费错误间距字段。相机中心射线采样地形，四角仍为局部平面投影，零高度字段和 Centerpoint 不作精确地面高程依据；SearchTaskAnalysis 在导出时重放事件，使用飞机位置最近邻地形计算 AGL。保持这些限制，扩大区域或修改算法须重验。T05 真实 G4 状态接入也已通过，下一卡 T06 为实体／姿态显示；T09／T10 完整显示联调和 T11 人工确认／发布尚待后续。
 
 ## G5-T03 地图与本地资源服务
 
-T03 已完成，见 [地图报告](docs/g5-map-validation.md)。本地 PMTiles 经有界 Range／工作线程绘制；USGS 区域高度场直接使用 T02 椭球高，区域外明确为未验收参考椭球；Esri 按切换加载，失败恢复本地底图。字体与 Cesium 资源本地部署；OSGB 原件继续留待 T06。真实业务消息接入、实体与时间仍待 T05／T06，T04 后端真实地形资格也已完成，下一卡为 T05 真实业务接入。
+T03 已完成，见 [地图报告](docs/g5-map-validation.md)。本地 PMTiles 经有界 Range／工作线程绘制；USGS 区域高度场直接使用 T02 椭球高，区域外明确为未验收参考椭球；Esri 按切换加载，失败恢复本地底图。字体与 Cesium 资源本地部署；OSGB 原件继续留待 T06。后续 T04 后端地形和 T05 真实状态／时间接入已完成，下一卡为 T06 实体／姿态显示。
 
 ```powershell
 $pythonExe = Join-Path $env:LOCALAPPDATA 'Python/pythoncore-3.14-64/python.exe'
@@ -520,6 +530,6 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\windows\run-g5
 
 首次准备省略 VerifyOnly；入口自行复查正式后端、网关和日常入口资格，可选 BaselineRunId 仍会重查来源。构建在 out 独立副本进行，可加 ChinesePath；运行复查候选，输出 8080 地址及本组 request-stop 文件位置，创建该文件正常退出。开发端口 5173；端口冲突明确失败，验收临时使用 CDP 9223。普通／中文空格路径、不同工作目录、实际 Edge、四类 Cesium 资源、刷新、拒绝矩阵及正常退出通过。
 
-T01 交付时只有工具环境指针 .tools/g5/current.json，页面为椭球与工程样片，候选 stageQualified=false；这一历史入口不代表当前地图能力。后续 T02 已完成，见 [地理检查报告](docs/g5-geography-validation.md)：原始 z10 异常保留历史；用户选定原矢量底图＋USGS 区域主地形，Copernicus 对照，WGS84／EGM96 标准化正高派生 AMASE DTED 与 Cesium 椭球高。完整矢量摘要／索引、区域来源／网格、独立数值及八组验收通过。T03 后续地图资格见上节，T04 后端地形资格也已通过，当前下一卡为 T05；正式前端仍未发布。源 NAD83／NAVD88 与 Copernicus EGM2008 按固定链转换，禁止重标 CRS、混合补值或用合成输出代替真实资格；全球地形不随区域自动合格。
+T01 交付时只有工具环境指针 .tools/g5/current.json，页面为椭球与工程样片，候选 stageQualified=false；这一历史入口不代表当前地图能力。后续 T02 已完成，见 [地理检查报告](docs/g5-geography-validation.md)：原始 z10 异常保留历史；用户选定原矢量底图＋USGS 区域主地形，Copernicus 对照，WGS84／EGM96 标准化正高派生 AMASE DTED 与 Cesium 椭球高。完整矢量摘要／索引、区域来源／网格、独立数值及八组验收通过。T03 后续地图资格见上节，T04 后端地形资格也已通过，T05 状态接入也已通过，当前下一卡为 T06；正式前端仍未发布。源 NAD83／NAVD88 与 Copernicus EGM2008 按固定链转换，禁止重标 CRS、混合补值或用合成输出代替真实资格；全球地形不随区域自动合格。
 
 T02 入口为 `scripts/windows/prepare-g5-geography.ps1 -PythonExecutable <已核查解释器>`，输出新准备编号后使用 `tests/windows/g5-geography.tests.ps1 -PythonExecutable <已核查解释器> -BuildRunId <本次准备编号>`。两入口自行核查当前后端、网关和工具，候选与独立 acceptance 成对交接；具体批次和命令见报告第 9 节。`config/g5-terrain.json`、`config/g5-regional-sources.json` 与 `config/g5-usgs-operation.json` 为当前区域契约；`g5-terrarium-legacy.json` 仅作历史异常回归。来源、网格或实现变化须重新准备／验收，不改写旧收据；T01 资源登记和下载 manifest 不能代替区域地形资格。
