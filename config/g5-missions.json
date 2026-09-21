@@ -1,0 +1,10 @@
+{
+  "schemaVersion": 1,
+  "entityBuildRunId": "g5-t06-build-20260921-144826-020",
+  "entityValidationBuildRunId": "g5-t06-build-20260921-144802-049",
+  "entityValidationRunId": "g5-t06-test-20260921-144815-830",
+  "entityAcceptanceSHA256": "5117260e031e112a86c63dc25e240fc8a856cbfa7e24786a163bcb23c62ddf6e",
+  "maximumVertices": 50000,
+  "rendering": {"msaaSamples": 1, "fxaa": true},
+  "ground": {"west": -122, "east": -120, "south": 45, "north": 46, "width": 2401, "height": 1201, "stepDegrees": 0.0008333333333333334, "url": "/missions/orthometric.f32"}
+}

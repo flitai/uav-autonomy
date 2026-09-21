@@ -1,0 +1,62 @@
+import assert from 'node:assert/strict';
+import {readFileSync,writeFileSync} from 'node:fs';
+import {resolve} from 'node:path';
+import {pathToFileURL} from 'node:url';
+const [project,reference,output]=process.argv.slice(2),read=p=>JSON.parse(readFileSync(p,'utf8'));
+const {MissionModel}=await import(pathToFileURL(resolve(project,'mission-unit/missions/model.js')));
+const {location,ground,boundary}=await import(pathToFileURL(resolve(project,'mission-unit/missions/geometry.js')));
+const {MissionLayer,world}=await import(pathToFileURL(resolve(project,'mission-unit/missions/layer.js')));
+const {Event,Cartesian3,JulianDate}=await import(pathToFileURL(resolve(project,'node_modules/cesium/Source/Cesium.js')));
+const config=read(resolve(project,'public/missions/runtime.json')),r=read(reference),big='9223372036854775807';
+const bytes=readFileSync(resolve(project,'public/missions/orthometric.f32'));
+const heights={ground:config.ground,geoid:read(resolve(project,'public/entities/runtime.json')).height,values:new Float32Array(bytes.buffer.slice(bytes.byteOffset,bytes.byteOffset+bytes.length))};
+const model=new MissionModel(heights);let error=0;
+for(const sample of r.samples){
+ const v=location({Longitude:sample.longitude,Latitude:sample.latitude,Altitude:sample.altitude,AltitudeType:sample.reference},heights);
+ assert.ok(Math.abs(v.msl-sample.msl)<1e-7);assert.ok(Math.abs(ground(sample.longitude,sample.latitude,heights)-sample.ground)<1e-7);
+ const dist=Cartesian3.distance(world(v),Cartesian3.fromArray(sample.ecef));error=Math.max(error,dist);assert.ok(dist<=1);
+}
+for(const value of r.rectangles){const shape=structuredClone(r.fixture.tasks['13'].definition.SearchArea);shape.Rotation=value.rotation;
+ const actual=boundary(shape,heights);for(let i=0;i<4;i++)assert.ok(Math.hypot(...actual[i].map((x,j)=>x-value.corners[i][j]))<1e-9);
+}
+const state=structuredClone(r.fixture);model.update(state);assert.equal(model.features.size,8);assert.ok([...model.features.values()].every(f=>!f.error));
+for(const key of ['zone:21','zone:22','zone:23']){const wall=model.features.get(key).drawings[0];assert.equal(wall.kind,'wall');
+ for(let i=0;i<wall.vertices.length;i++){assert.equal(wall.vertices[i].msl,2000);const p=wall.lower[i];assert.ok(Math.abs(p.msl-ground(p.longitude,p.latitude,heights)-100)<1e-7);}}
+const footprint=model.features.get('task:13').drawings[0];assert.ok(footprint.ground);assert.ok(footprint.vertices.every(p=>Math.abs(p.msl-ground(p.longitude,p.latitude,heights))<1e-7));
+let plan=model.features.get('plan:'+big);assert.deepEqual(plan.waypoints.map(w=>w.id),['3','9',big]);assert.equal(plan.drawings.length,2);
+assert.equal(plan.drawings[0].vertices[0].longitude,-120.71);assert.equal(plan.drawings[0].vertices[1].longitude,-120.7);
+assert.equal(plan.drawings[1].vertices[1].longitude,-120.69,'NextWaypoint ignored');
+assert.equal(model.features.get('task:11').status,'任务已初始化','Predicted assignment completion became actual completion');
+const before=structuredClone(plan),m=structuredClone(state.routes[big].planned_mission);
+state.commands[big+':mission']={entity_id:big,command_id:'800',kind:'mission',received:true,execution_observed:false,execution_time_ms:null,current_waypoint_id:null,message:m};
+state.entities[big]={current_command_id:'0',current_waypoint_id:'9',associated_task_ids:['11'],simulation_time_ms:'1000'};
+model.update(state);assert.equal(model.features.get('command:'+big+':mission').status,'命令已收到');assert.equal(model.features.get('execution:'+big).drawings.length,0);
+const observe=(target,time)=>{Object.assign(state.entities[big],{current_command_id:'800',current_waypoint_id:target,simulation_time_ms:time});Object.assign(state.commands[big+':mission'],{execution_observed:true,current_waypoint_id:target,execution_time_ms:time});model.update(state);};
+observe('0','500');assert.equal(model.features.get('command:'+big+':mission').status,'命令已收到');assert.equal(model.features.get('execution:'+big).error,undefined);assert.equal(model.features.get('execution:'+big).drawings.length,0,'Unresolved startup target became execution');
+observe('9','1000');assert.equal(model.features.get('execution:'+big).drawings.length,1,'Snapshot invented segment');
+observe(big,'2000');assert.equal(model.features.get('execution:'+big).evidence.previousWaypoint,'9');assert.equal(model.features.get('execution:'+big).drawings.length,2);
+observe('3','2000');assert.equal(model.features.get('execution:'+big).evidence.previousWaypoint,null,'Non-advancing timestamp reused an old segment');
+observe('9','2100');observe(big,'2200');assert.equal(model.features.get('execution:'+big).evidence.previousWaypoint,'9');
+state.commands[big+':mission'].message.WaypointList=state.commands[big+':mission'].message.WaypointList.filter(w=>w.Number!=='3');
+model.update(state);assert.equal(model.features.get('execution:'+big).evidence.previousWaypoint,null,'Revised command reused history');assert.deepEqual(model.features.get('plan:'+big),before);
+observe('9','3000');assert.equal(model.features.get('execution:'+big).evidence.previousWaypoint,null,'Non-adjacent jump became segment');
+state.tasks['11'].backend_completed=true;state.tasks['11'].completed_entity_ids=[big];state.tasks['11'].completed_time_ms='3000';model.update(state);
+assert.equal(model.features.get('task:11').status,'后端报告完成');assert.ok(model.features.has('plan:'+big)&&model.features.has('execution:'+big));
+let destroyed=false;
+const viewer={isDestroyed:()=>destroyed,dataSources:{add(){},remove(){}},selectedEntityChanged:new Event(),scene:{requestRender(){}},camera:{flyToBoundingSphere(s){assert.ok(s.radius>=50);}},trackedEntity:undefined,selectedEntity:undefined};
+const layer=new MissionLayer(viewer,model,()=>{});layer.update();assert.ok(layer.source.entities.values.length>20);
+layer.select('plan:'+big,big);layer.locate();assert.equal(layer.waypoint,big);
+layer.visible.plans=false;layer.refreshVisibility();assert.ok(layer.groups.get('plan:'+big).entities.every(e=>!e.show));
+const picked=layer.groups.get('zone:21').entities[0];viewer.selectedEntity=picked;viewer.selectedEntityChanged.raiseEvent(picked);assert.equal(layer.selected,'zone:21');
+delete state.zones['21'];model.update(state);layer.update();assert.equal(layer.selected,null);assert.equal(viewer.selectedEntity,undefined);assert.match(model.features.get('zone:region:24').details.flat().join(' '),/缺少边界/);
+const count=layer.source.entities.values.length;for(let i=0;i<40;i++){model.update(state);layer.update();}assert.equal(layer.source.entities.values.length,count);
+const invalid=structuredClone(r.fixture);invalid.tasks['13'].definition.SearchArea.Width=-1;invalid.routes[big].planned_mission.WaypointList[1].AltitudeType=99;
+invalid.zones['21'].definition.MaxAltitude=-1000;invalid.zones['23'].definition.Boundary.BoundaryPoints[1].Longitude=0;
+model.update(invalid);for(const key of ['task:13','plan:'+big,'zone:21','zone:23']){assert.ok(model.features.get(key).error,key);assert.equal(model.features.get(key).drawings.length,0);}
+assert.equal(model.features.get('task:12').error,undefined,'Bad geometry hid valid objects');
+const bounded=new MissionModel(heights,1);bounded.update(r.fixture);assert.ok([...bounded.features.values()].reduce((s,f)=>s+f.drawings.reduce((n,d)=>n+d.vertices.length+(d.lower?.length??0),0)+(f.waypoints?.length??0),0)<=1);
+model.clear();layer.clear();assert.equal(layer.source.entities.values.length,0);model.update(r.fixture);layer.update();assert.equal(model.features.get('execution:'+big),undefined);
+layer.destroy();assert.equal(viewer.selectedEntityChanged.numberOfListeners,0);assert.equal(layer.source.entities.values.length,0);
+const orphan=new MissionLayer(viewer,model,()=>{});orphan.update();destroyed=true;
+Object.defineProperty(viewer,'trackedEntity',{get(){throw Error('Destroyed Viewer accessed');}});orphan.destroy();orphan.destroy();orphan.update();assert.equal(orphan.groups.size,0);assert.equal(viewer.selectedEntityChanged.numberOfListeners,0);
+writeFileSync(output,JSON.stringify({status:'passed',scope:r.scope,samples:r.samples.length,maximumPositionErrorMeters:error,rectangleRotations:[0,90,33],checks:['NextWaypoint topology','large identifiers','plan preserved across segments','received versus observed','target transition evidence','revised command invalidation','completion retention','zone height ranges','invalid geometry isolation','source bounds','bounded drawing vertices','delete clears selection','region missing references','idempotent render count','clear and dispose']},null,2));
