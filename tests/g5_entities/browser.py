@@ -65,7 +65,7 @@ def pose_check(events,session,state,grid):
 
 EXPRESSION="""(()=>{
  const m=window.__g5Map,v=m?.viewer,models={};let visited=0;
- function walk(p){if(!p||++visited>10000)return;if(p.id?.id?.startsWith('aircraft:')&&p.modelMatrix){models[p.id.id.slice(9)]={ready:p.ready,scale:p.scale,matrix:Array.from(p.modelMatrix),axis:p._sceneGraph?Array.from(p._sceneGraph._axisCorrectionMatrix):null,textureBytes:p.statistics?.texturesByteLength};}
+ function walk(p){if(!p||++visited>10000)return;if(p.id?.id?.startsWith('aircraft:')&&p.modelMatrix){models[p.id.id.slice(9)]={ready:p.ready,scale:p.scale,matrix:Array.from(p.modelMatrix),axis:p._sceneGraph?Array.from(p._sceneGraph._axisCorrectionMatrix):null,textureBytes:p.statistics?.texturesByteLength,color:p.color?.toCssHexString(),colorBlendMode:p.colorBlendMode,outline:p.silhouetteColor?.toCssHexString(),outlinePixels:p.silhouetteSize,silhouetteId:p._silhouetteId};}
  if(typeof p.get==='function'&&typeof p.length==='number')for(let i=0;i<p.length;i++)walk(p.get(i));}
  if(v)walk(v.scene.primitives);const gl=v?.scene.context._gl,e=gl?.getExtension('WEBGL_debug_renderer_info');
  return {business:window.__g5State?.inspect(),entities:window.__g5Entities?.inspect(),models,map:document.documentElement.dataset.ready,mapErrors:m?.errors,tilesLoaded:v?.scene.globe.tilesLoaded,timeOrigin:performance.timeOrigin,text:document.querySelector('#backend-time')?.textContent,detail:document.querySelector('#entity-details')?.textContent,renderer:e?gl.getParameter(e.UNMASKED_RENDERER_WEBGL):null,cameraHeight:v?.camera.positionCartographic.height};})()"""
@@ -115,8 +115,15 @@ async def verify(url,directory):
             live=await until(lambda s:s.get('map')=='true' and s.get('business',{}).get('phase')=='live' and s.get('entities',{}).get('count')==3 and all(n>=5 for n in s['business']['sampleCounts'].values()) and len(s['business']['sampleCounts'])==3,150)
             assert not live['entities']['error'];result['initial']=live;result['initialPoseCheck']=pose_check(cdp.events,session,live,grid)
             await evaluate("document.querySelector('[data-entity-id=\"400\"]').click();true");await click('entity-locate')
-            loaded=await until(lambda s:len(s['models'])==3 and all(m['ready'] and m['textureBytes']>0 for m in s['models'].values()))
+            loaded=await until(lambda s:len(s['models'])==3 and all(m['ready'] and m['textureBytes']>0 for m in s['models'].values()) and s['models']['400'].get('outlinePixels')==3)
             assert loaded['entities']['selected']=='400' and '1090.00' in loaded['detail'];result['loaded']=loaded
+            for identity,expected in [('400','#00e5ff'),('500','#00e5ff'),('600','#ff4265')]:
+                assert loaded['models'][identity]['color']==expected and loaded['models'][identity]['colorBlendMode']==1
+                assert loaded['models'][identity]['outlinePixels']==(3 if identity=='400' else 2)
+                assert loaded['models'][identity]['silhouetteId']>0
+                assert loaded['entities']['objects'][identity]['affiliation']['source']=='display-config'
+                assert loaded['business']['state']['entities'][identity]['configuration']['Affiliation']=='Unknown'
+            assert '用户指定' in loaded['detail'] and '蓝方' in loaded['detail']
             for identity,model in loaded['models'].items():
                 assert math.dist(model['matrix'][12:15],loaded['entities']['objects'][identity]['position'])<=1
                 # Actual Cesium engine maps GLB +Z to model +X, +Y to +Z.
@@ -144,6 +151,10 @@ async def verify(url,directory):
             for control,field in (('label-toggle','labels'),('trail-toggle','trails'),('entity-toggle','visible')):
                 await click(control);assert not (await evaluate(EXPRESSION))['entities'][field];await click(control)
             await click('entity-locate');await until(lambda s:s['cameraHeight']<3000 and s['tilesLoaded']);await shot('real-model-paused')
+            await evaluate("document.querySelector('[data-entity-id=\"600\"]').click();true");await click('entity-locate')
+            red=await until(lambda s:s['models'].get('600',{}).get('outline')=='#f8ffff' and s['models'].get('400',{}).get('outline')=='#071a2c' and s['tilesLoaded'])
+            assert red['models']['600']['color']=='#ff4265' and '红方' in red['detail'];await shot('red-model-paused')
+            result['affiliationDisplay']=dict(status='passed',blue=['400','500'],red=['600'],backendValuesUnchanged=True,redSelected=red)
             result['interactionChecks']=dict(status='passed',locate=True,follow=True,reset=True,layers=True,frozenTime=True)
             origin=paused['timeOrigin'];await cdp.call('Page.reload',{'ignoreCache':True},session)
             refreshed=await until(lambda s:s['timeOrigin']!=origin and s.get('map')=='true' and s.get('business',{}).get('phase')=='live' and s.get('entities',{}).get('count')==3)

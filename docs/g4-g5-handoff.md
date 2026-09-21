@@ -56,3 +56,5 @@ G5 已按用户确认的 [实施方案](g5-cesium-display-plan.md) 细化为 [�
 G5 当前日常联合入口为 `scripts/windows/start-g5-entities-session.ps1 -PythonExecutable <已核查解释器> -BuildRunId <T06 候选编号> -Mode Gui`，使用合格三实体地形场景与正式 G4；生产页面 8080，网关 8000。它独立于上述 G4 零高程入口，原入口和历史资格保留。完整命令、运行边界和候选编号见 [T06 报告](g5-entities-validation.md)；T05 原状态入口保留。
 
 G5-T06 已完成真实模型／姿态／时间显示，选择／轨迹／定位／跟随／复位及 +／-／0 模型倍率操作通过。UCAV 来源由用户说明为 AFSIM，1 源单位＝1 显示米；高度按 EGM96 改正一次，消息与后端性能不变。两模式短程显示、离线地图和正常退出不替代 T09／T10 全程，下一卡为 T07，正式前端发布仍归 T11。
+
+T06 当前候选已增加 [荧光阵营色／描边](g5-affiliation-display-validation.md)。直接读取 entities[id].configuration.Affiliation；仅当后端 Unknown／缺失时补充用户显示指定，保留原快照与来源，未增加 G4 字段或控制接口。

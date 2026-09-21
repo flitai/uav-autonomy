@@ -37,7 +37,7 @@ def build(run,folder,binding,backend,mapdir,mapservice,state_candidate,tool_pack
     for scene in ('original','small','mixed20'):
         info=c.load(backend/scene/'scene.json');entity_ids.update(str(a['entityId']) for a in info['assignments'])
     runtime=dict(schemaVersion=1,modelUrl='/entities/ucav.glb',modelName=config['model']['label'],modelLengthMeters=model['dimensionsMeters'][2],
-        entityModels={k:'ucav' for k in sorted(entity_ids)},height=height,interpolationMilliseconds=config['interpolationMilliseconds'],modelSHA256=model['sha256'])
+        entityModels={k:'ucav' for k in sorted(entity_ids)},height=height,interpolationMilliseconds=config['interpolationMilliseconds'],modelSHA256=model['sha256'],affiliations=config['affiliations'])
     c.save(public/'runtime.json',runtime)
     state_service=c.load(state_candidate/'service.json');(project/'public/state').mkdir()
     shutil.copy2(Path(state_service['dist'])/'state/runtime.json',project/'public/state/runtime.json')

@@ -17,6 +17,20 @@
     "scaleShortcuts": {"increase":"+","decrease":"-","reset":"0","minimum":0.25,"maximum":32}
   },
   "interpolationMilliseconds": "1000",
+  "affiliations": {
+    "styles": {
+      "blue": {"label":"蓝方","color":"#00e5ff"},
+      "red": {"label":"红方","color":"#ff4265"},
+      "neutral": {"label":"中立","color":"#66ff5e"},
+      "unknown": {"label":"未知","color":"#ffe94a"}
+    },
+    "aliases": {"blue":"blue","blue team":"blue","蓝方":"blue","red":"red","red team":"red","红方":"red","neutral":"neutral","中立":"neutral","unknown":"unknown","未知":"unknown"},
+    "entityDefaults": {"400":"blue","500":"blue","600":"red"},
+    "outlineColor":"#071a2c",
+    "selectedOutlineColor":"#f8ffff",
+    "outlinePixels":2,
+    "selectedOutlinePixels":3
+  },
   "supportedEntityHeightReference": "MSL/EGM96; other references explicitly refused",
   "positionToleranceMeters": 1,
   "attitudeToleranceDegrees": 0.1,

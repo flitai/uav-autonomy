@@ -2,6 +2,8 @@
 
 日期：2026-09-21，Asia/Shanghai。**G5-T06 已完成，实体显示资格通过。** 本卡交付模型、标签、列表／详情、实际轨迹、定位／跟随／复位及大小快捷键；完整航线、任务和区域图层继续归 T07，G5 阶段发布归 T11。
 
+当前配色修订和可启动候选见 [阵营荧光色与描边补充](g5-affiliation-display-validation.md)。下文首次 T06 批次及命令示例保留历史，使用现源码时应选补充报告中的新 BuildRunId。
+
 ## 1. 输入、工具与候选
 
 新增 [实体模块](../apps/cesium_entities/README.md)、[构建／运行编排](../scripts/g5_entities/manage.py)、[配置](../config/g5-entities.json)及独立验收。构建把经过来源复查的 T03 地图源代码、T05 状态类和 T06 实体模块组成单一 Vite 包，共用一个 Cesium 引擎；锁定依赖、原地图／状态实现、正式 AMASE／UxAS／G4 和 T02～T05 收据保持。候选独立绑定 20 项 T06 输入、前置资格和模型工具，不更新正式前端指针。
