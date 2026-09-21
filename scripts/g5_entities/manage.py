@@ -57,6 +57,7 @@ def build(run,folder,binding,backend,mapdir,mapservice,state_candidate,tool_pack
     c.invoke([node,ROOT/'tests/g5_entities/numerical.mjs',project,directory/'calibration',run/'numerical.json'],run,'numerical')
     c.invoke([node,tsc,'--ignoreConfig','--target','ES2022','--module','NodeNext','--skipLibCheck','--outDir',project/'layer-unit',project/'entities/layer.ts'],run,'layer-unit-compile',cwd=project)
     c.invoke([node,ROOT/'tests/g5_entities/lifecycle.mjs',project,run/'lifecycle.json'],run,'entity-lifecycle')
+    c.invoke([node,ROOT/'tests/g5_entities/playback.mjs',project,run/'playback.json'],run,'buffered-playback')
     c.invoke([sys.executable,'-I','-B','-X','utf8',ROOT/'tests/g5_entities/model.py',extracted,public/'ucav.glb',run/'model.json'],run,'model-audit')
     c.save(directory/'model-source.json',dict(original=config['model'],toolManifestSHA256=binding['modelTools']['manifestSHA256'],conversion=model))
     files=[p for p in directory.rglob('*') if p.is_file() and 'node_modules' not in p.parts]

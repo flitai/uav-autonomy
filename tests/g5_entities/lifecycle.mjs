@@ -13,13 +13,13 @@ for(const [name,key] of [[' Red  Team ','red'],['BLUE','blue'],['中立','neutra
 assert.equal(appearance('999',{},config.affiliations).key,'unknown');
 assert.equal(appearance('400',{configuration:{Affiliation:'other team'}},config.affiliations).source,'unmapped');
 assert.equal(appearance('400',{configuration:{Affiliation:'__proto__'}},config.affiliations).key,'unknown');
-let destroyed=false;
+let destroyed=false,wall=0;
 const viewer={isDestroyed:()=>destroyed,dataSources:{add(){},remove(){}},selectedEntityChanged:new Event(),scene:{requestRender(){}},trackedEntity:undefined,selectedEntity:undefined,
   canvas:{clientWidth:1440,clientHeight:900},camera:{positionWC:new Cartesian3(),directionWC:new Cartesian3(0,0,1),frustum:new PerspectiveFrustum({fov:Math.PI/3,aspectRatio:1.6,near:1})}};
 const id='400',row={simulation_time_ms:'2000',position:{longitude_deg:-121,latitude_deg:45.3,altitude_m:1090,altitude_reference:1},attitude:{heading_deg:0,pitch_deg:0,roll_deg:0}};
-const store={generation:0,state:{simulation:{simulation_time_ms:'2000',state:1},entities:{[id]:row},tasks:{}},samples:new Map()};
+const store={generation:0,state:{simulation:{simulation_time_ms:'2000',state:1,real_time_multiple:1},entities:{[id]:row},tasks:{}},samples:new Map()};
 const connection={store,phase:'live',lastHealth:null};
-const layer=new EntityLayer(viewer,connection,config,()=>{});
+const layer=new EntityLayer(viewer,connection,config,()=>{},()=>wall);
 layer.update();assert.equal(layer.objects.size,1);assert.equal(layer.inspect().objects[id].trailPoints,0);
 assert.equal(layer.inspect().objects[id].color,'#00e5ff');assert.equal(layer.inspect().objects[id].outlinePixels,2);
 store.state.entities[id]={...row,configuration:{Affiliation:'Red'}};layer.update();assert.equal(layer.inspect().objects[id].color,'#ff4265');assert.equal(layer.inspect().objects[id].affiliation.source,'backend');
@@ -31,10 +31,14 @@ delete store.state.entities[id];layer.update();assert.equal(layer.objects.size,0
 store.state.entities[id]=row;layer.update();layer.select(id);layer.follow();store.generation++;store.state.entities={};layer.update();assert.equal(layer.objects.size,0);assert.equal(layer.selected,null);
 store.state.entities[id]=row;layer.update();connection.phase='recovering';layer.update();assert.equal(layer.objects.size,0);assert.equal(layer.poses.size,0);
 connection.phase='live';store.state.entities[id]={...row,position:{...row.position,altitude_reference:0}};layer.update();assert.equal(layer.objects.size,0);assert.match(layer.error,/MSL/);
-store.state.entities[id]=row;layer.update();store.state.simulation.state=2;layer.update();const frozen=layer.inspect();store.state.simulation.simulation_time_ms='3000';layer.update();assert.deepEqual(layer.inspect().objects,frozen.objects);assert.equal(layer.inspect().displayClock,frozen.displayClock);
+store.state.entities[id]=row;store.samples.set(id,[{time:'0',position:row.position,attitude:row.attitude},{time:'2000',position:{...row.position,longitude_deg:-120.999},attitude:{...row.attitude,heading_deg:30}}]);layer.update();
+const first=layer.inspect();wall+=16;layer.source.update();const second=layer.inspect();wall+=16;layer.source.update();const third=layer.inspect();
+assert.notDeepEqual(first.objects[id].position,second.objects[id].position);assert.notDeepEqual(second.objects[id].position,third.objects[id].position);
+assert.notDeepEqual(first.objects[id].orientation,third.objects[id].orientation);assert.equal(first.objects[id].lower,third.objects[id].lower);assert.equal(first.objects[id].upper,third.objects[id].upper);
+store.state.simulation.state=2;layer.update();const frozen=layer.inspect();store.state.simulation.simulation_time_ms='3000';layer.update();wall+=1000;layer.source.update();assert.deepEqual(layer.inspect().objects,frozen.objects);assert.equal(layer.inspect().displayClock,frozen.displayClock);
 assert.equal(layer.inspect().objects[id].pointFallback,false);
 const shader=layer.objects.get(id).model.customShader.getValue();assert.equal(shader.isDestroyed(),false);
-layer.destroy();assert.equal(layer.objects.size,0);assert.equal(viewer.selectedEntityChanged.numberOfListeners,0);assert.equal(shader.isDestroyed(),true);
+layer.destroy();wall+=16;assert.equal(layer.source.update(),true);assert.equal(layer.objects.size,0);assert.equal(viewer.selectedEntityChanged.numberOfListeners,0);assert.equal(shader.isDestroyed(),true);
 // Defensive cleanup also tolerates a Viewer already destroyed by its owner.
 destroyed=true;layer.destroy();layer.update();
 writeFileSync(output,JSON.stringify({status:'passed',scope:'isolated Cesium entity lifecycle',checks:9,affiliationCases:['user-defaults','backend-aliases','unknown-and-unmapped','backend-precedence','dynamic-color-and-selection'],backendAffiliationPrecedence:true,unknownAndUnmappedPreserved:true,dynamicColorAndSelection:true,deleteClearsSelectionAndTracking:true,completionRetainsEntity:true,recoveryClearsSamples:true,unknownHeightRejected:true,pausedClockHeld:true},null,2));

@@ -72,6 +72,25 @@ EXPRESSION="""(()=>{
  if(v)walk(v.scene.primitives);const gl=v?.scene.context._gl,e=gl?.getExtension('WEBGL_debug_renderer_info');
  return {business:window.__g5State?.inspect(),entities:window.__g5Entities?.inspect(),models,map:document.documentElement.dataset.ready,mapErrors:m?.errors,tilesLoaded:v?.scene.globe.tilesLoaded,timeOrigin:performance.timeOrigin,text:document.querySelector('#backend-time')?.textContent,detail:document.querySelector('#entity-details')?.textContent,renderer:e?gl.getParameter(e.UNMASKED_RENDERER_WEBGL):null,cameraHeight:v?.camera.positionCartographic.height};})()"""
 
+def motion_check(frames):
+    assert len(frames)>3,'No intermediate rendered frames'
+    interior=0;steps=[];errors=[];brackets=set()
+    for frame in frames:
+        assert int(frame['lower'])<=int(frame['time'])<=int(frame['upper'])
+        errors.append(math.dist(frame['position'],frame['rendered']))
+        brackets.add((frame['lower'],frame['upper']))
+    assert max(errors)<=1,'Rendered model lags interpolated pose'
+    for a,b in zip(frames,frames[1:]):
+        step=int(b['clock'])-int(a['clock']);assert step>=0;steps.append(step)
+        # Same received bracket, distinct intermediate positions: fails the old packet-only implementation.
+        if (a['lower'],a['upper'])==(b['lower'],b['upper']) and 0<a['fraction']<b['fraction']<1:
+            assert math.dist(a['position'],b['position'])>0;interior+=1
+        assert step<=111,'Display clock snapped by a full message interval'
+    assert len(brackets)>=2 and interior>=6,(len(brackets),interior)
+    return dict(status='passed',frames=len(frames),receivedBrackets=len(brackets),interiorMovingFrames=interior,
+        maximumStepMilliseconds=max(steps),maximumRenderedPositionErrorMeters=max(errors),
+        observedFramesPerSecond=(len(frames)-1)*1000/(frames[-1]['wall']-frames[0]['wall']))
+
 async def verify(url,directory):
     directory=directory.resolve();directory.mkdir(parents=True)
     context=json.loads((directory.parent.parent/'context.json').read_text(encoding='utf-8'))
@@ -131,7 +150,13 @@ async def verify(url,directory):
                 assert math.dist(model['matrix'][12:15],loaded['entities']['objects'][identity]['position'])<=1
                 # Actual Cesium engine maps GLB +Z to model +X, +Y to +Z.
                 assert math.dist(model['axis'][8:11],[1,0,0])<1e-12 and math.dist(model['axis'][4:7],[0,0,1])<1e-12
-            await shot('real-model-running');await asyncio.sleep(2)
+            await shot('real-model-running')
+            motion_expression=Path(__file__).with_name('motion.js').read_text(encoding='utf-8')
+            frames=await evaluate(motion_expression);save(directory/'rendered-motion.json',frames);result['motion']=motion_check(frames)
+            await click('entity-follow');await until(lambda s:s['entities']['followed']=='400')
+            frames=await evaluate(motion_expression);save(directory/'rendered-follow-motion.json',frames);result['followMotion']=motion_check(frames)
+            assert all(f['followed']=='400' for f in frames)
+            await click('entity-reset');await click('entity-locate')
             moved=await evaluate(EXPRESSION);assert math.dist(moved['entities']['objects']['400']['position'],loaded['entities']['objects']['400']['position'])>1
             result['movingPoseCheck']=pose_check(cdp.events,session,moved,grid)
             (directory/'request-pause').touch()

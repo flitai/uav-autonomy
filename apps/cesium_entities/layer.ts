@@ -3,6 +3,7 @@ import { interpolate, position, type Attitude, type HeightGrid, type PoseSample,
 import type { ReadOnlyConnection } from '../state/connection.js';
 import { appearance, type Appearance, type AffiliationConfig } from './affiliation.js';
 import { modelLighting, screenScale, validateDisplay, type DisplayConfig } from './display.js';
+import { BufferedPlayback } from './playback.js';
 
 export interface EntityConfig { modelUrl: string; modelName: string; modelLengthMeters: number; modelDiameterMeters: number; display: DisplayConfig; entityModels: Record<string, string>; height: HeightGrid; interpolationMilliseconds: string; affiliations: AffiliationConfig }
 export class EntityLayer {
@@ -10,12 +11,17 @@ export class EntityLayer {
   readonly objects = new Map<string, Entity>();
   readonly poses = new Map<string, ReturnType<typeof interpolate>>();
   readonly affiliations = new Map<string, Appearance>();
-  selected: string | null = null; error = ''; private generation = -1; private displayClock: bigint | null = null;
+  selected: string | null = null; error = ''; private generation = -1;
+  private readonly playback: BufferedPlayback;
+  private lastDetails=0; private lastTrail=0; private disposed=false;
   showModels = true; showLabels = true; showTrails = true;
   modelScale = 1;
   private readonly lighting = modelLighting();
-  constructor(readonly viewer: Viewer, readonly connection: ReadOnlyConnection, readonly config: EntityConfig, readonly changed: () => void) {
+  constructor(readonly viewer: Viewer, readonly connection: ReadOnlyConnection, readonly config: EntityConfig, readonly changed: () => void, private readonly now: () => number = () => performance.now()) {
     validateDisplay(config.display,config.modelDiameterMeters);
+    this.playback=new BufferedPlayback(BigInt(config.interpolationMilliseconds));
+    // Runs before Cesium visualizers and tracked-camera updates, once per frame.
+    this.source.update=()=>{this.update(true);return true;};
     viewer.dataSources.add(this.source);
     viewer.selectedEntityChanged.addEventListener(this.selection);
   }
@@ -44,18 +50,22 @@ export class EntityLayer {
   clear(): void {
     if (this.viewer.trackedEntity && [...this.objects.values()].includes(this.viewer.trackedEntity)) this.viewer.trackedEntity = undefined;
     if (this.viewer.selectedEntity && [...this.objects.values()].includes(this.viewer.selectedEntity)) this.viewer.selectedEntity = undefined;
-    this.source.entities.removeAll(); this.objects.clear(); this.poses.clear(); this.affiliations.clear(); this.selected = null; this.displayClock = null;
+    this.source.entities.removeAll(); this.objects.clear(); this.poses.clear(); this.affiliations.clear(); this.selected = null; this.playback.reset();
   }
-  update(): void {
-    if (this.viewer.isDestroyed()) return;
+  update(frame = false): void {
+    if (this.disposed || this.viewer.isDestroyed()) return;
     const store = this.connection.store;
+    if (frame && this.connection.phase!=='live') return;
     if (this.generation !== store.generation || this.connection.phase !== 'live') { this.clear(); this.generation = store.generation; }
     if (this.connection.phase !== 'live') { this.viewer.scene.requestRender(); this.changed(); return; }
     const now = store.state.simulation.simulation_time_ms;
     if (typeof now !== 'string') return;
-    const running = store.state.simulation.state === 1 && !this.connection.lastHealth?.freshness.paused;
-    // Only committed backend time drives interpolation. No browser wall-clock prediction.
-    if (running || this.displayClock === null) this.displayClock = BigInt(now) - BigInt(this.config.interpolationMilliseconds);
+    const wall=this.now(),running = store.state.simulation.state === 1 && !this.connection.lastHealth?.freshness.paused;
+    if (!frame) this.playback.observe(BigInt(now),running,Number(store.state.simulation.real_time_multiple),wall);
+    const before=this.playback.value,displayClock=frame?this.playback.advance(wall):before;
+    if (displayClock===null || frame && displayClock===before) return;
+    const rebuildTrail=!frame || wall-this.lastTrail>=250;
+    if (rebuildTrail) this.lastTrail=wall;
     this.error = '';
     for (const [id, entity] of this.objects) if (!store.state.entities[id]) {
       if (this.viewer.trackedEntity === entity) this.viewer.trackedEntity = undefined;
@@ -69,7 +79,7 @@ export class EntityLayer {
         const current: PoseSample = { time: raw.simulation_time_ms, position: raw.position as unknown as Position, attitude: raw.attitude as unknown as Attitude };
         // Snapshot location is displayed immediately, but never becomes invented past history.
         const samples = (store.samples.get(id) ?? []) as unknown as PoseSample[];
-        const pose = interpolate(samples.length ? samples : [current], this.displayClock, this.config.height);
+        const pose = interpolate(samples.length ? samples : [current], displayClock, this.config.height);
         let entity = this.objects.get(id);
         if (!entity) {
           entity = this.source.entities.add({ id: 'aircraft:'+id, name: '实体 '+id,
@@ -84,11 +94,13 @@ export class EntityLayer {
         this.paint(id,entity,appearance(id,raw,this.config.affiliations));
         (entity.position as ConstantPositionProperty).setValue(pose.position);
         (entity.orientation as ConstantProperty).setValue(pose.orientation);
-        const trail = samples.filter(s => BigInt(s.time) <= BigInt(pose.time)).map(s => position(s.position,this.config.height).ecef);
-        if (trail.length) trail.push(pose.position);
-        entity.polyline!.positions = new ConstantProperty(trail);
+        if (rebuildTrail) {
+          const trail = samples.filter(s => BigInt(s.time) <= BigInt(pose.time)).map(s => position(s.position,this.config.height).ecef);
+          if (trail.length) trail.push(pose.position);
+          entity.polyline!.positions = new ConstantProperty(trail);
+          entity.polyline!.show = new ConstantProperty(this.showTrails && trail.length > 1);
+        }
         entity.show = this.showModels; entity.label!.show = new ConstantProperty(this.showLabels);
-        entity.polyline!.show = new ConstantProperty(this.showTrails && trail.length > 1);
         this.poses.set(id, pose);
       } catch (error) {
         const previous = this.objects.get(id);
@@ -97,7 +109,8 @@ export class EntityLayer {
         this.error = ('实体 '+id+'：'+String(error)).slice(0,600);
       }
     }
-    this.viewer.scene.requestRender(); this.changed();
+    this.viewer.scene.requestRender();
+    if (!frame || wall-this.lastDetails>=250) { this.lastDetails=wall;this.changed(); }
   }
   select(id: string): void { if (!this.objects.has(id)) return; this.selected = id; this.viewer.selectedEntity = this.objects.get(id); this.outlines(); this.changed(); }
   locate(): void {
@@ -116,7 +129,7 @@ export class EntityLayer {
   inspect() {
     const time = JulianDate.now();
     return { count:this.objects.size, selected:this.selected, followed:[...this.objects].find(([,e])=>e===this.viewer.trackedEntity)?.[0] ?? null,
-      error:this.error, displayClock:this.displayClock?.toString() ?? null, generation:this.generation,
+      error:this.error, displayClock:this.playback.value?.toString() ?? null, generation:this.generation,
       visible:this.showModels, labels:this.showLabels, trails:this.showTrails, modelScale:this.modelScale, screenPixels:this.config.display.sizePixels*this.modelScale,
       objects:Object.fromEntries([...this.objects].map(([id,e]) => { const pose=this.poses.get(id)!;
         return [id,{position:Cartesian3.pack(e.position!.getValue(time)!,[]),orientation:Quaternion.pack(e.orientation!.getValue(time),[]),
@@ -125,8 +138,9 @@ export class EntityLayer {
           outline:e.model!.silhouetteColor!.getValue(time).toCssHexString(),outlinePixels:e.model!.silhouetteSize!.getValue(time),pointFallback:!!e.point}]; })) };
   }
   destroy(): void {
+    this.disposed=true;this.source.update=()=>true;
     if (!this.viewer.isDestroyed()) { this.viewer.selectedEntityChanged.removeEventListener(this.selection); this.clear(); this.viewer.dataSources.remove(this.source,true); }
-    else { this.objects.clear(); this.poses.clear(); this.affiliations.clear(); this.selected = null; this.displayClock = null; }
+    else { this.objects.clear(); this.poses.clear(); this.affiliations.clear(); this.selected = null; this.playback.reset(); }
     if (!this.lighting.isDestroyed()) this.lighting.destroy();
   }
 }
