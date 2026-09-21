@@ -18,6 +18,8 @@ ROOT=Path(__file__).resolve().parents[2]
 spec=importlib.util.spec_from_file_location('g5_entity_state_browser',ROOT/'tests/g5_state/browser.py')
 previous=importlib.util.module_from_spec(spec);spec.loader.exec_module(previous)
 save=previous.save;DevTools=previous.DevTools
+spec=importlib.util.spec_from_file_location('g5_entity_screen',Path(__file__).with_name('screen.py'))
+screen=importlib.util.module_from_spec(spec);spec.loader.exec_module(screen)
 
 def ecef(p,grid):
     lon,lat=p['longitude_deg'],p['latitude_deg'];assert p['altitude_reference']==1
@@ -65,7 +67,7 @@ def pose_check(events,session,state,grid):
 
 EXPRESSION="""(()=>{
  const m=window.__g5Map,v=m?.viewer,models={};let visited=0;
- function walk(p){if(!p||++visited>10000)return;if(p.id?.id?.startsWith('aircraft:')&&p.modelMatrix){models[p.id.id.slice(9)]={ready:p.ready,scale:p.scale,matrix:Array.from(p.modelMatrix),axis:p._sceneGraph?Array.from(p._sceneGraph._axisCorrectionMatrix):null,textureBytes:p.statistics?.texturesByteLength,color:p.color?.toCssHexString(),colorBlendMode:p.colorBlendMode,outline:p.silhouetteColor?.toCssHexString(),outlinePixels:p.silhouetteSize,silhouetteId:p._silhouetteId};}
+ function walk(p){if(!p||++visited>10000)return;if(p.id?.id?.startsWith('aircraft:')&&p.modelMatrix){models[p.id.id.slice(9)]={ready:p.ready,scale:p.scale,matrix:Array.from(p.modelMatrix),axis:p._sceneGraph?Array.from(p._sceneGraph._axisCorrectionMatrix):null,textureBytes:p.statistics?.texturesByteLength,color:p.color?.toCssHexString(),colorBlendMode:p.colorBlendMode,outline:p.silhouetteColor?.toCssHexString(),outlinePixels:p.silhouetteSize,silhouetteId:p._silhouetteId,customLighting:!!p.customShader};}
  if(typeof p.get==='function'&&typeof p.length==='number')for(let i=0;i<p.length;i++)walk(p.get(i));}
  if(v)walk(v.scene.primitives);const gl=v?.scene.context._gl,e=gl?.getExtension('WEBGL_debug_renderer_info');
  return {business:window.__g5State?.inspect(),entities:window.__g5Entities?.inspect(),models,map:document.documentElement.dataset.ready,mapErrors:m?.errors,tilesLoaded:v?.scene.globe.tilesLoaded,timeOrigin:performance.timeOrigin,text:document.querySelector('#backend-time')?.textContent,detail:document.querySelector('#entity-details')?.textContent,renderer:e?gl.getParameter(e.UNMASKED_RENDERER_WEBGL):null,cameraHeight:v?.camera.positionCartographic.height};})()"""
@@ -107,7 +109,7 @@ async def verify(url,directory):
                 save(directory/'timeout-state.json',last);raise AssertionError('Entity browser timeout')
             async def click(identity):await evaluate("document.getElementById("+json.dumps(identity)+").click();true")
             async def shot(name):
-                image=await cdp.call('Page.captureScreenshot',{'format':'png'},session);(directory/(name+'.png')).write_bytes(base64.b64decode(image['data']))
+                image=await cdp.call('Page.captureScreenshot',{'format':'png'},session);png=base64.b64decode(image['data']);(directory/(name+'.png')).write_bytes(png);return png
             async def key(value):
                 for kind in ('keyDown','keyUp'):await cdp.call('Input.dispatchKeyEvent',dict(type=kind,key=value),session)
             await cdp.call('Page.navigate',{'url':url},session)
@@ -118,7 +120,8 @@ async def verify(url,directory):
             loaded=await until(lambda s:len(s['models'])==3 and all(m['ready'] and m['textureBytes']>0 for m in s['models'].values()) and s['models']['400'].get('outlinePixels')==3)
             assert loaded['entities']['selected']=='400' and '1090.00' in loaded['detail'];result['loaded']=loaded
             for identity,expected in [('400','#00e5ff'),('500','#00e5ff'),('600','#ff4265')]:
-                assert loaded['models'][identity]['color']==expected and loaded['models'][identity]['colorBlendMode']==1
+                assert loaded['models'][identity]['color']==expected and loaded['models'][identity]['colorBlendMode']==0
+                assert loaded['models'][identity]['customLighting'] and not loaded['entities']['objects'][identity]['pointFallback']
                 assert loaded['models'][identity]['outlinePixels']==(3 if identity=='400' else 2)
                 assert loaded['models'][identity]['silhouetteId']>0
                 assert loaded['entities']['objects'][identity]['affiliation']['source']=='display-config'
@@ -137,20 +140,35 @@ async def verify(url,directory):
             assert all(p['trailPoints']>=2 for p in paused['entities']['objects'].values())
             await asyncio.sleep(1.2);frozen=await evaluate(EXPRESSION);assert frozen['entities']['objects']==paused['entities']['objects'] and frozen['text']==paused['text']
             await key('+');await key('+');scaled=await evaluate(EXPRESSION);assert abs(scaled['entities']['modelScale']-2)<1e-10
-            scaled=await until(lambda s:all(abs(m['scale']-2)<1e-10 for m in s['models'].values()))
-            for identity,pose in scaled['entities']['objects'].items():assert pose['position']==paused['entities']['objects'][identity]['position'] and pose['orientation']==paused['entities']['objects'][identity]['orientation'] and abs(pose['scale']-2)<1e-10
+            scaled=await until(lambda s:all(abs(m['scale']/paused['models'][identity]['scale']-2)<1e-6 for identity,m in s['models'].items()))
+            for identity,pose in scaled['entities']['objects'].items():assert pose['position']==paused['entities']['objects'][identity]['position'] and pose['orientation']==paused['entities']['objects'][identity]['orientation']
             await key('-');assert abs((await evaluate(EXPRESSION))['entities']['modelScale']-math.sqrt(2))<1e-10
             await key('0');assert (await evaluate(EXPRESSION))['entities']['modelScale']==1
             for _ in range(18):await key('+')
-            assert (await evaluate(EXPRESSION))['entities']['modelScale']==32
+            assert (await evaluate(EXPRESSION))['entities']['modelScale']==runtime['display']['maximumScale']
             for _ in range(30):await key('-')
-            assert (await evaluate(EXPRESSION))['entities']['modelScale']==.25
-            await key('0');result['scaleShortcuts']=dict(status='passed',default=1,maximum=32,minimum=.25,changesSimulation=False)
+            assert (await evaluate(EXPRESSION))['entities']['modelScale']==runtime['display']['minimumScale']
+            await key('0');result['scaleShortcuts']=dict(status='passed',default=1,display=runtime['display'],changesSimulation=False)
             await click('entity-follow');following=await until(lambda s:s['entities']['followed']=='400');result['following']=following
             await click('entity-reset');reset=await until(lambda s:s['entities']['followed'] is None and abs(s['cameraHeight']-45000)<2);result['reset']=reset
             for control,field in (('label-toggle','labels'),('trail-toggle','trails'),('entity-toggle','visible')):
                 await click(control);assert not (await evaluate(EXPRESSION))['entities'][field];await click(control)
             await click('entity-locate');await until(lambda s:s['cameraHeight']<3000 and s['tilesLoaded']);await shot('real-model-paused')
+            await click('label-toggle');await click('trail-toggle')
+            measures=[]
+            for name,backward in [('near',0),('medium',1840),('far',48000)]:
+                await evaluate(f'window.__g5Map.viewer.camera.moveBackward({backward});window.__g5Map.viewer.scene.requestRender();true')
+                await asyncio.sleep(.7)
+                measurement=screen.measure(await shot('screen-size-'+name));measures.append(measurement)
+                assert measurement['pixels']>300 and max(measurement['width'],measurement['height'])>35,measurement
+            assert max(m['width'] for m in measures)/min(m['width'] for m in measures)<1.18,measures
+            assert max(m['height'] for m in measures)/min(m['height'] for m in measures)<1.18,measures
+            await key('+');await key('+');await asyncio.sleep(.7)
+            enlarged=screen.measure(await shot('screen-size-enlarged'))
+            assert 1.8<enlarged['width']/measures[-1]['width']<2.2,(measures,enlarged)
+            assert enlarged['brightnessSpan']>=18 and enlarged['levels']>=25,enlarged
+            result['screenDisplay']=dict(status='passed',distancesMeters=[160,2000,50000],measurements=measures,enlarged=enlarged,geometryLighting=True)
+            await key('0');await click('label-toggle');await click('trail-toggle')
             await evaluate("document.querySelector('[data-entity-id=\"600\"]').click();true");await click('entity-locate')
             red=await until(lambda s:s['models'].get('600',{}).get('outline')=='#f8ffff' and s['models'].get('400',{}).get('outline')=='#071a2c' and s['tilesLoaded'])
             assert red['models']['600']['color']=='#ff4265' and '红方' in red['detail'];await shot('red-model-paused')

@@ -2,7 +2,7 @@
 
 日期：2026-09-21，Asia/Shanghai。**G5-T06 已完成，实体显示资格通过。** 本卡交付模型、标签、列表／详情、实际轨迹、定位／跟随／复位及大小快捷键；完整航线、任务和区域图层继续归 T07，G5 阶段发布归 T11。
 
-当前配色修订和可启动候选见 [阵营荧光色与描边补充](g5-affiliation-display-validation.md)。下文首次 T06 批次及命令示例保留历史，使用现源码时应选补充报告中的新 BuildRunId。
+当前可启动候选与显示规则见 [固定屏幕尺寸与立体光照补充](g5-model-display-validation.md)，前一配色版本见 [阵营荧光色与描边补充](g5-affiliation-display-validation.md)。下文首次 T06 批次及命令示例保留历史，使用现源码时应选补充报告中的新 BuildRunId。
 
 ## 1. 输入、工具与候选
 

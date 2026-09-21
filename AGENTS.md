@@ -536,10 +536,12 @@ T02 入口为 `scripts/windows/prepare-g5-geography.ps1 -PythonExecutable <已�
 
 ## G5-T06 实体显示与模型尺寸
 
-T06 已完成，见 [实体验收](docs/g5-entities-validation.md)。独立 apps/cesium_entities 与未改动的 T03／T05 源码构建为单一 Cesium 包；模型工具为项目内固定 OpenSceneGraph 3.6.5 原生读取器。只选用 AFSIM UCAV，1 源单位＝1 显示米；+／= 放大、- 缩小、0 复位，范围 0.25～32×，不改变后端性能。原件只读，不把来源声明视为再分发许可。
+T06 已完成，见 [实体验收](docs/g5-entities-validation.md)。独立 apps/cesium_entities 与未改动的 T03／T05 源码构建为单一 Cesium 包；模型工具为项目内固定 OpenSceneGraph 3.6.5 原生读取器。只选用 AFSIM UCAV，资产按 1 源单位＝1 米转换；页面按固定屏幕尺寸展示，默认包围直径 96 CSS px，+／= 放大、- 缩小、0 恢复默认，范围 48～384 px，不改变后端性能。原件只读，不把来源声明视为再分发许可。
 
-入口为 setup-g5-models.ps1（复查加 VerifyOnly）、build-g5-entities.ps1（可加 ChinesePath）、tests/windows/g5-entities.tests.ps1 和 start-g5-entities-session.ps1；均要求 PythonExecutable，后两者要求 BuildRunId。当前普通候选 g5-t06-build-20260921-112011-442，中文候选 g5-t06-build-20260921-111807-770，双模式验收 g5-t06-test-20260921-111838-512。启动后访问 8080，创建本次 out/runs/<session>/request-stop 正常退出；详细命令见报告。正式前端指针仍未发布。
+入口为 setup-g5-models.ps1（复查加 VerifyOnly）、build-g5-entities.ps1（可加 ChinesePath）、tests/windows/g5-entities.tests.ps1 和 start-g5-entities-session.ps1；均要求 PythonExecutable，后两者要求 BuildRunId。当前普通候选 g5-t06-build-20260921-121650-265，中文候选 g5-t06-build-20260921-121522-226，双模式验收 g5-t06-test-20260921-121533-381。启动后访问 8080，创建本次 out/runs/<session>/request-stop 正常退出；详细命令见报告。正式前端指针仍未发布。
 
 实体 MSL／EGM96 改正一次到 WGS84 椭球高，未知基准／越界拒绝；姿态独立对照正式 AMASE Euler。显示时间为后端时间减 1 秒并限制于已收样本，暂停保持；10 分钟／2048 源样本，刷新重新积累。删除／恢复清理实体及跟随，完成保留实体。模型、定位／跟随／复位、快捷键、两模式真实时间和离线地图回归通过；beforeunload 必须先释放实体层再销毁地图 Viewer，后续修改保留此回归。下一卡 T07，不将本卡短程显示验收扩大为 T09／T10 全程或 T11 阶段资格。
 
-T06 配色补充见 [阵营显示报告](docs/g5-affiliation-display-validation.md)：模型荧光色替换原深色渲染结果，普通 2 像素深色轮廓、选中 3 像素白色轮廓，标签／轨迹／列表同色。实际 Affiliation 优先；当前 Unknown 的 400／500 按用户显示指定为蓝方、600 红方，详情标注来源，未知未指定保持黄，不猜测友敌、不修改后端。用户明确先完成配色，控制按后续任务实施；开始／暂停、倍速及只读时间进度条归 G6，进度条只显示当前仿真时间和进度，历史拖动回放仍归 G7。当前控制尚未接入，下一卡保持 G5-T07。
+T06 当前固定尺寸／光照见 [显示修正报告](docs/g5-model-display-validation.md)，原配色证据见 [阵营显示报告](docs/g5-affiliation-display-validation.md)：真实网格法线驱动展示主光／补光／高光，再以 HIGHLIGHT 保留阵营色与明暗，移除远距点符号；普通 2 像素深色轮廓、选中 3 像素白色轮廓，标签／轨迹／列表同色。实际 Affiliation 优先；当前 Unknown 的 400／500 按用户显示指定为蓝方、600 红方，详情标注来源，未知未指定保持黄，不猜测友敌、不修改后端。用户明确先完成配色，控制按后续任务实施；开始／暂停、倍速及只读时间进度条归 G6，进度条只显示当前仿真时间和进度，历史拖动回放仍归 G7。当前控制尚未接入，下一卡保持 G5-T07。
+
+固定屏幕尺寸由 CSS 视口、相机投影和距离计算，不代表真实占地；暂停移动镜头仍更新显示倍率，不推进业务时间。展示光源相对视角固定，不声称太阳光照或地面投影；原 GLB 保持，共享 CustomShader 必须随实体层正常释放。近／中／远距离实际截图、两模式真实渲染与地图回归已通过；后续修改保留该回归。

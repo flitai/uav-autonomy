@@ -58,3 +58,5 @@ G5 当前日常联合入口为 `scripts/windows/start-g5-entities-session.ps1 -P
 G5-T06 已完成真实模型／姿态／时间显示，选择／轨迹／定位／跟随／复位及 +／-／0 模型倍率操作通过。UCAV 来源由用户说明为 AFSIM，1 源单位＝1 显示米；高度按 EGM96 改正一次，消息与后端性能不变。两模式短程显示、离线地图和正常退出不替代 T09／T10 全程，下一卡为 T07，正式前端发布仍归 T11。
 
 T06 当前候选已增加 [荧光阵营色／描边](g5-affiliation-display-validation.md)。直接读取 entities[id].configuration.Affiliation；仅当后端 Unknown／缺失时补充用户显示指定，保留原快照与来源，未增加 G4 字段或控制接口。
+
+T06 后续显示修正已通过 [固定屏幕尺寸与立体光照验收](g5-model-display-validation.md)：动态屏幕缩放、展示补光只作用于模型；原 G4 v1、坐标／姿态／时间和后端性能保持，显示模型尺度不能当作真实机体占地。

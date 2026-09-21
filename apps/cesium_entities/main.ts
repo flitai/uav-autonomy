@@ -11,7 +11,7 @@ const panel = document.createElement('section'); panel.id='backend-panel'; panel
 panel.innerHTML='<h2>仿真连接</h2><p id="backend-status" role="status">正在读取配置…</p><p id="backend-counts"></p><p id="backend-error" role="alert"></p><hr><h2 id="selected-title">实体详情</h2><p id="selected-hint">在实体列表或场景中选择对象</p><dl id="entity-details"></dl><div class="actions"><button id="entity-locate" disabled>定位</button><button id="entity-follow" disabled>跟随</button><button id="entity-reset">视角复位</button></div><p id="entity-error" role="alert"></p>';
 document.body.append(panel);
 const listPanel=document.createElement('section');listPanel.id='entity-panel';listPanel.setAttribute('aria-label','仿真实体');
-listPanel.innerHTML='<h2>仿真实体</h2><label class="check"><input id="entity-toggle" type="checkbox" checked>实体</label><label class="check"><input id="label-toggle" type="checkbox" checked>标签</label><label class="check"><input id="trail-toggle" type="checkbox" checked>实际轨迹</label><div id="entity-list"></div><div id="affiliation-legend" aria-label="阵营颜色图例"></div><p id="model-scale" class="hint">模型显示倍率 1×</p><p class="hint">+ 放大 · − 缩小 · 0 原尺寸<br>轨迹保留最近 10 分钟；刷新后重新积累。</p>';
+listPanel.innerHTML='<h2>仿真实体</h2><label class="check"><input id="entity-toggle" type="checkbox" checked>实体</label><label class="check"><input id="label-toggle" type="checkbox" checked>标签</label><label class="check"><input id="trail-toggle" type="checkbox" checked>实际轨迹</label><div id="entity-list"></div><div id="affiliation-legend" aria-label="阵营颜色图例"></div><p id="model-scale" class="hint">模型屏幕尺寸</p><p class="hint">+ 放大 · − 缩小 · 0 默认尺寸<br>拉近拉远保持模型大小；不代表实际占地。<br>轨迹保留最近 10 分钟；刷新后重新积累。</p>';
 document.body.append(listPanel);
 const timeElement=document.querySelector('footer span')!;timeElement.id='backend-time';
 const text=(id:string,value:string)=>{document.getElementById(id)!.textContent=value;};
@@ -33,7 +33,7 @@ try {
   const render=()=>{
     const value=connection.inspect();document.documentElement.dataset.backendReady=String(value.phase==='live');
     text('backend-status',phaseNames[value.phase]);text('backend-error',value.error);text('entity-error',layer.error);
-    text('model-scale',`模型显示倍率 ${layer.modelScale.toFixed(2).replace(/\.00$/,'')}×`);
+    text('model-scale',`模型屏幕尺寸 ${Math.round(config.display.sizePixels*layer.modelScale)} px · ${layer.modelScale.toFixed(2).replace(/\.00$/,'')}×`);
     text('backend-counts',collections.map((k,i)=>['实体','任务','航线','命令','区域'][i]+' '+Object.keys(value.state[k]).length).join(' · '));
     const simulation=value.state.simulation;
     timeElement.textContent=value.phase==='live'?`后端时间：${seconds(simulation.simulation_time_ms)} · ${['停止','运行','暂停','重置','未知'][Number(simulation.state)]??''}`:`后端时间：${seconds(value.lastKnownTime)}${value.lastKnownTime===null?'':' · 已过期'}`;
@@ -59,8 +59,8 @@ try {
     const element=event.target as HTMLElement;
     if(event.ctrlKey||event.metaKey||event.altKey||element?.isContentEditable||['INPUT','TEXTAREA','SELECT'].includes(element?.tagName))return;
     let scale=layer.modelScale;
-    if(event.key==='+'||event.key==='='||event.code==='NumpadAdd')scale=Math.min(32,scale*Math.SQRT2);
-    else if(event.key==='-'||event.code==='NumpadSubtract')scale=Math.max(.25,scale/Math.SQRT2);
+    if(event.key==='+'||event.key==='='||event.code==='NumpadAdd')scale=Math.min(config.display.maximumScale,scale*Math.SQRT2);
+    else if(event.key==='-'||event.code==='NumpadSubtract')scale=Math.max(config.display.minimumScale,scale/Math.SQRT2);
     else if(event.key==='0')scale=1;else return;
     event.preventDefault();layer.modelScale=scale;layer.update();
   };

@@ -14,8 +14,9 @@
     "sourceUp": "+Z",
     "origin": "Preserve original local zero as entity anchor; centre of gravity not asserted",
     "label": "AFSIM UCAV（显示资产）",
-    "scaleShortcuts": {"increase":"+","decrease":"-","reset":"0","minimum":0.25,"maximum":32}
+    "scaleShortcuts": {"increase":"+","decrease":"-","reset":"0","minimum":0.5,"maximum":4}
   },
+  "display": {"sizePixels":96,"minimumScale":0.5,"maximumScale":4},
   "interpolationMilliseconds": "1000",
   "affiliations": {
     "styles": {

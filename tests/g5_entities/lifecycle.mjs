@@ -3,7 +3,7 @@ import { readFileSync, writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 const [project,output]=process.argv.slice(2);
-const {Event}=await import(pathToFileURL(resolve(project,'node_modules/cesium/Source/Cesium.js')));
+const {Event,Cartesian3,PerspectiveFrustum}=await import(pathToFileURL(resolve(project,'node_modules/cesium/Source/Cesium.js')));
 const {EntityLayer}=await import(pathToFileURL(resolve(project,'layer-unit/entities/layer.js')));
 const {appearance,validateAffiliations}=await import(pathToFileURL(resolve(project,'layer-unit/entities/affiliation.js')));
 const config=JSON.parse(readFileSync(resolve(project,'public/entities/runtime.json'),'utf8'));
@@ -14,7 +14,8 @@ assert.equal(appearance('999',{},config.affiliations).key,'unknown');
 assert.equal(appearance('400',{configuration:{Affiliation:'other team'}},config.affiliations).source,'unmapped');
 assert.equal(appearance('400',{configuration:{Affiliation:'__proto__'}},config.affiliations).key,'unknown');
 let destroyed=false;
-const viewer={isDestroyed:()=>destroyed,dataSources:{add(){},remove(){}},selectedEntityChanged:new Event(),scene:{requestRender(){}},trackedEntity:undefined,selectedEntity:undefined};
+const viewer={isDestroyed:()=>destroyed,dataSources:{add(){},remove(){}},selectedEntityChanged:new Event(),scene:{requestRender(){}},trackedEntity:undefined,selectedEntity:undefined,
+  canvas:{clientWidth:1440,clientHeight:900},camera:{positionWC:new Cartesian3(),directionWC:new Cartesian3(0,0,1),frustum:new PerspectiveFrustum({fov:Math.PI/3,aspectRatio:1.6,near:1})}};
 const id='400',row={simulation_time_ms:'2000',position:{longitude_deg:-121,latitude_deg:45.3,altitude_m:1090,altitude_reference:1},attitude:{heading_deg:0,pitch_deg:0,roll_deg:0}};
 const store={generation:0,state:{simulation:{simulation_time_ms:'2000',state:1},entities:{[id]:row},tasks:{}},samples:new Map()};
 const connection={store,phase:'live',lastHealth:null};
@@ -31,7 +32,9 @@ store.state.entities[id]=row;layer.update();layer.select(id);layer.follow();stor
 store.state.entities[id]=row;layer.update();connection.phase='recovering';layer.update();assert.equal(layer.objects.size,0);assert.equal(layer.poses.size,0);
 connection.phase='live';store.state.entities[id]={...row,position:{...row.position,altitude_reference:0}};layer.update();assert.equal(layer.objects.size,0);assert.match(layer.error,/MSL/);
 store.state.entities[id]=row;layer.update();store.state.simulation.state=2;layer.update();const frozen=layer.inspect();store.state.simulation.simulation_time_ms='3000';layer.update();assert.deepEqual(layer.inspect().objects,frozen.objects);assert.equal(layer.inspect().displayClock,frozen.displayClock);
-layer.destroy();assert.equal(layer.objects.size,0);assert.equal(viewer.selectedEntityChanged.numberOfListeners,0);
+assert.equal(layer.inspect().objects[id].pointFallback,false);
+const shader=layer.objects.get(id).model.customShader.getValue();assert.equal(shader.isDestroyed(),false);
+layer.destroy();assert.equal(layer.objects.size,0);assert.equal(viewer.selectedEntityChanged.numberOfListeners,0);assert.equal(shader.isDestroyed(),true);
 // Defensive cleanup also tolerates a Viewer already destroyed by its owner.
 destroyed=true;layer.destroy();layer.update();
 writeFileSync(output,JSON.stringify({status:'passed',scope:'isolated Cesium entity lifecycle',checks:9,affiliationCases:['user-defaults','backend-aliases','unknown-and-unmapped','backend-precedence','dynamic-color-and-selection'],backendAffiliationPrecedence:true,unknownAndUnmappedPreserved:true,dynamicColorAndSelection:true,deleteClearsSelectionAndTracking:true,completionRetainsEntity:true,recoveryClearsSamples:true,unknownHeightRejected:true,pausedClockHeld:true},null,2));

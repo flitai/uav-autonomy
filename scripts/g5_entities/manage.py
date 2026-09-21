@@ -1,5 +1,6 @@
 """Build and qualify a composed Cesium entity viewer without rewriting predecessors."""
 import argparse
+import math
 import os
 from pathlib import Path
 import shutil
@@ -37,6 +38,7 @@ def build(run,folder,binding,backend,mapdir,mapservice,state_candidate,tool_pack
     for scene in ('original','small','mixed20'):
         info=c.load(backend/scene/'scene.json');entity_ids.update(str(a['entityId']) for a in info['assignments'])
     runtime=dict(schemaVersion=1,modelUrl='/entities/ucav.glb',modelName=config['model']['label'],modelLengthMeters=model['dimensionsMeters'][2],
+        modelDiameterMeters=math.sqrt(sum(d*d for d in model['dimensionsMeters'])),display=config['display'],
         entityModels={k:'ucav' for k in sorted(entity_ids)},height=height,interpolationMilliseconds=config['interpolationMilliseconds'],modelSHA256=model['sha256'],affiliations=config['affiliations'])
     c.save(public/'runtime.json',runtime)
     state_service=c.load(state_candidate/'service.json');(project/'public/state').mkdir()

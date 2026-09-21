@@ -1,9 +1,10 @@
-import { BoundingSphere, Cartesian2, Cartesian3, Color, ColorBlendMode, ColorMaterialProperty, ConstantPositionProperty, ConstantProperty, CustomDataSource, DistanceDisplayCondition, Entity, HeadingPitchRange, JulianDate, LabelStyle, Matrix4, Quaternion, Viewer } from 'cesium';
+import { BoundingSphere, CallbackProperty, Cartesian2, Cartesian3, Color, ColorBlendMode, ColorMaterialProperty, ConstantPositionProperty, ConstantProperty, CustomDataSource, Entity, HeadingPitchRange, JulianDate, LabelStyle, Matrix4, Quaternion, Viewer } from 'cesium';
 import { interpolate, position, type Attitude, type HeightGrid, type PoseSample, type Position } from './coordinates.js';
 import type { ReadOnlyConnection } from '../state/connection.js';
 import { appearance, type Appearance, type AffiliationConfig } from './affiliation.js';
+import { modelLighting, screenScale, validateDisplay, type DisplayConfig } from './display.js';
 
-export interface EntityConfig { modelUrl: string; modelName: string; modelLengthMeters: number; entityModels: Record<string, string>; height: HeightGrid; interpolationMilliseconds: string; affiliations: AffiliationConfig }
+export interface EntityConfig { modelUrl: string; modelName: string; modelLengthMeters: number; modelDiameterMeters: number; display: DisplayConfig; entityModels: Record<string, string>; height: HeightGrid; interpolationMilliseconds: string; affiliations: AffiliationConfig }
 export class EntityLayer {
   readonly source = new CustomDataSource('仿真实体');
   readonly objects = new Map<string, Entity>();
@@ -12,7 +13,9 @@ export class EntityLayer {
   selected: string | null = null; error = ''; private generation = -1; private displayClock: bigint | null = null;
   showModels = true; showLabels = true; showTrails = true;
   modelScale = 1;
+  private readonly lighting = modelLighting();
   constructor(readonly viewer: Viewer, readonly connection: ReadOnlyConnection, readonly config: EntityConfig, readonly changed: () => void) {
+    validateDisplay(config.display,config.modelDiameterMeters);
     viewer.dataSources.add(this.source);
     viewer.selectedEntityChanged.addEventListener(this.selection);
   }
@@ -31,9 +34,8 @@ export class EntityLayer {
     this.affiliations.set(id,style);
     const color=Color.fromCssColorString(style.color);
     entity.model!.color=new ConstantProperty(color);
-    // REPLACE runs after lighting in the locked engine, so dark texture/shadows cannot mute the symbol.
-    entity.model!.colorBlendMode=new ConstantProperty(ColorBlendMode.REPLACE);
-    entity.point!.color=new ConstantProperty(color);
+    // Tint the normal-based lighting result, retaining bright/dark surfaces.
+    entity.model!.colorBlendMode=new ConstantProperty(ColorBlendMode.HIGHLIGHT);
     entity.label!.fillColor=new ConstantProperty(color);
     entity.label!.text=new ConstantProperty('实体 '+id+' · '+style.label);
     entity.polyline!.material=new ColorMaterialProperty(color);
@@ -73,8 +75,8 @@ export class EntityLayer {
           entity = this.source.entities.add({ id: 'aircraft:'+id, name: '实体 '+id,
             position: new ConstantPositionProperty(pose.position), orientation: new ConstantProperty(pose.orientation),
             viewFrom: new Cartesian3(-120,-180,100),
-            model: { uri: this.config.modelUrl, scale: 1, minimumPixelSize: 0, runAnimations: false },
-            point: { pixelSize: 7, color: Color.CYAN, outlineColor: Color.BLACK, outlineWidth: 1, distanceDisplayCondition: new DistanceDisplayCondition(1200, Number.MAX_VALUE) },
+            model: { uri: this.config.modelUrl, minimumPixelSize: 0, runAnimations: false, customShader: this.lighting,
+              scale: new CallbackProperty(() => screenScale(this.viewer,this.poses.get(id)?.position ?? pose.position,this.config.modelDiameterMeters,this.config.display.sizePixels*this.modelScale),false) },
             label: { text: '实体 '+id, font: '14px "Map CJK"', fillColor: Color.WHITE, outlineColor: Color.BLACK, outlineWidth: 3, style: LabelStyle.FILL_AND_OUTLINE, pixelOffset: new Cartesian2(0,-24) },
             polyline: { positions: [], width: 2, material: Color.fromCssColorString('#7be1c9'), clampToGround: false } });
           this.objects.set(id, entity);
@@ -82,7 +84,6 @@ export class EntityLayer {
         this.paint(id,entity,appearance(id,raw,this.config.affiliations));
         (entity.position as ConstantPositionProperty).setValue(pose.position);
         (entity.orientation as ConstantProperty).setValue(pose.orientation);
-        entity.model!.scale = new ConstantProperty(this.modelScale);
         const trail = samples.filter(s => BigInt(s.time) <= BigInt(pose.time)).map(s => position(s.position,this.config.height).ecef);
         if (trail.length) trail.push(pose.position);
         entity.polyline!.positions = new ConstantProperty(trail);
@@ -116,15 +117,16 @@ export class EntityLayer {
     const time = JulianDate.now();
     return { count:this.objects.size, selected:this.selected, followed:[...this.objects].find(([,e])=>e===this.viewer.trackedEntity)?.[0] ?? null,
       error:this.error, displayClock:this.displayClock?.toString() ?? null, generation:this.generation,
-      visible:this.showModels, labels:this.showLabels, trails:this.showTrails, modelScale:this.modelScale,
+      visible:this.showModels, labels:this.showLabels, trails:this.showTrails, modelScale:this.modelScale, screenPixels:this.config.display.sizePixels*this.modelScale,
       objects:Object.fromEntries([...this.objects].map(([id,e]) => { const pose=this.poses.get(id)!;
         return [id,{position:Cartesian3.pack(e.position!.getValue(time)!,[]),orientation:Quaternion.pack(e.orientation!.getValue(time),[]),
           time:pose.time,lower:pose.lower,upper:pose.upper,fraction:pose.fraction,model:e.model!.uri!.getValue(time),scale:e.model!.scale!.getValue(time),
           trailPoints:e.polyline!.positions!.getValue(time).length,affiliation:this.affiliations.get(id),color:e.model!.color!.getValue(time).toCssHexString(),
-          outline:e.model!.silhouetteColor!.getValue(time).toCssHexString(),outlinePixels:e.model!.silhouetteSize!.getValue(time)}]; })) };
+          outline:e.model!.silhouetteColor!.getValue(time).toCssHexString(),outlinePixels:e.model!.silhouetteSize!.getValue(time),pointFallback:!!e.point}]; })) };
   }
   destroy(): void {
     if (!this.viewer.isDestroyed()) { this.viewer.selectedEntityChanged.removeEventListener(this.selection); this.clear(); this.viewer.dataSources.remove(this.source,true); }
     else { this.objects.clear(); this.poses.clear(); this.affiliations.clear(); this.selected = null; this.displayClock = null; }
+    if (!this.lighting.isDestroyed()) this.lighting.destroy();
   }
 }
