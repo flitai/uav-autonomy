@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "stateBuildRunId": "g5-t05-build-20260921-092813-768",
+  "stateValidationRunId": "g5-t05-test-20260921-092825-217",
+  "stateValidationBuildRunId": "g5-t05-build-20260921-092811-412",
+  "stateAcceptanceSHA256": "61742cefe87d42c7d17e92044eea68e6cecc86f71b9899e4f720cf1a451fc0b1",
+  "model": {
+    "path": "models/ucav_lo.osgb",
+    "sha256": "ffb83ce6da482060a65a2eff5ef508e29398c34a1b2c9fc7e7507393cf2676c7",
+    "source": "AFSIM; user declaration 2026-09-21",
+    "metersPerUnit": 1,
+    "unitDecision": "User confirmed 1 source unit = 1 display meter on 2026-09-21; no change to simulation performance",
+    "sourceForward": "-Y",
+    "sourceUp": "+Z",
+    "origin": "Preserve original local zero as entity anchor; centre of gravity not asserted",
+    "label": "AFSIM UCAV（显示资产）",
+    "scaleShortcuts": {"increase":"+","decrease":"-","reset":"0","minimum":0.25,"maximum":32}
+  },
+  "interpolationMilliseconds": "1000",
+  "supportedEntityHeightReference": "MSL/EGM96; other references explicitly refused",
+  "positionToleranceMeters": 1,
+  "attitudeToleranceDegrees": 0.1,
+  "stageQualified": false
+}

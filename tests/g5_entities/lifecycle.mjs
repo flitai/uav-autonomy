@@ -1,0 +1,26 @@
+import assert from 'node:assert/strict';
+import { readFileSync, writeFileSync } from 'node:fs';
+import { resolve } from 'node:path';
+import { pathToFileURL } from 'node:url';
+const [project,output]=process.argv.slice(2);
+const {Event}=await import(pathToFileURL(resolve(project,'node_modules/cesium/Source/Cesium.js')));
+const {EntityLayer}=await import(pathToFileURL(resolve(project,'layer-unit/entities/layer.js')));
+const config=JSON.parse(readFileSync(resolve(project,'public/entities/runtime.json'),'utf8'));
+let destroyed=false;
+const viewer={isDestroyed:()=>destroyed,dataSources:{add(){},remove(){}},selectedEntityChanged:new Event(),scene:{requestRender(){}},trackedEntity:undefined,selectedEntity:undefined};
+const id='400',row={simulation_time_ms:'2000',position:{longitude_deg:-121,latitude_deg:45.3,altitude_m:1090,altitude_reference:1},attitude:{heading_deg:0,pitch_deg:0,roll_deg:0}};
+const store={generation:0,state:{simulation:{simulation_time_ms:'2000',state:1},entities:{[id]:row},tasks:{}},samples:new Map()};
+const connection={store,phase:'live',lastHealth:null};
+const layer=new EntityLayer(viewer,connection,config,()=>{});
+layer.update();assert.equal(layer.objects.size,1);assert.equal(layer.inspect().objects[id].trailPoints,0);
+store.state.tasks['1000']={status:'backend_completed'};layer.update();assert.equal(layer.objects.size,1,'Completion removed a flying entity');
+layer.select(id);layer.follow();assert.equal(viewer.trackedEntity,layer.objects.get(id));
+delete store.state.entities[id];layer.update();assert.equal(layer.objects.size,0);assert.equal(layer.selected,null);assert.equal(viewer.trackedEntity,undefined);assert.equal(viewer.selectedEntity,undefined);
+store.state.entities[id]=row;layer.update();layer.select(id);layer.follow();store.generation++;store.state.entities={};layer.update();assert.equal(layer.objects.size,0);assert.equal(layer.selected,null);
+store.state.entities[id]=row;layer.update();connection.phase='recovering';layer.update();assert.equal(layer.objects.size,0);assert.equal(layer.poses.size,0);
+connection.phase='live';store.state.entities[id]={...row,position:{...row.position,altitude_reference:0}};layer.update();assert.equal(layer.objects.size,0);assert.match(layer.error,/MSL/);
+store.state.entities[id]=row;layer.update();store.state.simulation.state=2;layer.update();const frozen=layer.inspect();store.state.simulation.simulation_time_ms='3000';layer.update();assert.deepEqual(layer.inspect().objects,frozen.objects);assert.equal(layer.inspect().displayClock,frozen.displayClock);
+layer.destroy();assert.equal(layer.objects.size,0);assert.equal(viewer.selectedEntityChanged.numberOfListeners,0);
+// Defensive cleanup also tolerates a Viewer already destroyed by its owner.
+destroyed=true;layer.destroy();layer.update();
+writeFileSync(output,JSON.stringify({status:'passed',scope:'isolated Cesium entity lifecycle',checks:9,deleteClearsSelectionAndTracking:true,completionRetainsEntity:true,recoveryClearsSamples:true,unknownHeightRejected:true,pausedClockHeld:true},null,2));

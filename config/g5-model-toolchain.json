@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "version": "3.6.5",
+  "archive": "OpenSceneGraph-3.6.5.tar.gz",
+  "url": "https://codeload.github.com/openscenegraph/OpenSceneGraph/tar.gz/refs/tags/OpenSceneGraph-3.6.5",
+  "source": "https://github.com/openscenegraph/OpenSceneGraph/tree/OpenSceneGraph-3.6.5",
+  "sha256": "aea196550f02974d6d09291c5d83b51ca6a03b3767e234a8c0e21322927d1e12",
+  "sha512": "7002fa30a3bcf6551d2e1050b4ca75a3736013fd190e4f50953717406864da1952deb09f530bc8c5ddf6e4b90204baec7dbc283f497829846d46d561f66feb4b",
+  "checksumSource": "Fixed project vcpkg baseline ports/osg/portfile.cmake",
+  "sourceDirectory": "OpenSceneGraph-OpenSceneGraph-3.6.5",
+  "license": "OpenSceneGraph Public License; source LICENSE.txt",
+  "targets": ["g5-model-reader", "osgdb_osg", "osgdb_serializers_osg"],
+  "compiler": "qualified MSVC v143 Release x64 /MD; independent tool build only",
+  "scope": "Read static OSGB via OSG; bounded mesh and embedded image extraction; no animation conversion"
+}
