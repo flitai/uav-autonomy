@@ -1897,3 +1897,14 @@ T09 入口复核与纠正：首轮 g4-t09-stage-20260920-103431-086805 已真实
 交接：新增 docs/g5-close-motion-validation.md，同步 AGENTS、状态、任务卡、G5 方案、总体计划和报告当前入口。新预览 g5-t06-session-20260921-145042-078，启动器 g5-close-motion-preview-20260921-145041-845，PID 31700，新普通候选／Headless，ready=true、1 倍速、12709→14839 ms 及三实体推进通过。Ctrl+F5 刷新 8080 查看；结束创建本次会话 request-stop。新预览未结束，不登记人工确认；任务结束仍自动暂停，控制保持 G6，下一卡 T07。
 
 归档：final-audit.json 复核来源、普通／中文生产文件一致、原资产、UTF-8／语法／文档链接及 diff。日志追加前 393332 字节、SHA256=a9b56e0ac8b1d0d734b73de026057444bfd6fd9d190bef15dfae5ce22f45d71c，保留完整历史字节。按持续授权普通提交／推送并核对 origin/main，关闭自动 maintenance／gc，归档回执保存在本次验收目录；不提交工具、数据、原始运行或候选。正式前端指针保持，T09／T10 长时稳定性与 T11 人工确认未提前完成。
+
+
+## WL-20260921-011｜重新启动修复后的 Cesium 预览
+
+时间／时区：2026-09-21，Asia/Shanghai；关联 G5-T06，状态：运行启动完成，新会话保留运行。用户要求再次启动服务查看；起点 30b2212ef97f6216b4e8e966670902555de195c6，git status 干净。复用近景跟随修复后的合格候选，不改源码、资产或阶段范围。
+
+检查与操作：旧会话 g5-t06-session-20260921-145042-078 的所属启动器 PID 31700 仍存活，代理 state=2、time=756199 ms，属于任务完成后的自动暂停。写入该会话 request-stop，等待正常退出；result／entry-result／runtime-result 均 passed。仓库根以隐藏 PowerShell 调用 scripts/windows/start-g5-entities-session.ps1，PythonExecutable 为已核查 Python 3.14.7，BuildRunId=g5-t06-build-20260921-144826-020、BaselineRunId=g3-t01-check-20260921-121235-215、Mode=Headless。入口自行复查来源，未发生冲突或失败，无需重新构建或新增测试。
+
+实际结果：启动器 out/runs/g5-view-restart-20260921-151035-692/launch.json，PID 27748，新会话 g5-t06-session-20260921-151035-926。8080 ready=true，state=1、rate=1.0；两次独立快照时间 2569→4709 ms，400／500／600 坐标均变化；原始快照和 running-check.json 保存在启动器目录。用户可打开 http://127.0.0.1:8080 并 Ctrl+F5 查看；不将接口启动检查计作新的人工或浏览器渲染验收。
+
+交接与归档：同步 docs/status.md 当前运行记录，新会话保留运行；任务结束仍会自动暂停，正常结束创建 out/runs/g5-t06-session-20260921-151035-926/request-stop。本次尚未正常退出，不登记退出或人工确认；下一卡 T07，控制按 G6 实施。日志追加前 397986 字节、SHA256=960193ee831ed6273a25dc482892d9480c558e4cc279c857f40f3f2651d40641，保留历史字节前缀；UTF-8、git diff --check 及运行证据通过后，按持续授权普通提交／推送并核对远程，关闭自动 maintenance／gc，回执保留在本次启动器目录。
