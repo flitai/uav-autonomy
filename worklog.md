@@ -1833,3 +1833,16 @@ T09 入口复核与纠正：首轮 g4-t09-stage-20260920-103431-086805 已真实
 文档与预览：新增 docs/g5-motion-validation.md，同步 status、backlog、G5 方案、AGENTS、总体计划、G4 交接及旧报告入口，历史批次数据保留。新普通候选由隐藏 start-g5-entities-session.ps1 -Mode Headless 启动，启动器 out/runs/g5-motion-preview-20260921-123611-657/launch.json、PID 23152，会话 g5-t06-session-20260921-123611-912；8080 代理 ready=true、status=live。保留供用户刷新，未登记新预览正常退出或 T11 人工确认；正常关闭创建该会话 request-stop。未重试此前被拒绝的可见调试浏览器启动。
 
 来源与收尾：final-audit.json 复核 26 项当前 T06 来源、冻结前置、候选全文件及普通／中文 405 个生产文件摘要一致；原 GLB SHA256 仍为 4e7e7646fcb24656f1d944bdf9fdc4767af38d26c4f23a617dbab642c17ada51。UTF-8、Python 语法、本地文档链接和 git diff --check 通过。工作日志追加前 376354 字节、SHA256=e3def04531a22ca78abd69a8434081295c5fa6c43c5dcd37f6ffe817938a72a2，完整保留此前字节。按持续授权提交并普通推送本次源码／测试／文档，关闭自动 maintenance／gc，归档回执保留在 out；不提交运行记录、模型、工具或地理数据。正式指针保持，下一卡仍为 G5-T07；控制、倍速及只读时间进度条归 G6。
+
+
+## WL-20260921-007｜任务完成暂停后的预览重启
+
+时间／时区：2026-09-21，Asia/Shanghai；状态：日常预览重新启动并实际运行，未新增产品控制。用户反馈页面显示暂停、实体不动，要求跑起来。起点 119d57dbb3608c09ee1eac23c48fb337842591a2，git status 干净。
+
+原因：8080 代理 health ready=true、freshness.paused=true，snapshot 为 state=2、simulation_time_ms=756309。原会话 g5-t06-session-20260921-123611-912/session-paused.json 记录三个任务分别于 120910／133240／752969 ms 完成；源码 scripts/g5_state/runtime.py 的日常 Session 在三个任务完成后三秒请求暂停并保留现场。这是实际后端暂停，不是本轮逐帧显示失效。现有 StartupProbe 只有首次 request-start、一次 request-pause 和正常关闭，没有继续接口；SimTimer 收到 SessionStatus 也不等同于调用 go，未伪造 Running 消息或修改合格来源。
+
+操作与结果：先向原会话根目录创建 request-stop，等待所属启动器 PID 23152 退出，result／entry-result／runtime-result 均 passed。随后以隐藏 PowerShell 调用 start-g5-entities-session.ps1，BuildRunId=g5-t06-build-20260921-123530-656、BaselineRunId=g3-t01-check-20260921-121235-215、Mode=Headless、PythonExecutable 为已核查 Python 3.14.7。新启动器 out/runs/g5-restart-preview-20260921-132131-908/launch.json，PID 32624；新会话 g5-t06-session-20260921-132132-134。实际代理 ready=true、state=1、real_time_multiple=1.0，两次独立快照时间 14309→16409 ms，400／500／600 坐标均变化；证据见该启动器 running-check.json 和两份原始快照。
+
+交接：新会话运行供用户刷新 http://127.0.0.1:8080 查看，属于从头启动新一轮，不声称原运行恢复／重置接口已实现。任务完成仍会自动暂停；开始／暂停、倍速及只读时间进度条继续按用户决定归 G6，未提前实现。补充当前状态和运行报告中的自动暂停说明，保留原记录；浏览器刷新本身不能解除后端暂停。本次新会话尚未退出，不登记其正常收尾或新人工确认；正常结束创建 out/runs/g5-t06-session-20260921-132132-134/request-stop。阶段仍为 T06 已完成、T07 可执行。
+
+归档：只追加运维记录和交接说明，不改源码、合格候选或正式指针；日志追加前 382421 字节、SHA256=f197cf36980bc565a8b5dd55f3b248047e7dabb44f85f2905773b2d4342ee9b7，保持历史字节前缀。检查文档 UTF-8、git diff --check 和实际运行证据后，按持续授权普通提交／推送，关闭自动 maintenance／gc；归档回执保留在本次启动器目录。
