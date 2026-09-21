@@ -1869,3 +1869,14 @@ T09 入口复核与纠正：首轮 g4-t09-stage-20260920-103431-086805 已真实
 文档和预览：新增 docs/g5-metal-display-preview.md，同步 AGENTS、状态、任务卡、G5 方案、总体计划、G4 交接及旧报告的当前候选入口，保留历史批次。新普通候选由隐藏 start-g5-entities-session.ps1 -Mode Headless 启动，启动器 out/runs/g5-metal-preview-20260921-133957-915/launch.json、PID 32436，会话 g5-t06-session-20260921-133958-135。8080 代理 ready=true、state=1、rate=1.0，两次快照时间 3639→5239 ms，三实体位置变化；证据在启动器 running-check.json。新预览保留供用户刷新查看，未结束，不登记正常退出；结束仍创建本次会话 request-stop。三任务完成后的自动暂停规则保持，页面控制继续归 G6。
 
 收尾：final-audit.json 复核当前来源、冻结前置、候选文件和普通／中文 405 个生产文件摘要一致；UTF-8、Python 语法、文档链接和 git diff --check 通过。日志追加前 385125 字节、SHA256=bf349a5afacd67ce024756cbb5b4c746676a197eb2e45d74875e2f0c49e91f96，完整保留此前字节。按持续授权提交并普通推送本次源码／配置／测试／文档，关闭自动 maintenance／gc，归档回执保存在 out；不提交模型、数据、工具或原始运行文件。正式指针保持，用户可先评审此预览，下一实施卡仍为 T07。
+
+
+## WL-20260921-009｜重新启动金属模型预览服务
+
+时间／时区：2026-09-21，Asia/Shanghai；状态：运维启动完成，新会话保留运行。用户要求再次启动服务查看视角和材质。起点 205111134df522368d587d395cddedd1876b9a6f，git status 干净；只使用当前合格候选，不改源码或阶段范围。
+
+检查和操作：原 g5-t06-session-20260921-133958-135 仍存活，后端 state=2、time=756289 ms，属于任务完成后自动暂停。创建该会话 request-stop，等待所属 PID 32436 正常退出；result／entry-result／runtime-result 均 passed。仓库根以隐藏 PowerShell 运行 start-g5-entities-session.ps1，PythonExecutable 为已核查 Python 3.14.7，BuildRunId=g5-t06-build-20260921-133636-599、BaselineRunId=g3-t01-check-20260921-121235-215、Mode=Headless；入口复查来源，没有端口冲突、下载或额外业务修改。
+
+实际结果：启动器 out/runs/g5-view-preview-20260921-142331-795/launch.json、PID 5148，新会话 g5-t06-session-20260921-142332-017。8080 代理 ready=true、state=1、rate=1.0，连续快照时间 2040→3639 ms，400／500／600 坐标均变化，原始快照和 running-check.json 保存在启动器目录。保留运行供用户打开 http://127.0.0.1:8080 查看；浏览器仍由用户打开，不把接口就绪写成本轮新的人工／浏览器渲染验收。材质与视角资格继续引用上一轮，未扩大测试。任务结束仍会自动暂停，正常关闭创建本次会话 request-stop；本次会话尚未退出。
+
+交接与归档：同步当前状态中的最近预览编号，下一卡仍为 G5-T07，控制按已定 G6 范围实施。没有发现新的实现问题；无需新增测试或重新构建。日志追加前 391273 字节、SHA256=c56e17b71418c955e77d9d4843a3d59c050e91068225b224fedde5c2cf4513fb，历史字节保持。检查 UTF-8、git diff --check 及运行证据后按持续授权提交／普通推送运维记录，关闭自动 maintenance／gc，归档回执保存在启动器目录。
