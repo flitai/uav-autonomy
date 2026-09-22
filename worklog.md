@@ -1995,3 +1995,14 @@ T09 入口复核与纠正：首轮 g4-t09-stage-20260920-103431-086805 已真实
 交接：检查会话 g5-coverage-session-20260922-140940-929 正常退出，三层结果 passed。新预览 g5-coverage-session-20260922-141126-456、启动器 g5-coverage-navigation-preview-20260922-141126-220，当前普通候选／Headless，1 倍时间 135370→137510 ms、三实体位置和累计身份通过。访问 8080 并 Ctrl+F5，正常关闭创建本次会话 request-stop；当前预览尚未退出，三任务完成仍自动暂停，不登记 T11 人工确认或发布。下一卡仍 G5-T08。
 
 文档与归档：覆盖报告新增第 7 节，上一轮第 6 节标为历史；同步当前状态、G5 方案、AGENTS 和来源 README。本条追加前 420381 字节、SHA256=a48643cb200fc7dccbce96bc47df2960753831a983da2f7dfc01ea3e1db805d2，历史字节前缀完整保留。复查新候选来源／文件、前置绑定、普通中文一致性、UTF-8／链接和 diff 后按持续授权提交并普通推送本次八项改动，关闭自动 maintenance／gc，回执保存在本次专项 archive.json；不提交工具、候选或原始运行记录。
+
+
+## WL-20260922-005｜重新启动当前导航预览服务
+
+时间／时区：2026-09-22，Asia/Shanghai。关联 G5，状态：重启完成，新会话保留运行。用户要求重启再次查看；起点 110e54328e4e15db249b9b282d0fd760b5d8a291，git status 干净。复用已核查“左拖平移、右拖环绕、滚轮缩放”候选，仅运行操作，不改源码或扩大任务范围。
+
+操作与原因：原会话 g5-coverage-session-20260922-141126-456 的所属 PID 16812 存活，state=2、time=756189 ms，为完成三任务后的自动暂停。复核命令行与快照身份，创建本次 request-stop；正常退出后三层 result／entry-result／runtime-result 均 passed。仓库根以隐藏 PowerShell 调用 scripts/windows/start-g5-coverage-session.ps1，PythonExecutable 为已核查 Python 3.14.7，BuildRunId=g5-coverage-build-20260922-140926-685、BaselineRunId=g3-t01-check-20260922-112501-380、Mode=Headless；入口复查来源，无冲突或失败，不重新构建、不增加测试。
+
+实际验证：启动器 out/runs/g5-coverage-navigation-restart-20260922-162523-025/launch.json、PID 30912，新会话 g5-coverage-session-20260922-162523-266。等待 session-ready.json 后 8080 ready=true、state=1、rate=1.0；两次快照时间 8439→10039 ms，400／500／600 坐标均推进，三条规划／三任务、累计覆盖运行身份与只读 POST 405 检查通过，退出 0。快照及 running-check.json 保存在启动器目录；不将接口检查登记为新的浏览器渲染或人工确认。
+
+交接与归档：用户可 Ctrl+F5 刷新 http://127.0.0.1:8080。新预览保留运行，尚未退出，完成三任务仍自动暂停；正常结束创建 out/runs/g5-coverage-session-20260922-162523-266/request-stop。当前状态同步，下一卡仍 G5-T08；未发现新问题。日志追加前 423750 字节、SHA256=7e912dd8641433365b8e77b70bbd4ec3cfcab0adf3634b831cfa61f90c5cb08a，历史字节前缀保持。UTF-8、运行证据及 git diff --check 通过后按持续授权提交并普通推送两份运维说明，关闭自动 maintenance／gc；实际归档结果写入本次启动器 archive.json。
