@@ -1,6 +1,6 @@
 # 项目实施状态
 
-更新日期：2026-09-21。依据：[总体实施计划](../04.项目总体实施计划与阶段验收.md)、[G0 报告](g0-baseline.md)、[Java 环境验收](g1-java-validation.md)、[T03 消息库验收](g1-lmcp-validation.md)、[T04 AMASE 验收](g1-amase-validation.md)、[T05 TCP 验收](g1-tcp-validation.md)、[G2 实施方案](g2-windows-uxas-plan.md)、[G3 实施方案](g3-system-integration-plan.md)、[任务清单](backlog.md)。过程记录见根级 [worklog.md](../worklog.md)。
+更新日期：2026-09-22。依据：[总体实施计划](../04.项目总体实施计划与阶段验收.md)、[G0 报告](g0-baseline.md)、[Java 环境验收](g1-java-validation.md)、[T03 消息库验收](g1-lmcp-validation.md)、[T04 AMASE 验收](g1-amase-validation.md)、[T05 TCP 验收](g1-tcp-validation.md)、[G2 实施方案](g2-windows-uxas-plan.md)、[G3 实施方案](g3-system-integration-plan.md)、[任务清单](backlog.md)。过程记录见根级 [worklog.md](../worklog.md)。
 
 ## 当前关卡
 
@@ -9,9 +9,9 @@
 | 项目 | 当前记录 |
 | --- | --- |
 | 最近完成的规划 | [G5 方案](g5-cesium-display-plan.md) 已同步 T07 完整规划／命令／任务／区域及 T08 交接；同源高度链和控制边界保持 |
-| 最近通过的实现任务 | G5-T07：完整航线、当前命令、执行证据、点／线／区域任务、区域高度范围及查询／定位；[业务显示报告](g5-missions-validation.md) |
+| 最近通过的实现任务 | G5-T07 及 [侦察覆盖补充](g5-coverage-display-validation.md)：当前相机覆盖、任务累计覆盖、两个独立开关、原生逐格对照及刷新恢复通过 |
 | 三维模型输入 | 用户提供 16 个 AFSIM OSGB；本轮 UCAV 已转换及校准，1 单位＝1 显示米，可快捷键缩放；其余保持 [输入登记](g5-model-inputs.md) |
-| 当前执行结果 | 普通候选 g5-t07-build-20260921-210702-807、中文候选 g5-t07-build-20260921-210342-447；四组真实后端／独立区域／离线资源验收 g5-t07-test-20260921-210534-383 passed；正式前端指针不变 |
+| 当前执行结果 | 普通 g5-coverage-build-20260922-112335-163、中文 g5-coverage-build-20260922-112213-396；四组真实运行及离线资源验收 g5-coverage-test-20260922-112501-163 passed；前端正式指针保持 |
 | G3 历史基线 | T07 起点 `6c0294e3`，当时工作区干净；新增独立阶段验收，业务源码／XML／生成代码及 T03～T06 实现保持。inputRevision=3、43 项冻结输入复查通过 |
 | 已归档历史 | G1-T01～T03 为 `304def9`，G1-T04 为 `f2f73ab`，G1-T05 为 `d77dd78`；T04 `b8ccf72`／`68ed420`、T05 `0fe8553`／交接 `5c2d387` 已推送 origin/main |
 | 本轮变更 | G4 方案 `908fdfd`、T01 `ca21032`、T02 `22cacc6` 已归档；T03 `71c5906` 已归档并发布日志修复；T04 `f3b4d08` 已归档；T05 `a206fe5` 已归档；T06 `g4-t06-test-20260920-010936-703` 两模式全程及独立审计通过 |
@@ -74,7 +74,7 @@ T03 新登记：旧 LMCP 字符串长度与 UTF-8 字节长度存在差异，当
 
 ## 下一次工作的起点
 
-先读 [G5 实施方案](g5-cesium-display-plan.md)、[十一张任务卡](backlog.md#9-g5-顺序与任务卡)、[T07 业务显示报告](g5-missions-validation.md)和工作日志 WL-20260921-012。T01～T07 已完成，T08 可执行。当前使用 start-g5-missions-session.ps1 联合启动；页面关闭不结束后端，观察恢复全矩阵与阶段发布仍归 T08／T11。
+先读 [G5 实施方案](g5-cesium-display-plan.md)、[十一张任务卡](backlog.md#9-g5-顺序与任务卡)、[T07 业务显示报告](g5-missions-validation.md)、[侦察覆盖补充](g5-coverage-display-validation.md)和工作日志 WL-20260922-001。T01～T07 已完成，T08 可执行。当前使用 start-g5-coverage-session.ps1 联合启动；页面关闭不结束后端，观察恢复全矩阵与阶段发布仍归 T08／T11。
 
 G3 已完成，最终资格 `g3-t01-check-20260919-172312-180`、阶段验收 `g3-t07-test-20260919-173116-474` 及本轮 GUI 确认／正常退出已通过。先读 [T07 报告](g3-stage-validation.md)、[G4 交接](g3-g4-handoff.md) 与工作日志 WL-20260919-010。唯一连接配置为 config/g3-startup.json；execution／completion／acceptance 配置分别约束执行、完成和阶段验收，来源与摘要在合格 handoff 中绑定。
 
@@ -102,3 +102,5 @@ T09 正式发布 g4-t09-publish-20260920-115418-723744，package.json SHA256=dcc
 
 
 2026-09-21 T07 已完成：旧预览 g5-t06-session-20260921-151035-926 已正常退出；当前 g5-t07-session-20260921-211814-236 使用 T07 普通候选，8080 就绪、真实 1 倍时间和三实体位置推进已核查。入口正常退出由 g5-t07-session-20260921-211420-838 独立验证，当前预览保留运行。完整航线／命令／执行目标、任务／区域查询已可用；下一卡 T08，控制继续归 G6。
+
+2026-09-22 侦察覆盖补充已完成：两个图层分别开关，默认开启；当前覆盖用原相机足迹贴同源地形，任务累计覆盖与本次 AMASE 原生统计逐格一致。累计在后台按运行保存，关闭显示继续累计、刷新恢复；不改变任务或仿真。当前预览 g5-coverage-session-20260922-113600-734，入口正常退出另由 g5-coverage-session-20260922-113321-401 验证；下一卡仍为 T08。

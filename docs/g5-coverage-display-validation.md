@@ -1,0 +1,77 @@
+# G5 侦察覆盖显示补充
+
+日期：2026-09-22，Asia/Shanghai。用户要求同时显示当前传感器覆盖与累计已侦察范围，并为两种显示分别设置开关。本补充独立组合已合格 T07 页面；不改写 T02～T07 来源、候选或正式后端／网关，不提前实施 G6 控制或 T08 完整恢复矩阵。本次补充已完成并通过最终自动验收；运行编号及证据见下文。
+
+## 1. 显示及范围
+
+[页面模块](../apps/cesium_coverage/README.md)提供“当前传感器覆盖”和“累计侦察覆盖”两个默认打开的开关，分别控制两个 Cesium 数据源；本地保存开关选择。关闭图层不停止仿真、传感器或累计计算。
+
+当前覆盖直接使用真实实体的 CameraState.Footprint，填充及边界采用阵营色。当前正式 AMASE 的角点 Altitude 为零，表达的是局部平面足迹，页面采用其经纬度并贴同源地形；不把零当作海平面高度。原有中心射线求交、四角平面近似保持，不宣称完成三维地形遮挡。姿态过渡中原生视场可能越出合格地形，页面裁剪显示到西经 122～120／北纬 45～46 度内并提示；累计计算仍用原多边形对合格任务采样点分类，不查询范围外地形。
+
+累计覆盖限于真实任务定义内：线任务显示已观察采样线段，矩形任务显示已观察的 20 米栅格，点任务显示观察标记及有效观察秒数。按正式 SearchTaskAnalysis 的波段、相机分辨率／视场、GSD 和飞机所在位置的 DTED 最近邻高程判断；支持目前已资格化的零 DwellTime 三类任务，其他输入明确拒绝。保持全部相机的附带贡献，不只计算指定执行实体；任务完成不清除累计结果，不将任务完成状态当作覆盖证据。不设置最低覆盖率，不调参寻优。
+
+## 2. 数据与恢复
+
+[只读计算](../scripts/g5_coverage/engine.py)从当前网关持久规范化事件库按分片／行号顺序重建，检查运行身份、来源、元数据绑定、顺序和摘要。SQLite 使用 mode=ro 和 query_only，按 512 行读取并及时关闭连接；不写网关数据库，不发送后端消息。
+
+独立工作线程发布有界累计快照；新资源服务包装入口提供只读 `/api/coverage/v1/snapshot`，不增加端口，不改变 G4 浏览器 v1 或添加控制接口。浏览器核查 runId、时间和响应大小；新运行、断流和异步过期响应清除旧显示。累计工作不随浏览器生命周期停止，刷新及晚加入可恢复本次运行已有覆盖；新运行使用新库从头累计。服务不可用或数据不合格时清除累计显示并提示，保留后端独立运行。
+
+最多 50000 统计单元、128 任务／实体、8 MiB 快照；点观察区间有上限，缺失超过 1000 ms 的同相机样本不计连续观察时间。区域绘制仅合并相邻已覆盖格，格数和位置不变；线任务不跨未覆盖单元连线。没有用飞机轨迹涂色冒充侦察结果。
+
+## 3. 标准入口
+
+从仓库根运行；启动和验收要求明确本次合格构建编号。旧服务需通过其本次运行目录的 request-stop 正常结束。
+
+```powershell
+$pythonExe = Join-Path $env:LOCALAPPDATA 'Python/pythoncore-3.14-64/python.exe'
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\windows\build-g5-coverage.ps1 -PythonExecutable $pythonExe
+# 中文空格构建加 -ChinesePath；下列两个入口使用实际合格构建编号。
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\tests\windows\g5-coverage.tests.ps1 -PythonExecutable $pythonExe -BuildRunId '<构建编号>'
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\windows\start-g5-coverage-session.ps1 -PythonExecutable $pythonExe -BuildRunId '<构建编号>' -Mode Headless
+```
+
+访问 http://127.0.0.1:8080。联合入口仍使用合格 T04 三实体地形场景及正式 G4，三任务完成后自动暂停；创建本次 `out/runs/<session>/request-stop` 正常结束本组。控制按钮／倍速／进度条继续归 G6。
+
+当前已验证版本可直接使用以下命令；先结束占用端口的本组旧会话，再启动新会话。原 `start-g5-missions-session.ps1` 保留 T07 页面，查看覆盖显示需使用新入口。
+
+```powershell
+$pythonExe = Join-Path $env:LOCALAPPDATA 'Python/pythoncore-3.14-64/python.exe'
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\windows\start-g5-coverage-session.ps1 -PythonExecutable $pythonExe -BuildRunId g5-coverage-build-20260922-112335-163 -Mode Headless
+```
+
+## 4. 发现与验收记录
+
+初步只读重放使用用户重新启动的 `g5-t07-session-20260922-103218-267/session-headless`：4279 个原始状态，完整线任务 724 个采样单元、区域 1250 格，已见集合逐格与本次 AMASE 导出一致；点任务 203742 ms 对应原生两位小数 203.74 秒。该对照说明累计算法可与原生口径对齐，不替代新页面的真实验收。
+
+初次重放将足迹四角也限制到合格地形，遇到相机俯仰过渡时的外延角点而明确失败。核查后区分了“查询地形的位置”和“平面分类多边形”：只对飞机位置和任务采样位置要求合格地形，原始角点允许合法经纬度；显示另裁剪并标注，不扩大地形资格。初次构建 `g5-coverage-build-20260922-110305-316` 因 TypeScript 严格检查发现区域合并返回数组缺少明确类型而失败，已修正源文件，保留失败记录并重建，不使用旧产物冒充成功。
+
+首次真实验收 `g5-coverage-test-20260922-110636-708` 的原实体浏览器回归通过，但累计线程在网关规范化库尚未创建时读库失败，因此整组明确判失败。所属进程正常退出。修复为初次消费前对库／表／元数据建立提供最多 30 秒等待，等待期间累计接口不可用；已消费数据后的读库错误，以及顺序／身份／摘要损坏不进入该宽限。空库等待纳入独立检查，原候选及失败收据保留。
+
+修复后 `g5-coverage-test-20260922-111122-465` 的四组真实运行、开关／刷新／原生覆盖及离线资源均通过。但截图审查发现新增面板使 Flex 侧栏压缩了实体列表，因此继续修正各面板禁止收缩、覆盖开关放在航线面板前；最终候选另行重建复验。审查中尝试提前关闭受检浏览器时，CDP 未返回命令行信息；后续 PID 守卫发现用例已切换而拒绝关闭。两次都未实际发送关闭命令，原验收按顺序正常完成。最终检查还直接复算实际 Cesium 矩形／折线覆盖了哪些原生单元，不只核对界面数字。
+
+
+## 5. 最终资格
+
+普通候选 `g5-coverage-build-20260922-112335-163`，中文空格候选 `g5-coverage-build-20260922-112213-396`；各 18 项独立来源、462 个候选文件，407 个生产文件逐项一致。两类路径构建均包含从不同工作目录调用绝对入口；无工具安装或依赖升级。最终联合验收 `g5-coverage-test-20260922-112501-163` 的 result、entry-result、runtime-result、acceptance 均 passed；acceptance SHA256 为 `2689de2f74e9add1bcb1d47c58147c9e6a23f0e775c84347a788d2af188cfdaf`。原前端正式指针保持，未登记 T11 人工确认。
+
+| 构建 | candidate.json SHA256 |
+| --- | --- |
+| 普通 | 554d615c2a381763146cefaeaa025e9b7f61067df95ce2e86b789cfc4e1e5ebe |
+| 中文空格 | ecae0407d38a3adbfa38b7ebbff4d067cd512655069b24fea333fa4f5b850d1c |
+
+17 项独立计算／拒绝／就绪边界及 10 项前端几何／身份检查通过。新包上的原 T06 Headless／Gui 浏览器探针保持原判据，金属材质、阵营细描边、固定屏幕尺寸、缩放循环、位置／姿态、近景跟随、暂停与正常退出通过。原 T07 完整规划、命令与真实执行、三类任务及 TaskComplete 保留回归通过。
+
+| 真实模式 | 线任务已见／总单元 | 区域已见／总格数 | 点有效观察秒数 | 实际 Cesium 几何对应的已见单元 |
+| --- | --- | --- | --- | --- |
+| Headless | 603 / 724 | 1062 / 1250 | 125.871 | 1666 |
+| Gui | 599 / 724 | 1062 / 1250 | 125.871 | 1662 |
+
+每种模式逐项核对本次原生导出的 1975 个单元坐标及已见标记，点观察时间与原生两位小数报告一致。还从实际 Cesium 矩形边界重建覆盖格集合、逐段核对线段及点坐标，证明绘制与数字一致；没有把任务完成当作全部覆盖。这里是本轮约 135 秒的采样窗口，不是 T09／T10 全程或覆盖效果优化。
+
+同一运行下独立关闭两个图层、关闭显示仍继续累计、恢复开关、浏览器刷新恢复累计以及网关停止清理通过。真实 footprint 顶点与同连接消息逐项对照，贴地转换独立核对；截图在每模式 `browser/current-and-accumulated-coverage.png`、`accumulated-only.png`、`current-only.png`、`both-hidden.png`。侧栏实际高度检查通过，实体列表不再被压缩，覆盖开关位于航线面板前。上述自动截图不代替 T11 人工确认。
+
+本机实际渲染器为 `ANGLE (NVIDIA, NVIDIA RTX 4000 SFF Ada Generation (0x000027B0) Direct3D11 vs_5_0 ps_5_0, D3D11)`；近景回归记录为 Headless 32.00 FPS / 最大锚点跳动 1.332e-07 px；Gui 31.98 FPS / 最大锚点跳动 1.358e-07 px。此为三实体短时记录，不代表 20 实体稳定性资格。离线矢量／地形、Range、有界缓存、端口冲突、客户端退出及全部所属进程正常退出通过；无强制结束。累计服务另有 16 个并发响应、8 MiB 单响应上限。
+
+日常联合入口单独运行并正常退出：`g5-coverage-session-20260922-113321-401`，三层结果 passed。新预览 `g5-coverage-session-20260922-113600-734` 使用普通候选，8080 页面、真实 1 倍时间和三实体位移、累计运行身份／三任务及 POST 405 拒绝已检查；启动记录在 `out/runs/g5-coverage-preview-20260922-113600-501/`。当前预览保留运行，正常结束创建 `out/runs/g5-coverage-session-20260922-113600-734/request-stop`；它尚未退出，不登记人工确认。
+
+下一张主要实施任务仍为 G5-T08。后续恢复矩阵须同时涵盖当前传感器层、累计层及只读工作线程；G6 控制、T09／T10 完整联调、T11 阶段发布边界保持。

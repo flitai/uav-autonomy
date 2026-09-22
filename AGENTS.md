@@ -558,3 +558,12 @@ T07 已完成，见 [业务显示报告](docs/g5-missions-validation.md)。新�
 完整 planned_mission 与当前命令分离；按字符串 Number／NextWaypoint 连接，目标存在于命令并与实体状态匹配才确认执行；绿色航段还要求同命令内容、时间严格前进的相邻目标变化。快照不恢复历史推进，TaskComplete 不删除任务或停止实体。二维任务区域忽略中心高度，AGL 用同源地面正高，再加一次 N96；区域上下界各按自身基准。区域时间／Padding 不擅自解释。业务 50000 顶点上限、异常对象隔离、删除／新流／销毁清理；地图先销毁 Viewer 时仍须安全释放自有引用。保留真实近景跟随和正常退出回归。
 
 T07 组合页面采用公开 msaaSamples=1 加 FXAA，解决本轮 Intel／ANGLE D3D11 下放大后缩小丢失细描边的实测问题；原 T06 包也能复现，独立对照与新包两模式原像素检查均有记录。保留模型、金属材质及描边宽度；不依据历史 NVIDIA 记录推断当前渲染器，后续保持缩放循环与近景跟随回归。
+
+
+## G5 侦察覆盖显示补充
+
+当前／累计覆盖已按用户要求实现，见 [覆盖报告](docs/g5-coverage-display-validation.md)。apps/cesium_coverage 和 scripts/g5_coverage 独立组合已合格 T07；两个开关默认显示、独立控制，关闭显示仍累计，刷新恢复本次运行结果。当前 CameraState.Footprint 只取原经纬度贴同源地形，零角点高程不作海平面；越界视场裁剪显示并提示。累计按正式 20 米任务单元、波段／GSD、飞机位置最近邻 DTED 及点观察时间语义从只读持久事件重建；仅资格化当前零 DwellTime 点／线／矩形，不以轨迹、完成消息或任务边界冒充覆盖。
+
+日常入口改用 scripts/windows/start-g5-coverage-session.ps1（PythonExecutable、BuildRunId 必填，Mode Gui／Headless）；构建为 build-g5-coverage.ps1，验收为 tests/windows/g5-coverage.tests.ps1。当前普通 g5-coverage-build-20260922-112335-163、中文 g5-coverage-build-20260922-112213-396，联合验收 g5-coverage-test-20260922-112501-163；入口复查 T07 及前置绑定。访问 8080，创建本次会话 request-stop 正常退出。新增 /api/coverage/v1/snapshot 只读路径，不改 G4 v1、不增加监听端口；旧来源／候选／正式指针保持。
+
+累计线程初次等库最多 30 秒，之后顺序／摘要／来源失败明确不可用，不补零；16 个并发响应、8 MiB 单响应、50000 单元及 128 任务／实体上限。新运行或连接恢复清理旧显示，核对 runId 后恢复；浏览器及图层开关不控制后台计算。两模式真实原生逐格对照、实际 Cesium 几何、开关／刷新、原实体近景与离线地图回归通过。下一卡仍为 T08，须涵盖两个覆盖层与累计线程；T11 人工确认／发布待后续。

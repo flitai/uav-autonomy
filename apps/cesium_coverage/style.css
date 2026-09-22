@@ -1,0 +1,4 @@
+#left-stack>*{flex-shrink:0}
+#coverage-panel{padding:14px;background:#142630ee;border:1px solid #496574;border-radius:8px;color:#e8eff2}
+#coverage-panel h2{font-size:16px;margin:0 0 12px}#coverage-panel label{display:inline-flex;align-items:center;gap:5px;font-size:13px;margin:0 10px 8px 0}
+#coverage-panel p{font-size:12px;line-height:1.6}#coverage-list button{width:100%;text-align:left;margin-bottom:6px}

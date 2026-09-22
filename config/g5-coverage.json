@@ -1,0 +1,11 @@
+{
+  "schemaVersion": 1,
+  "missionBuildRunId": "g5-t07-build-20260921-210702-807",
+  "missionValidationBuildRunId": "g5-t07-build-20260921-210342-447",
+  "missionValidationRunId": "g5-t07-test-20260921-210534-383",
+  "missionAcceptanceSHA256": "18fa2b24c27390820068bd50b2999c58534753b137d84c60611c22dc2ceda831",
+  "maximumCells": 50000,
+  "maximumSnapshotBytes": 8388608,
+  "gridResolutionMeters": 20,
+  "coverageEndpoint": "/api/coverage/v1/snapshot"
+}
