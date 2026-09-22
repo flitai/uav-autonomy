@@ -1958,3 +1958,14 @@ T09 入口复核与纠正：首轮 g4-t09-stage-20260920-103431-086805 已真实
 预览探针补充：首次检查新预览时 session-ready.json 尚未创建，临时探针明确 FileNotFoundError，没有把启动进程等同于就绪；随后等待同一所属启动器的真实就绪文件再重跑，通过后才登记上述预览运行结果。
 
 收尾与归档：本条追加前 406604 字节、SHA256=8c18c58e7004e7df6812ca548bc84af158874fda72670fc429b6639166440b9f，历史字节完整保留。final-audit.json 复查 18 项来源、前置绑定、普通／中文全部候选文件、生产一致性、UTF-8／语法／链接和 Git diff。按 AGENTS 第 7 节持续授权完成后提交并普通推送，关闭自动 maintenance／gc，核对 origin/main；实际提交及远程结果另存本次验收 archive.json。只提交 25 项源码／配置／测试／说明，不提交原始日志、工具、地理或模型资产。正式前端指针保持，下一实施卡 G5-T08。
+
+
+## WL-20260922-002｜重新启动侦察覆盖预览服务
+
+时间／时区：2026-09-22，Asia/Shanghai。关联 G5 显示补充，状态：服务重启完成，新预览保留运行。用户要求重新启动服务再次查看；起点 ad25e62bba4fe6cca883627c2941fba8e04efee7，git status 干净。复用当前合格覆盖候选，不改实现、资产或任务范围。
+
+操作与原因：原会话 g5-coverage-session-20260922-113600-734 仍存活，后端 state=2、time=756389 ms，为任务完成后自动暂停。核对所属 PID 27900 的命令行及快照运行身份后，创建该会话 request-stop；正常退出后三层 result／entry-result／runtime-result 均 passed，没有强制结束。仓库根通过隐藏 PowerShell 调用 scripts/windows/start-g5-coverage-session.ps1，PythonExecutable 为已核查 Python 3.14.7，BuildRunId=g5-coverage-build-20260922-112335-163、BaselineRunId=g3-t01-check-20260922-112501-380、Mode=Headless；入口自行复查来源。未发生端口冲突或启动失败，无需重新构建或新增测试。
+
+实际验证：启动器 out/runs/g5-coverage-restart-20260922-121323-648/launch.json，PID 11916，新会话 g5-coverage-session-20260922-121323-878。等待本次 session-ready.json 后检查 8080 ready=true、state=1、rate=1.0；两次独立快照时间 12709→14839 ms，400／500／600 坐标均推进；三条规划、三任务及累计覆盖运行身份一致，覆盖接口 POST 返回 405。原始快照及 running-check.json 保存在启动器目录，检查命令退出 0。预览可通过 http://127.0.0.1:8080 并 Ctrl+F5 查看，两个覆盖开关继续可用；不把接口就绪记作新的浏览器渲染或人工验收。
+
+交接与归档：同步 docs/status.md 当前运行；新预览保留运行，尚未正常退出，三任务完成仍自动暂停。正常结束创建 out/runs/g5-coverage-session-20260922-121323-878/request-stop。未发现新问题，下一卡保持 G5-T08，控制继续归 G6。日志追加前 414776 字节、SHA256=41dd8a020d2d129010335d32317e0a976337b78272bb30da2c342f3f98cffc49，历史字节前缀完整保留；UTF-8、运行证据与 git diff --check 通过后按持续授权提交并普通推送本次两份运维说明，关闭自动 maintenance／gc；实际提交及远程核对结果保存在本次启动器 archive.json。
