@@ -36,7 +36,7 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\windows\start-
 
 ```powershell
 $pythonExe = Join-Path $env:LOCALAPPDATA 'Python/pythoncore-3.14-64/python.exe'
-powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\windows\start-g5-coverage-session.ps1 -PythonExecutable $pythonExe -BuildRunId g5-coverage-build-20260922-134929-900 -Mode Headless
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\windows\start-g5-coverage-session.ps1 -PythonExecutable $pythonExe -BuildRunId g5-coverage-build-20260922-140926-685 -Mode Headless
 ```
 
 ## 4. 发现与验收记录
@@ -79,6 +79,8 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\windows\start-
 
 ## 6. 左右键拖动调整（2026-09-22）
 
+本节保留上一轮互换要求及结果；当前操作方式已由用户进一步明确，见第 7 节。
+
 用户明确只交换普通左右键拖动、保留左键点击选择。现为左键拖动缩放，右键拖动平移／环绕；滚轮、中键、触控和 Ctrl／Shift 组合手势保持原映射。实体面板新增操作提示。仅修改 apps/cesium_coverage/ui.ts 与该目录 README；后端、协议、累计计算、模型／姿态和既有验收探针保持。
 
 当前普通候选 `g5-coverage-build-20260922-134929-900`、中文空格候选 `g5-coverage-build-20260922-134901-892`，均构建通过；18 项来源中仅上述两文件相对第 5 节版本变化，407 个生产文件在两路径一致。构建自带的 17 项计算与 10 项几何检查通过。新候选 SHA256 分别为 `1bc1014e100475261033d15fb5eec3ed57be285ebcb4ecdd8f997ec739c9defe`、`c00b1f9501dc638e15e2c288407251766d0387e64d5c80422ebfea381f3ad1b0`。第 5 节全量覆盖验收仍是父版本的历史证据；本次按操作映射改动进行专项检查，没有把旧收据改写为新候选的全量验收。
@@ -86,3 +88,14 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\windows\start-
 真实 Headless 后端下的独立 Edge 浏览器专项 `g5-coverage-mouse-check-20260922-134949-352/browser` 通过：实际鼠标事件验证左拖缩放、右拖平移、中键转动、滚轮缩放；跟随实体时左拖调整距离、右拖环绕；实际模型像素的左键点击选择仍生效，右键点击不会选择。两个覆盖开关和刷新后的映射／运行身份保持，无页面异常或 WebSocket 业务回送。浏览器正常退出 0，截图为该目录 mouse-controls.png。专项仅使用真实新包与本次后端，未重跑两模式完整覆盖或声明 T08 恢复矩阵通过。
 
 检查会话 `g5-coverage-session-20260922-134949-576` 正常退出，三层结果 passed；旧预览 g5-coverage-session-20260922-121323-878 也已正常退出。新预览 `g5-coverage-session-20260922-135252-148` 使用当前普通候选，启动器 `g5-coverage-mouse-preview-20260922-135251-922`；1 倍后端时间 117910→119910 ms、三实体位移和覆盖运行身份均通过。页面 http://127.0.0.1:8080，Ctrl+F5 刷新查看；正常关闭创建本次会话 request-stop。当前预览保留运行，不登记本次预览退出或 T11 人工确认，下一卡仍为 T08。
+
+
+## 7. 左键平移与右键环绕（2026-09-22）
+
+用户进一步明确为“右键环绕，左键平移”。当前左拖平移、右拖环绕、滚轮缩放；左键点击仍选择目标。独立 navigation.ts 管理公开 Cesium 相机输入：自由视角使用地图平移及右键倾斜／环绕，跟随时右键绕实体转动；左键按屏幕像素比例平移相机，保留方向和跟随状态。松键、窗口失焦及切换跟随状态结束平移，销毁时释放监听及恢复控制器映射。中键、触控及 Ctrl／Shift 映射保持。
+
+当前普通 `g5-coverage-build-20260922-140926-685`、中文空格 `g5-coverage-build-20260922-140910-656` 均构建通过，19 项来源、各 463 文件、407 个生产文件一致；相对第 6 节只有 ui.ts、README 修改及新增 navigation.ts。两类构建的 17 项计算／10 项几何检查通过。新候选 SHA256 分别为 `4d1549404ae388a28c41f0d864b94edd18c03ae789b610cd754266b3a68705b1` 和 `fd7796e460f6406ac900682b6427a1b6c6d828764cbf3d24b6166bb1fcd42024`。
+
+真实 Headless 后端与 Edge 专项 `g5-coverage-navigation-check-20260922-140940-708/browser` 通过：自由视角左拖平移且没有缩放，右拖改变环绕／俯仰；跟随时左拖位置沿屏幕平面改变、方向不转且不解除跟随，右拖仍环绕；松键／失焦停止平移、退出跟随后恢复自由平移，滚轮／中键、真实模型左击选择、右击不选择、覆盖开关及刷新通过。无页面异常或业务回送，浏览器正常退出 0。截图、实际前后相机向量及输入记录保存在本次目录。不将本次鼠标专项扩展为两模式完整覆盖或 T08 恢复矩阵；父版本全量覆盖历史证据保持。
+
+旧预览 g5-coverage-session-20260922-135252-148 和检查会话 `g5-coverage-session-20260922-140940-929` 均已正常退出，三层结果 passed。新预览 `g5-coverage-session-20260922-141126-456`，启动器 `g5-coverage-navigation-preview-20260922-141126-220`，当前普通包、1 倍时间 135370→137510 ms、三实体位移和累计运行身份通过，保留供 Ctrl+F5 查看。关闭仍创建本次会话 request-stop；当前预览未退出，不登记 T11 人工确认或正式发布。
