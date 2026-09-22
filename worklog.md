@@ -1969,3 +1969,16 @@ T09 入口复核与纠正：首轮 g4-t09-stage-20260920-103431-086805 已真实
 实际验证：启动器 out/runs/g5-coverage-restart-20260922-121323-648/launch.json，PID 11916，新会话 g5-coverage-session-20260922-121323-878。等待本次 session-ready.json 后检查 8080 ready=true、state=1、rate=1.0；两次独立快照时间 12709→14839 ms，400／500／600 坐标均推进；三条规划、三任务及累计覆盖运行身份一致，覆盖接口 POST 返回 405。原始快照及 running-check.json 保存在启动器目录，检查命令退出 0。预览可通过 http://127.0.0.1:8080 并 Ctrl+F5 查看，两个覆盖开关继续可用；不把接口就绪记作新的浏览器渲染或人工验收。
 
 交接与归档：同步 docs/status.md 当前运行；新预览保留运行，尚未正常退出，三任务完成仍自动暂停。正常结束创建 out/runs/g5-coverage-session-20260922-121323-878/request-stop。未发现新问题，下一卡保持 G5-T08，控制继续归 G6。日志追加前 414776 字节、SHA256=41dd8a020d2d129010335d32317e0a976337b78272bb30da2c342f3f98cffc49，历史字节前缀完整保留；UTF-8、运行证据与 git diff --check 通过后按持续授权提交并普通推送本次两份运维说明，关闭自动 maintenance／gc；实际提交及远程核对结果保存在本次启动器 archive.json。
+
+
+## WL-20260922-003｜交换地图左右键拖动操作
+
+时间／时区：2026-09-22，Asia/Shanghai。关联 G5 界面操作，状态：调整、专项验证及新预览启动完成。用户要求左右键功能互换，澄清为“只交换左右键拖动，保留左键选中目标”。起点 6f99ebc756d312c120709dba7a65e3ff6e059245，工作区干净；不改变系统鼠标设置或仿真控制。
+
+实施：复查本地锁定 Cesium 源码，原普通左键为平移／环绕，右键为缩放；在当前组合页面设置公开 ScreenSpaceCameraController 的 translate／rotate 为 RIGHT_DRAG，zoom 为 LEFT_DRAG、WHEEL、PINCH。Viewer 点击事件、Ctrl／Shift、滚轮、中键及触控保持。只改 apps/cesium_coverage/ui.ts 和 README，实体面板增加操作提示，销毁时释放该提示。修改前正常关闭旧会话 g5-coverage-session-20260922-121323-878（所属 PID 11916，原 state=2、time=756239 ms），三层结果 passed，避免运行过程中改变来源。
+
+验证与结果：仓库根使用固定 Python 3.14.7、项目 Node 和 build-g5-coverage.ps1（中文增加 ChinesePath），基线 g3-t01-check-20260922-112501-380；普通 g5-coverage-build-20260922-134929-900、中文 g5-coverage-build-20260922-134901-892 均退出 0，18 项来源中仅两文件变化，407 个生产文件逐项一致，17 项计算和 10 项几何检查通过。新普通包真实 Headless 会话 g5-coverage-session-20260922-134949-576 的独立 Edge 鼠标专项 g5-coverage-mouse-check-20260922-134949-352/browser passed：实际左拖缩放、右拖平移，中键／滚轮保持；跟随时缩放／环绕生效；点击实际模型像素仍由左键选择，右键点击不选择；覆盖两个开关与刷新后的映射、累计运行身份保持。浏览器退出 0，无强制终止，无页面异常或业务消息回送。仅做与本次改动相关的专项，第 5 节父版本全量覆盖证据保持，不改写旧收据或声称本次重跑完整矩阵。
+
+运行交接：正常关闭检查会话 g5-coverage-session-20260922-134949-576，三层结果 passed；隐藏启动新预览 g5-coverage-session-20260922-135252-148，启动器 g5-coverage-mouse-preview-20260922-135251-922，当前普通候选／Headless，真实 1 倍时间 117910→119910 ms、三实体移动、三任务及累计运行身份检查通过。用户 Ctrl+F5 刷新 8080 查看；新预览保留运行、尚未退出，三任务完成仍自动暂停。正常结束创建本次 request-stop，下一卡仍为 G5-T08。没有新的实现失败或未解决问题；Edge 隔离网络下后台同步的 DNS 诊断不属于页面异常，不放宽页面检查。
+
+文档与归档：同步覆盖报告第 6 节、当前状态、G5 方案及 AGENTS；历史工作日志保留，本条追加前 417137 字节、SHA256=eca1731cc6d8d7f9ea7500b623792790a4795b9cffba9a930a5ab8469149ed54。候选来源、正常退出、UTF-8、相对链接及 git diff --check 复核通过后按持续授权提交并普通推送，关闭自动 maintenance／gc；本次七项改动不含原始日志或工具，final-audit.json 与实际 Git 归档回执保存在鼠标专项目录。正式前端指针和 T11 人工确认边界保持。

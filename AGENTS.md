@@ -564,6 +564,8 @@ T07 组合页面采用公开 msaaSamples=1 加 FXAA，解决本轮 Intel／ANGLE
 
 当前／累计覆盖已按用户要求实现，见 [覆盖报告](docs/g5-coverage-display-validation.md)。apps/cesium_coverage 和 scripts/g5_coverage 独立组合已合格 T07；两个开关默认显示、独立控制，关闭显示仍累计，刷新恢复本次运行结果。当前 CameraState.Footprint 只取原经纬度贴同源地形，零角点高程不作海平面；越界视场裁剪显示并提示。累计按正式 20 米任务单元、波段／GSD、飞机位置最近邻 DTED 及点观察时间语义从只读持久事件重建；仅资格化当前零 DwellTime 点／线／矩形，不以轨迹、完成消息或任务边界冒充覆盖。
 
-日常入口改用 scripts/windows/start-g5-coverage-session.ps1（PythonExecutable、BuildRunId 必填，Mode Gui／Headless）；构建为 build-g5-coverage.ps1，验收为 tests/windows/g5-coverage.tests.ps1。当前普通 g5-coverage-build-20260922-112335-163、中文 g5-coverage-build-20260922-112213-396，联合验收 g5-coverage-test-20260922-112501-163；入口复查 T07 及前置绑定。访问 8080，创建本次会话 request-stop 正常退出。新增 /api/coverage/v1/snapshot 只读路径，不改 G4 v1、不增加监听端口；旧来源／候选／正式指针保持。
+日常入口改用 scripts/windows/start-g5-coverage-session.ps1（PythonExecutable、BuildRunId 必填，Mode Gui／Headless）；构建为 build-g5-coverage.ps1，验收为 tests/windows/g5-coverage.tests.ps1。全量覆盖父版本验收 g5-coverage-test-20260922-112501-163 保留；鼠标调整后当前普通 g5-coverage-build-20260922-134929-900、中文 g5-coverage-build-20260922-134901-892，真实浏览器专项 g5-coverage-mouse-check-20260922-134949-352 通过，见报告第 6 节；入口复查 T07 及前置绑定。访问 8080，创建本次会话 request-stop 正常退出。新增 /api/coverage/v1/snapshot 只读路径，不改 G4 v1、不增加监听端口；旧来源／候选／正式指针保持。
 
 累计线程初次等库最多 30 秒，之后顺序／摘要／来源失败明确不可用，不补零；16 个并发响应、8 MiB 单响应、50000 单元及 128 任务／实体上限。新运行或连接恢复清理旧显示，核对 runId 后恢复；浏览器及图层开关不控制后台计算。两模式真实原生逐格对照、实际 Cesium 几何、开关／刷新、原实体近景与离线地图回归通过。下一卡仍为 T08，须涵盖两个覆盖层与累计线程；T11 人工确认／发布待后续。
+
+普通左／右键拖动按用户要求互换：左拖缩放、右拖平移／环绕，左键点击仍选中对象；滚轮／中键／触控及 Ctrl／Shift 手势保持。仅设公开 camera controller 拖动映射，不替换 Viewer 点击事件；自由视角、跟随视角和刷新已用真实鼠标事件核查。

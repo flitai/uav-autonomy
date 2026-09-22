@@ -1,4 +1,4 @@
-import { ArcType, BoundingSphere, CallbackProperty, Cartesian3, Color, CustomDataSource, HeadingPitchRange, HeightReference, PolygonHierarchy, Rectangle, type Viewer } from 'cesium';
+import { ArcType, BoundingSphere, CallbackProperty, CameraEventType, Cartesian3, Color, CustomDataSource, HeadingPitchRange, HeightReference, PolygonHierarchy, Rectangle, type Viewer } from 'cesium';
 import { type ReadOnlyConnection } from '../state/connection.js';
 import { need, type ObjectValue } from '../state/protocol.js';
 import { type EntityLayer } from '../entities/layer.js';
@@ -12,11 +12,18 @@ export class CoveragePanel {
   readonly current=new CustomDataSource('当前传感器覆盖');readonly accumulated=new CustomDataSource('累计侦察覆盖');
   private readonly panel=node('section');private readonly status=node('p');private readonly list=node('div');
   private readonly currentToggle=node('input');private readonly accumulatedToggle=node('input');
+  private readonly cameraHint=node('p','左键拖动：缩放；右键拖动：平移／环绕。左键点击选择目标；滚轮缩放，中键转动视角。');
   private generation=-1;private phase='';private disposed=false;private timer:number;
   private inflight=false;private abort:AbortController|null=null;private epoch=0;private signature='';
   private polygons=new Map<string,{points:XY[];raw:XY[];time:string;clipped:boolean;entity:string}>();
   private signatures=new Map<string,string>();private errors:string[]=[];private snapshot:CoverageSnapshot|null=null;
   constructor(readonly viewer:Viewer,readonly connection:ReadOnlyConnection,readonly entities:EntityLayer,readonly heights:Heights){
+    // Swap plain drags only; Viewer click selection and modified gestures stay intact.
+    const camera=viewer.scene.screenSpaceCameraController;
+    camera.translateEventTypes=CameraEventType.RIGHT_DRAG;
+    camera.rotateEventTypes=CameraEventType.RIGHT_DRAG;
+    camera.zoomEventTypes=[CameraEventType.LEFT_DRAG,CameraEventType.WHEEL,CameraEventType.PINCH];
+    this.cameraHint.id='camera-controls-hint';this.cameraHint.className='hint';document.getElementById('entity-panel')!.append(this.cameraHint);
     viewer.dataSources.add(this.current);viewer.dataSources.add(this.accumulated);
     this.panel.id='coverage-panel';this.panel.append(node('h2','侦察覆盖'));
     for(const [input,id,text,source] of [[this.currentToggle,'coverage-current','当前传感器覆盖',this.current],[this.accumulatedToggle,'coverage-accumulated','累计侦察覆盖',this.accumulated]] as const){
@@ -101,5 +108,5 @@ export class CoveragePanel {
   }
   private locate(task:TaskCoverage){const points=task.cells.map(c=>this.world([c[1],c[0]]));const sphere=BoundingSphere.fromPoints(points);this.viewer.trackedEntity=undefined;this.viewer.camera.flyToBoundingSphere(sphere,{duration:0,offset:new HeadingPitchRange(0,-Math.PI/3,Math.max(700,sphere.radius*3))});}
   inspect(){return {generation:this.generation,currentVisible:this.current.show,accumulatedVisible:this.accumulated.show,currentObjects:this.current.entities.values.length,accumulatedObjects:this.accumulated.entities.values.length,sensors:Object.fromEntries(this.polygons),snapshot:this.snapshot,status:this.status.textContent};}
-  destroy(){this.disposed=true;this.epoch++;window.clearInterval(this.timer);this.abort?.abort();if(!this.viewer.isDestroyed()){this.clear(this.current);this.clear(this.accumulated);this.viewer.dataSources.remove(this.current,true);this.viewer.dataSources.remove(this.accumulated,true);}this.polygons.clear();this.signatures.clear();this.snapshot=null;this.panel.remove();Object.assign(window,{__g5Coverage:undefined});}
+  destroy(){this.disposed=true;this.epoch++;window.clearInterval(this.timer);this.abort?.abort();if(!this.viewer.isDestroyed()){this.clear(this.current);this.clear(this.accumulated);this.viewer.dataSources.remove(this.current,true);this.viewer.dataSources.remove(this.accumulated,true);}this.polygons.clear();this.signatures.clear();this.snapshot=null;this.panel.remove();this.cameraHint.remove();Object.assign(window,{__g5Coverage:undefined});}
 }

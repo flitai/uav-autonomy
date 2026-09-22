@@ -36,7 +36,7 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\windows\start-
 
 ```powershell
 $pythonExe = Join-Path $env:LOCALAPPDATA 'Python/pythoncore-3.14-64/python.exe'
-powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\windows\start-g5-coverage-session.ps1 -PythonExecutable $pythonExe -BuildRunId g5-coverage-build-20260922-112335-163 -Mode Headless
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\windows\start-g5-coverage-session.ps1 -PythonExecutable $pythonExe -BuildRunId g5-coverage-build-20260922-134929-900 -Mode Headless
 ```
 
 ## 4. 发现与验收记录
@@ -75,3 +75,14 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\windows\start-
 日常联合入口单独运行并正常退出：`g5-coverage-session-20260922-113321-401`，三层结果 passed。新预览 `g5-coverage-session-20260922-113600-734` 使用普通候选，8080 页面、真实 1 倍时间和三实体位移、累计运行身份／三任务及 POST 405 拒绝已检查；启动记录在 `out/runs/g5-coverage-preview-20260922-113600-501/`。当前预览保留运行，正常结束创建 `out/runs/g5-coverage-session-20260922-113600-734/request-stop`；它尚未退出，不登记人工确认。
 
 下一张主要实施任务仍为 G5-T08。后续恢复矩阵须同时涵盖当前传感器层、累计层及只读工作线程；G6 控制、T09／T10 完整联调、T11 阶段发布边界保持。
+
+
+## 6. 左右键拖动调整（2026-09-22）
+
+用户明确只交换普通左右键拖动、保留左键点击选择。现为左键拖动缩放，右键拖动平移／环绕；滚轮、中键、触控和 Ctrl／Shift 组合手势保持原映射。实体面板新增操作提示。仅修改 apps/cesium_coverage/ui.ts 与该目录 README；后端、协议、累计计算、模型／姿态和既有验收探针保持。
+
+当前普通候选 `g5-coverage-build-20260922-134929-900`、中文空格候选 `g5-coverage-build-20260922-134901-892`，均构建通过；18 项来源中仅上述两文件相对第 5 节版本变化，407 个生产文件在两路径一致。构建自带的 17 项计算与 10 项几何检查通过。新候选 SHA256 分别为 `1bc1014e100475261033d15fb5eec3ed57be285ebcb4ecdd8f997ec739c9defe`、`c00b1f9501dc638e15e2c288407251766d0387e64d5c80422ebfea381f3ad1b0`。第 5 节全量覆盖验收仍是父版本的历史证据；本次按操作映射改动进行专项检查，没有把旧收据改写为新候选的全量验收。
+
+真实 Headless 后端下的独立 Edge 浏览器专项 `g5-coverage-mouse-check-20260922-134949-352/browser` 通过：实际鼠标事件验证左拖缩放、右拖平移、中键转动、滚轮缩放；跟随实体时左拖调整距离、右拖环绕；实际模型像素的左键点击选择仍生效，右键点击不会选择。两个覆盖开关和刷新后的映射／运行身份保持，无页面异常或 WebSocket 业务回送。浏览器正常退出 0，截图为该目录 mouse-controls.png。专项仅使用真实新包与本次后端，未重跑两模式完整覆盖或声明 T08 恢复矩阵通过。
+
+检查会话 `g5-coverage-session-20260922-134949-576` 正常退出，三层结果 passed；旧预览 g5-coverage-session-20260922-121323-878 也已正常退出。新预览 `g5-coverage-session-20260922-135252-148` 使用当前普通候选，启动器 `g5-coverage-mouse-preview-20260922-135251-922`；1 倍后端时间 117910→119910 ms、三实体位移和覆盖运行身份均通过。页面 http://127.0.0.1:8080，Ctrl+F5 刷新查看；正常关闭创建本次会话 request-stop。当前预览保留运行，不登记本次预览退出或 T11 人工确认，下一卡仍为 T08。
