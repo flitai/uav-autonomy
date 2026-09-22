@@ -47,6 +47,7 @@ Windows 原生运行是目标；WSL／Linux 可作参考或过渡环境，其验
 2. 运行 `git status --short`，识别用户现有修改和未跟踪文件；保留与本次任务无关的内容。
 3. 检查适用的目录说明，阅读目标组件 README、实际构建配置及相关源码；优先用 `rg` 定位。
 4. 根据任务按需阅读项目文档，不必每次加载全部长文：
+   - [项目整体说明与界面使用指南](docs/project-overview-and-user-guide.md)：面向使用者的原项目背景、组件职责、当前场景／任务、界面字段和启停说明；实现与验收状态仍以源码、status 和专题报告为准。
    - [当前状态](docs/status.md)、[任务清单](docs/backlog.md)：当前关卡、缺口、下一任务及验收条件；历史基线见 [G0 报告](docs/g0-baseline.md)。
    - [G3 实施方案](docs/g3-system-integration-plan.md)：当前七卡顺序、双向连接、启动屏障、完整执行／覆盖统计正确性、后续优化及 G4 边界；T01 实际资格通过见 [输入基线](docs/g3-input-baseline-validation.md)，不等于闭环通过。
    - [G2 实施方案](docs/g2-windows-uxas-plan.md)：Windows 原生工具链、vcpkg 依赖、C++ 消息库、可选桥及 HelloWorld 的当前任务边界；规划入口不视为已实现命令。
