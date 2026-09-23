@@ -2056,3 +2056,16 @@ T09 入口复核与纠正：首轮 g4-t09-stage-20260920-103431-086805 已真实
 验证与处理：本次中文先以 UTF-8 文件写入，再由只含 ASCII 的脚本读文件并以二进制追加，禁止经默认 ASCII 管道传递中文正文；核查新增段包含预期中文标题、无连续问号／替换字符，历史前缀保持。文档链接／锚点、Markdown 代码块、UTF-8 中文内容及 git diff --check 检查；不运行业务测试或将静态阅读登记为本轮规划实测。初次按猜测检索不存在的 g3_startup／runtime.py 等路径及 PowerShell 未展开的目录通配符，随后用 rg --files 和实际 g3_integration、g4_mixed/planning.py 定位复核；均只读。证据与归档回执保存在 out/runs/planning-overview-review-20260923-094925。
 
 归档：本轮只提交整体使用指南与本条工作日志，按持续授权普通推送并核对远程，不改变候选或正式指针。追加前 431900 字节、SHA256=400ea21277d234e2c4653785e83d8455e58915094f00473b56b11e4297345c43；原日志前缀完整保留。既有累计反馈及未交付的在线任务编辑／重规划流程继续保持原状态。
+
+
+## WL-20260923-002｜说明 OpenUxAS 的人机界面与配套工具
+
+时间／时区：2026-09-23，Asia/Shanghai。关联项目使用指南，状态：只读核查与说明完成。用户询问 OpenUxAS 是否具有人机交互界面；起点 58338107175ecbb5e78a26bfe29cd9fc36e028cf，工作区干净。只补充文档，不修改配置、服务或场景，不启动任何应用，不推进后续实施卡。
+
+依据与结论：检查 OpenUxAS README、UxAS_Main.cpp、CMake 可执行入口、AMASE README／原仿真手册、SetupTool 源文件及 AutomationDiagram 示例／绘图脚本。本仓库 UxAS 的主入口为命令行后台程序，没有配套完整地图式图形主界面；原系统仿真与设置界面来自 AMASE，UxAS 通过配置和 LMCP 消息工作。AutomationDiagram 按规划响应导出图形与 PDF，使用 Matplotlib 可弹出图窗，但属于结果分析工具，不是交互式任务编辑／指挥界面；Windows 运行资格本轮未验证。
+
+交付：整体使用指南新增 2.5 节，将 AMASE 仿真窗口、Setup Tool、UxAS 配置／消息接口、规划绘图和本项目 Cesium 分开说明；明确当前网页只读态势功能与未来控制／任务操作的边界。当前状态、任务卡及未关闭的累计覆盖反馈保持原结论。
+
+过程与验证：AutomationDiagram README 引用了 examples/05_AssignTasks，但本地该 README 不存在；保留这一上游历史引用事实，不为缺失页面创建链接。改用实际存在的 06_AutomationDiagram README、SetupTool 源码和 OpenAMASE README 核对配套界面；没有据缺失示例否定编辑器存在。进行新增中文内容、UTF-8、文档链接／目录锚点及 git diff --check 核查，不增加或运行业务测试。中文条目从 UTF-8 文件按字节追加，避免 PowerShell 默认 ASCII 管道替换；追加前 436044 字节、SHA256=997146538277ba64662cc59de64a0fffdf42e47cc9736e4b4a0de788971c51e2，历史前缀保持。
+
+归档与后续：按持续授权仅提交整体使用指南与本日志，普通推送并核对远程，审计及归档回执保存在 out/runs/ui-interface-review-20260923-102423。无新增实现问题；上游工具的存在与当前 Windows 功能资格分开陈述，不将本次阅读登记为运行通过。
