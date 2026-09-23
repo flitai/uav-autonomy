@@ -1,6 +1,6 @@
 # uav-autonomy：AI 开发协作说明
 
-适用范围：本仓库及其子目录。最后核对日期：2026-09-21。
+适用范围：本仓库及其子目录。方向与计划更新日期：2026-09-23；本次不新增实现资格。
 
 这是项目级工作约定。遵循当前会话中更高优先级的指令和用户明确要求；修改子目录前检查是否还有适用于该目录的说明。源码、构建配置和实际运行结果用于判断工程事实，规划文档不代表功能已实现。
 
@@ -14,6 +14,8 @@
 2. 保留 OpenAMASE 仿真内核和 OpenUxAS 自主任务服务。
 3. 新增消息网关，以 CesiumJS 三维 GIS 逐步替换原有态势可视化与操作界面。
 4. 后续为 TorchRL／BenchMARL 训练集成复用协议与仿真控制接口。
+
+2026-09-23 用户确定 UxAS 的主要改造方向：具有侦察监视任务库的通用自主任务规划框架。复用既有规划与任务服务，新增 Cesium 任务操作界面和后端业务接口。后续 G6 分为 A 基础仿真控制、B 任务规划交互，依次独立验收；B 首批接入点／线／矩形草稿、规划预览、确认下发、执行跟踪，再验证自由分配与受控重规划。见 [G6 后续计划](docs/g6-task-planning-interaction-plan.md)；尚未实施，下一主要任务仍为 G5-T08。当前自动规划执行链不能直接当作纯预览接口；实现时必须验证执行隔离、方案版本及运行身份绑定，不把新增页面按钮视为后端能力已具备。
 
 截至上述核对日期，G0、G1 已完成，G1-T01～T05 均已完成；G2-T01 已完成，原生工具链十组验收及 VS／Ninja 在两类路径下的 C/C++ 探针通过；T02 已完成固定依赖的源码重建、11 组验收与迁移发布；T03 已完成七模型 C++ 库、164 类型及三语言双向样本验收和发布，T04 已完成 UxAS 构建图与独立桥配置探针，T05 已完成两类路径的候选构建及平台／来源验收，T06 已完成 HelloWorld 内部双向消息、正常退出与真实配置拒绝，T07 已完成复验和正式发布，G2 已完成；G3-T01～T07 已完成，G3 已完成，见 [G3-T03 记录](docs/g3-startup-validation.md)、 [G3-T01 记录](docs/g3-input-baseline-validation.md)、 [T07 记录](docs/g2-uxas-release-validation.md)、[T06 记录](docs/g2-uxas-helloworld-validation.md)、 [T05 记录](docs/g2-uxas-build-validation.md)、[T01 记录](docs/g2-cpp-toolchain-validation.md)、[T02 记录](docs/g2-dependencies-validation.md)、[T03 记录](docs/g2-lmcp-cpp-validation.md)和 [T04 记录](docs/g2-uxas-cmake-validation.md)。G2 历史方案及任务卡见 [G2 实施方案](docs/g2-windows-uxas-plan.md)和 [G2 任务清单](docs/backlog.md#4-g2-顺序与任务卡)；G4 已按 [实施方案](docs/g4-message-gateway-plan.md)和 [九张任务卡](docs/backlog.md#8-g4-顺序与任务卡)完成；后续按 [G5 实施方案](docs/g5-cesium-display-plan.md)和 [十一张任务卡](docs/backlog.md#9-g5-顺序与任务卡)推进。项目内 Temurin JDK 11.0.32.1+1、Ant 1.10.18 已构建生成器、统一消息库和正式 AMASE；七模型已生成 Java／C++／Python 代码，Python 3.14.7 x64 的跨语言样本通过。T05 的 GUI／无界面真实 TCP 接收、十四组自动验收、GUI 人工确认、同版本受控复验及正常退出均完成；两层封装、分包、中文路径及故障处理已验证。证据见 [Java 验收](docs/g1-java-validation.md)、[T03 消息库验收](docs/g1-lmcp-validation.md)、[T04 AMASE 验收](docs/g1-amase-validation.md)和 [T05 TCP 验收](docs/g1-tcp-validation.md)。AMASE↔UxAS 双向协议及正式发布复验已通过；T05 已验证正式两模式完整任务、可靠 TaskComplete 与覆盖统计正确性，本轮新 AMASE GUI 确认／发布、UxAS 交接更新及来源修订通过；T06 稳定性、故障拒绝及整组重启矩阵已通过，G4 网关及观察恢复的当前结果见下文；Cesium 已完成 T01～T07 地图、真实接入、实体及业务图层；完整恢复、阶段发布与训练集成尚待后续；其他未登记的 Python 项目依赖未验证。继续工作时先读 [当前状态](docs/status.md) 与 [任务清单](docs/backlog.md)，并重新检查实际环境，不把历史快照当成永久结论。
 
@@ -52,6 +54,7 @@ Windows 原生运行是目标；WSL／Linux 可作参考或过渡环境，其验
    - [G3 实施方案](docs/g3-system-integration-plan.md)：当前七卡顺序、双向连接、启动屏障、完整执行／覆盖统计正确性、后续优化及 G4 边界；T01 实际资格通过见 [输入基线](docs/g3-input-baseline-validation.md)，不等于闭环通过。
    - [G2 实施方案](docs/g2-windows-uxas-plan.md)：Windows 原生工具链、vcpkg 依赖、C++ 消息库、可选桥及 HelloWorld 的当前任务边界；规划入口不视为已实现命令。
    - [G5 实施方案](docs/g5-cesium-display-plan.md)：本地全球矢量、USGS 区域主地形／Copernicus 对照、在线影像、Cesium／AMASE 同源地形及十一张显示任务卡；T01～T07 已完成，T08 可执行，实际资格见各卡报告。
+   - [G6 后续计划](docs/g6-task-planning-interaction-plan.md)：基础控制先行，随后补齐任务库契约、任务编辑、规划预览／确认下发、自由分配及受控重规划；当前只登记规划，不提前改动 G5 或正式后端接口。
    - [工作日志](worklog.md)：先读最近记录及当前任务关联的问题、尝试和决定，避免重复排查；新记录按第 10 节要求追加。
    - [总体实施计划与阶段验收](04.项目总体实施计划与阶段验收.md)：按用户主导、AI 逐项实施的方式推进，G0～G8 为任务细化与验收依据；首期采用联网开发、基础离线演示。
    - [目录分析与 Windows／Cesium 改造计划](03.项目目录分析与Windows_Cesium改造计划.md)：目录、技术方案及改造风险的参考。

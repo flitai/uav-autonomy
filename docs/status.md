@@ -2,7 +2,7 @@
 
 初次了解本项目，可先阅读 [项目整体说明与界面使用指南](project-overview-and-user-guide.md)，包含原项目背景、组件分工、当前场景、界面释义与启停方法。
 
-更新日期：2026-09-22。依据：[总体实施计划](../04.项目总体实施计划与阶段验收.md)、[G0 报告](g0-baseline.md)、[Java 环境验收](g1-java-validation.md)、[T03 消息库验收](g1-lmcp-validation.md)、[T04 AMASE 验收](g1-amase-validation.md)、[T05 TCP 验收](g1-tcp-validation.md)、[G2 实施方案](g2-windows-uxas-plan.md)、[G3 实施方案](g3-system-integration-plan.md)、[任务清单](backlog.md)。过程记录见根级 [worklog.md](../worklog.md)。
+更新日期：2026-09-23（本次更新后续规划，运行资格沿用已有记录）。依据：[总体实施计划](../04.项目总体实施计划与阶段验收.md)、[G0 报告](g0-baseline.md)、[Java 环境验收](g1-java-validation.md)、[T03 消息库验收](g1-lmcp-validation.md)、[T04 AMASE 验收](g1-amase-validation.md)、[T05 TCP 验收](g1-tcp-validation.md)、[G2 实施方案](g2-windows-uxas-plan.md)、[G3 实施方案](g3-system-integration-plan.md)、[任务清单](backlog.md)。过程记录见根级 [worklog.md](../worklog.md)。
 
 ## 当前关卡
 
@@ -10,7 +10,7 @@
 
 | 项目 | 当前记录 |
 | --- | --- |
-| 最近完成的规划 | [G5 方案](g5-cesium-display-plan.md) 已同步 T07 完整规划／命令／任务／区域及 T08 交接；同源高度链和控制边界保持 |
+| 最近完成的规划 | [G6 后续计划](g6-task-planning-interaction-plan.md)：定位为具有侦察监视任务库的通用自主任务规划框架；A 基础控制先行，B 八张卡补齐任务界面／后端接口、预览／下发、自由分配与重规划；尚未实施 |
 | 最近通过的实现任务 | G5-T07 及 [侦察覆盖补充](g5-coverage-display-validation.md)：当前相机覆盖、任务累计覆盖、两个独立开关、原生逐格对照及刷新恢复通过 |
 | 三维模型输入 | 用户提供 16 个 AFSIM OSGB；本轮 UCAV 已转换及校准，1 单位＝1 显示米，可快捷键缩放；其余保持 [输入登记](g5-model-inputs.md) |
 | 当前执行结果 | 左键平移／右键环绕：普通 g5-coverage-build-20260922-140926-685、中文 g5-coverage-build-20260922-140910-656；构建和真实浏览器专项 g5-coverage-navigation-check-20260922-140940-708 passed；父版本覆盖历史资格保留，正式指针保持 |
@@ -22,7 +22,7 @@
 | 已确定的 G2 路线 | MSVC v143＋CMake 3.31、Release x64／动态 CRT；固定 vcpkg baseline／overlay；Zyre／串口关闭，CZMQ／TCP 保留 |
 | 已验证工具 | Temurin 11.0.32.1+1、Ant 1.10.18、Python 3.14.7 x64；Build Tools 17.14.41／cl 19.44.35229、SDK 工具 10.0.26100.7705、CMake 3.31.12、Ninja 1.13.2、固定 vcpkg 提交及工具；Node 24.21.0／npm 11.19.0、独立 Rasterio／GDAL 与 PyProj／PROJ，见 [G5-T01](g5-environment-validation.md) |
 | 已验证能力 | G0～G4；真实规划／执行／完成，20 米统计，严格协议、状态／持久记录、HTTP／WS、两路观察和网关恢复，20 实体两模式各 30 分钟及三客户端；当前 GUI 确认与正常退出 |
-| 尚未完成验收 | G5 完整态势显示与阶段发布；G6 控制／重置分段；G7 正式回放；G8 第二机器与离线部署 |
+| 尚未完成验收 | G5 完整态势显示与阶段发布；G6-A 控制／重置分段、G6-B 任务操作与规划交互；G7 正式回放；G8 第二机器与离线部署 |
 | 下一动作 | 执行 G5-T08：生命周期与完整恢复矩阵；T09～T11 待前置 |
 | 当前边界 | G4 已发布；G5 用原矢量＋USGS 区域主地形，Copernicus 只作对照，旧 Terrarium 归档；西经 122～120／北纬 45～46 度外仅按未验收参考椭球浏览。无覆盖率／FPS 硬门槛，不开展寻优 |
 | 本轮实际倍率 | G4-T08 两模式各 3385 条 Running SessionStatus 均为 1.0，均到 1800009 ms；历史变速取证保持原记录 |
@@ -31,6 +31,12 @@
 G4-T03 已修复 UxAS 日志并发读写缺陷并正式发布；旧失败运行保留。新资格 g3-t01-check-20260919-233710-372、Web 环境复验、32 项状态／记录检查及两模式各 54 批在线只读消费通过，关键日志完整、正常退出。来源修订在 config/g4-baseline.json，保留 G3 历史 handoff，详见 [T03 报告](g4-state-validation.md)及工作日志 WL-20260919-014。
 
 G4-T07 正式资格已完成：新 AMASE 的 19 项并发、31 项统计、原线分析回归、11 组自动验收，以及四场景全程／独立审计均通过。本轮用户确认后 GUI 正常退出并正式发布，UxAS AMASE 交接复验发布通过；inputRevision=4、45 项冻结输入，新资格 g3-t01-check-20260920-081222-593、Web 环境复验及正式组合收据 g4-t07-qualified-20260920-081353-913195 passed。正式文件与候选取证字节相同，来源链十项反例被拒绝；旧结果保留。见 [T07 报告](g4-mixed-validation.md)。T08 后续已完成，见 [稳定性报告](g4-scale-validation.md)；T09 后续已通过并发布，见 [阶段报告](g4-stage-validation.md)。
+
+## 后续方向决定（2026-09-23）
+
+复用 UxAS 通用规划流程，优先建设侦察监视任务库。新增任务编辑界面和版本化业务接口归 G6-B，首批点／线／矩形草稿、真实规划预览、确认下发与执行跟踪，再验证自由分配和执行中重规划；监视／伴随等类型另行扩展。G6-A 基础控制先行且独立验收，G7／G8 继承操作记录与任务模板。计划与前置／验收／回退条件见 [八张任务卡](backlog.md#11-g6-b-任务规划交互任务卡)。
+
+当前 G4 及 G5 页面仍按既有只读契约运行，自动演示链尚无本计划要求的预览隔离；本次没有新接口、实现或运行资格。下一卡仍为 G5-T08，累计覆盖显示反馈保持未关闭，不能用计划更新替代问题修复。
 
 ## 已处理项与剩余缺口
 
