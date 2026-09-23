@@ -2115,3 +2115,17 @@ T09 入口复核与纠正：首轮 g4-t09-stage-20260920-103431-086805 已真实
 问题与处理：未发现新的实现问题。编辑工具产生的混合换行按原 CRLF 风格恢复，仅处理本次文档；中文用 UTF-8 文件保存后按字节追加日志，避免 PowerShell 5.1 管道编码损失。旧日志前缀 444208 字节、SHA256=a64e82b33ebdb6b510963f37ee9dfe8860d04a61fe6151434146ef6a970ed513，追加时核对旧前缀原样保留，历史记录不改写。
 
 遗留与归档：下一主要实施卡仍为 G5-T08，累计覆盖显示反馈保持未关闭，G6-A 具体控制任务卡及 G6-B 精确接口／配置在进入实施前细化。任务编辑、纯预览、确认下发及受控重规划均未实现，不扩大已有运行资格。按持续授权仅提交本次九份文档并普通推送核对远程；文档检查、前缀核对与 Git 归档结果保存在 out/runs/mission-planning-plan-review-20260923。
+
+## WL-20260923-007｜G5-T08 生命周期与恢复矩阵
+
+时间／时区：2026-09-23，Asia/Shanghai。关联任务 G5-T08；状态：两模式独立自动验收已完成，G5 整阶段尚未完成。目标为在已合格覆盖页面和真实三实体地形后端下验证对象／样本清理、观察及网关恢复、前端资源故障隔离和正常退出；不新增业务写接口、变更地形或切换正式指针。起点工作区干净，上轮预览 `g5-coverage-session-20260922-162523-266` 占用端口，先用其 `request-stop` 正常关闭并核查释放。
+
+过程与修改：新增 `scripts/g5_lifecycle/`、`tests/g5_lifecycle/` 和 `tests/windows/g5-lifecycle.tests.ps1`，绑定合格覆盖构建 `g5-coverage-build-20260922-140926-685`。运行自有只读观察代理，在 Headless／Gui 顺序注入 AMASE 单路、UxAS 单路、双路断开及网关重启；真实 Edge 记录连接阶段、身份、时间、实体／任务／覆盖对象，执行晚加入、刷新、慢客户端、在线影像失败、本地地图服务停止／重启；点／区域任务完成后暂停、独立比较页面完整状态与网关快照，再删除已完成任务 3001／实体 500 并核查两层覆盖清理。浏览器与累计线程正常退出，后端独立运行并正常收尾。
+
+失败与处理：第一次 `g5-t08-test-20260923-214731-480` 错把刷新后的新连接计数要求为大于旧计数；改为页面 timeOrigin 与新快照／运行身份核对。第二次 `g5-t08-test-20260923-215254-082` 的真实 756 秒三任务完成已出现，编排误用上游保留的 `amase-paused` 阶段名，命中初始化截止时间；改用独立阶段名，并按 T08 范围只等待点／区域完成，完整水道留给 T09。第三次 `g5-t08-test-20260923-220702-788` Headless passed，GUI 浏览器取证文件在 Windows 并发读取时原子替换触发 WinError 5；加入有限重试及浏览器退出快速报告。失败原始记录保留，均未登记为整组合格。
+
+验证与证据：工作目录仓库根；功能复验 `powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\tests\windows\g5-lifecycle.tests.ps1 -PythonExecutable <已核查解释器> -BuildRunId g5-coverage-build-20260922-140926-685 -BaselineRunId g3-t01-check-20260923-214731-692` 退出 0。功能复验 `g5-t08-test-20260923-221137-946` 的 result、entry-result、runtime-result、acceptance 均 passed，SHA256 `a6959ac27e3138bb246f7390ac7bb7ac732e54852f7ac002d310c8d13626d13b`。两模式各三次断开记录 1013 与 HTTP 503，网关两实例退出 passed；暂停页面与网关完整对象相同，删除后任务和实体不复活；慢客户端收据 passed。两模式 AMASE／UxAS 退出 0、浏览器 0、累计线程正常退出，端口释放；没有强制终止。详见 [T08 报告](docs/g5-lifecycle-validation.md)。本条追加前原工作文件为 447365 字节、SHA256=100a12eca205e4f98b8365ec7d6268ab18d1d3ce5996804dec7a32f018cc9ef0。本次文档补丁改变了历史工作区换行；已通过 Git checkout 恢复相同历史内容，checkout 按仓库规则将旧前缀规范为 CRLF（447550 字节、SHA256=f0f785591d3f21cb7c522b932d3b28296f7f7c59e2442eca2c5706efce24ab56），旧内容的 Git diff 无改写。
+
+最终来源复核与重跑：补齐 PowerShell 入口的来源哈希后，`g5-t08-test-20260923-223021-982` 虽通过两模式矩阵，但管理入口 `result.json` 的 `lifecycleQualified` 仍为初始化值 false；修正管理收据字段后完整重跑。`g5-t08-test-20260923-223641-852` 的 result、entry-result、runtime-result、acceptance 均 passed，资格字段一致为 true，验收 SHA256=073adcdb383b56c2c300bde23ab99fe58fb7b95d62688e02f4e31bcf1bce82d7。两模式各四类恢复、正常退出及端口释放均核查通过；旧收据保留。
+
+决定与遗留：T08 直接验收既有页面候选，无需改业务源码；G5-T09 现在可执行，需原 WaterwaySearch 两实体地形副本两模式完整任务、统计与正常退出。T10 的 20 实体各 30 分钟、三客户端资源采样和 T11 人工确认／发布尚未完成；累计覆盖显示的用户视觉反馈保持待确认。同步 status、backlog、G5 方案和 AGENTS；仅在本卡文档与来源复核完成后按持续授权提交、普通推送和远程核对。
