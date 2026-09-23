@@ -2,16 +2,16 @@
 
 初次了解本项目，可先阅读 [项目整体说明与界面使用指南](project-overview-and-user-guide.md)，包含原项目背景、组件分工、当前场景、界面释义与启停方法。
 
-更新日期：2026-09-23（G5-T09 原两实体完整任务联调已完成）。依据：[总体实施计划](../04.项目总体实施计划与阶段验收.md)、[G0 报告](g0-baseline.md)、[Java 环境验收](g1-java-validation.md)、[T03 消息库验收](g1-lmcp-validation.md)、[T04 AMASE 验收](g1-amase-validation.md)、[T05 TCP 验收](g1-tcp-validation.md)、[G2 实施方案](g2-windows-uxas-plan.md)、[G3 实施方案](g3-system-integration-plan.md)、[任务清单](backlog.md)。过程记录见根级 [worklog.md](../worklog.md)。
+更新日期：2026-09-24（G5-T10 二十实体两模式长时验收已完成）。依据：[总体实施计划](../04.项目总体实施计划与阶段验收.md)、[G0 报告](g0-baseline.md)、[Java 环境验收](g1-java-validation.md)、[T03 消息库验收](g1-lmcp-validation.md)、[T04 AMASE 验收](g1-amase-validation.md)、[T05 TCP 验收](g1-tcp-validation.md)、[G2 实施方案](g2-windows-uxas-plan.md)、[G3 实施方案](g3-system-integration-plan.md)、[任务清单](backlog.md)。过程记录见根级 [worklog.md](../worklog.md)。
 
 ## 当前关卡
 
-**G0～G4 已完成；G4-T01～T09 验收通过，正式网关及日常入口已发布。G5-T01～T09 已完成；地图、真实地形后端、状态／实体／业务显示、恢复矩阵及原两实体两模式完整任务与统计通过，T10 可执行；20 实体联调和阶段发布待后续。** G5 见 [实施方案](g5-cesium-display-plan.md) 和 [十一张任务卡](backlog.md#9-g5-顺序与任务卡)。G4 方案见 [实施方案](g4-message-gateway-plan.md)；规划提交 `908fdfd` 已推送并核对远程。原生 UxAS 历史正式发布见 [T07 报告](g2-uxas-release-validation.md)。
+**G0～G4 已完成；G4-T01～T09 验收通过，正式网关及日常入口已发布。G5-T01～T10 已完成；20 实体真实地形两模式各 30 分钟、三客户端、真实浏览器、恢复、逐架执行／统计和正常退出通过。T11 可执行；本轮人工页面确认、完整本地包和阶段发布尚待完成。** G5 见 [实施方案](g5-cesium-display-plan.md) 和 [十一张任务卡](backlog.md#9-g5-顺序与任务卡)。G4 方案见 [实施方案](g4-message-gateway-plan.md)；规划提交 `908fdfd` 已推送并核对远程。原生 UxAS 历史正式发布见 [T07 报告](g2-uxas-release-validation.md)。
 
 | 项目 | 当前记录 |
 | --- | --- |
 | 最近完成的规划 | [G6 后续计划](g6-task-planning-interaction-plan.md)：定位为具有侦察监视任务库的通用自主任务规划框架；A 基础控制先行，B 八张卡补齐任务界面／后端接口、预览／下发、自由分配与重规划；尚未实施 |
-| 最近通过的实现任务 | [G5-T09 原两实体完整联调](g5-full-validation.md)：两模式完整 WaterwaySearch、规划／执行／完成、页面全量状态及 724／724 格独立统计通过 |
+| 最近通过的实现任务 | [G5-T10 二十实体长时验收](g5-scale-validation.md)：两模式各 1800 仿真秒、20 项执行／完成、三客户端与真实 Cesium、恢复及独立统计通过；约 30 FPS 目标未达到 |
 | 三维模型输入 | 用户提供 16 个 AFSIM OSGB；本轮 UCAV 已转换及校准，1 单位＝1 显示米，可快捷键缩放；其余保持 [输入登记](g5-model-inputs.md) |
 | 当前执行结果 | 左键平移／右键环绕：普通 g5-coverage-build-20260922-140926-685、中文 g5-coverage-build-20260922-140910-656；构建和真实浏览器专项 g5-coverage-navigation-check-20260922-140940-708 passed；父版本覆盖历史资格保留，正式指针保持 |
 | G3 历史基线 | T07 起点 `6c0294e3`，当时工作区干净；新增独立阶段验收，业务源码／XML／生成代码及 T03～T06 实现保持。inputRevision=3、43 项冻结输入复查通过 |
@@ -23,7 +23,7 @@
 | 已验证工具 | Temurin 11.0.32.1+1、Ant 1.10.18、Python 3.14.7 x64；Build Tools 17.14.41／cl 19.44.35229、SDK 工具 10.0.26100.7705、CMake 3.31.12、Ninja 1.13.2、固定 vcpkg 提交及工具；Node 24.21.0／npm 11.19.0、独立 Rasterio／GDAL 与 PyProj／PROJ，见 [G5-T01](g5-environment-validation.md) |
 | 已验证能力 | G0～G4；真实规划／执行／完成，20 米统计，严格协议、状态／持久记录、HTTP／WS、两路观察和网关恢复，20 实体两模式各 30 分钟及三客户端；当前 GUI 确认与正常退出 |
 | 尚未完成验收 | G5 完整态势显示与阶段发布；G6-A 控制／重置分段、G6-B 任务操作与规划交互；G7 正式回放；G8 第二机器与离线部署 |
-| 下一动作 | 执行 G5-T10：20 实体混合任务两模式各 30 分钟、三客户端与资源审计；T11 待前置 |
+| 下一动作 | 执行 G5-T11：最终来源与本地包资格、当前 Cesium 页面人工确认、正常收尾、正式发布及 G6 交接 |
 | 当前边界 | G4 已发布；G5 用原矢量＋USGS 区域主地形，Copernicus 只作对照，旧 Terrarium 归档；西经 122～120／北纬 45～46 度外仅按未验收参考椭球浏览。无覆盖率／FPS 硬门槛，不开展寻优 |
 | 本轮实际倍率 | G4-T08 两模式各 3385 条 Running SessionStatus 均为 1.0，均到 1800009 ms；历史变速取证保持原记录 |
 | 已确定的 G3 验收 | GUI／无界面分别完成任务执行，AMASE 20 米栅格覆盖计算与报告正确，本轮 GUI 确认及正常退出；不设最低覆盖率，算法／参数寻优归后续 |
@@ -82,7 +82,7 @@ T03 新登记：旧 LMCP 字符串长度与 UTF-8 字节长度存在差异，当
 
 ## 下一次工作的起点
 
-先读 [G5 实施方案](g5-cesium-display-plan.md)、[十一张任务卡](backlog.md#9-g5-顺序与任务卡)、[T09 完整联调报告](g5-full-validation.md)、[T08 恢复报告](g5-lifecycle-validation.md)及工作日志 WL-20260923-008。T01～T09 已完成，T10 可执行。当前使用 start-g5-coverage-session.ps1 联合启动；页面关闭不结束后端，最终人工确认与阶段发布仍归 T11。
+先读 [G5 实施方案](g5-cesium-display-plan.md)、[十一张任务卡](backlog.md#9-g5-顺序与任务卡)、[T10 长时验收](g5-scale-validation.md)、[T09 完整联调报告](g5-full-validation.md)及工作日志 WL-20260924-001。T01～T10 已完成，T11 可执行。当前使用 start-g5-coverage-session.ps1 联合启动；页面关闭不结束后端，最终人工确认与阶段发布仍归 T11。
 
 G3 已完成，最终资格 `g3-t01-check-20260919-172312-180`、阶段验收 `g3-t07-test-20260919-173116-474` 及本轮 GUI 确认／正常退出已通过。先读 [T07 报告](g3-stage-validation.md)、[G4 交接](g3-g4-handoff.md) 与工作日志 WL-20260919-010。唯一连接配置为 config/g3-startup.json；execution／completion／acceptance 配置分别约束执行、完成和阶段验收，来源与摘要在合格 handoff 中绑定。
 
