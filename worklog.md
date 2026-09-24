@@ -2197,3 +2197,86 @@ WL-20260923-008｜G5-T09 原两实体真实地形完整联调
 正式复验：同一正式指针重跑 `cesium-stage-run-20260924-150104-558`，result、entry-result、runtime-result、production-result 均 passed；真实三任务完成后自动暂停，再正常停止整组进程，端口释放。production-result SHA256=47657da9021244167e51348890bbf97ddf97b523ac445281e62ed72ad7b60ee1；运行入口由正式包提供页面资源并绑定正式网关与后端。G5-T11 及 G5 阶段完成。仍保留 20 实体全图高负载约 5 FPS、当前区域和本机包限制；G6-A 控制及 G6-B 任务规划交互尚未实施。
 
 交接与归档：更新 [阶段报告](docs/g5-stage-validation.md)、[G5 → G6 交接](docs/g5-g6-handoff.md)、[用户指南](docs/project-overview-and-user-guide.md)、status、backlog、G5 方案和 AGENTS；按持续授权提交、普通推送并核对远程。追加前日志 463541 字节、SHA256=8441e9ad5b6515b7aa5c620af340db0065161eb483620c6a74fd1d432a8d4841，旧前缀逐字节保留。
+
+
+## WL-20260924-005｜G6-A 基础控制自动候选与待人工确认
+
+时间／时区：2026-09-24，Asia/Shanghai。关联 G6-A01～A05；状态：A01～A04 独立自动验收通过，A05 两模式自动组合通过；当前 GUI 真人确认、正式资格和发布未完成，G6-B 尚未启动。起点工作区干净，G5-T11 正式本地包与生产入口已经合格。按用户“执行G6”启动，先按既定顺序实施 A 基础控制。
+
+实施与判断：核对 AMASE `SimControls`／`SimTimer` 的直接控制语义以及 `SessionStatus` 只作反馈，保留 G4 只读观察接口。新增运行内 Java 受限控制探针、8001 本机写 API、操作版本／幂等与来源检查、Cesium 控制面板及只读权威时间进度。重置由长会话入口正常关闭整组并启动新分段，旧段和旧流拒绝写入；不向活动 AMASE 伪造一个 Reset 状态消息。候选来源重新绑定 G5-T11 正式指针及场景 1800 秒。
+
+自动取证：A01 `g6-a01-check-20260924-1826` 通过来源与 Java 11 编译；A02 `g6-a02-final-20260924-2331` 两模式真实开始／暂停／倍速／继续及权威反馈通过；A03 候选构建 `g6-a03-build-20260924-2330`，`g6-a03-final-20260924-2335` 两模式 Edge 控制、刷新及控制 API 断开后禁用按钮通过；A04 `g6-a04-reset-final-20260924-2340` 两模式各两段重置通过，`g6-a04-fault-final-20260924-2345` 丢响应后查询、幂等、后端退出拒绝和固定端口冲突负例通过。A05 `g6-a05-smoke-final-http-20260924-2350` 与 `g6-a05-smoke-final-browser-20260924-2355` 两模式长会话、新段控制、真实 Edge 重置及所属进程正常退出通过。故障注入中 G4 观察实例按既有规则 exit 1，原始 case 标 failed；顶层仅将这一预期负例判为通过，未改写旧收据或把故障退出表述成正常退出。
+
+处理过的失败：刷新测试短暂无身份字段、暂停改倍率后页面控制版本时序、重置后未开始的新段尚无 G4 实体流身份、浏览器在面板同步前点击、以及中文 Windows 端口冲突错误文本均导致早期候选失败；分别修正页面版本维护或验收等待条件，用新编号重跑。旧记录保留。当前代码和自动组合仍是候选，未切换 G5 指针，不登记 G6-A 正式资格。
+
+下一步：启动本轮真实 GUI 候选供用户查看控制、时间／进度和重置；取得明确反馈后正常关闭并核查运行收据，再决定 A05 资格／发布。B01 的任务契约与预览隔离仍受 G6-A 独立资格前置约束。已同步 G6-A 实施卡、验收报告、status、backlog 与 G6 总计划。本条追加前旧 worklog 为 465820 字节，SHA256=cb7201b6c806b1a62eacbd48720bd69c01d0f82a96cac8c561cbd23e9392f4e9；旧前缀保持不变。
+
+## WL-20260924-006｜G6-A05 自动资格与当前 GUI 待确认
+
+时间／时区：2026-09-24，Asia/Shanghai。关联 G6-A05；状态：自动资格通过，真人确认与正式发布仍待完成。本条继续 WL-20260924-005，不改写其当时状态。
+
+新增独立发布管理器 scripts/g6_release/manage.py，复核 A01～A04、A05 两模式自动组合、G6 源文件、G5 正式指针及页面候选来源。首次自动资格 g6-a05-qualify-20260924-0020 因管理器误读顶层字段失败；该字段实际属于每个 case，顶层使用 backendControlObserved。修正后 g6-a05-qualify-20260924-0021 的 result 与 acceptance 均 passed，manualReview=pending、stageQualified=false；旧失败目录保留。正式发布要求当前 GUI 明确批准及正常退出后才可原子更新 G6-A 本机增量指针，G5 正式指针不动。
+
+真实 GUI 候选 g6-control-review-20260924-0010 已用隐藏窗口独立启动，启动器 PID 25040；session-ready.json 为 segment-001-1，8080 页面返回 200、8001 控制状态绑定同一后端运行，初始等待开始。已通过交互请求用户查看开始、暂停、倍率、只读时间／进度和重置；截至本条没有真人反馈、正常退出或发布收据。页面地址 http://127.0.0.1:8080/，正常结束应写该运行目录的 request-stop。
+
+预研 B01 时从 CMASI MDM 确认：AutomationRequest 新请求会覆盖前请求，WaypointPlanManagerService 收到 AutomationResponse 会建立并发送分段命令。因此 B02 预览必须与活动执行链隔离；本轮尚未开始 B01 实施或登记其资格。追加前旧 worklog 为 468615 字节，SHA256=d36d4ec51980a57d2c0cf10dbd5ed87343ddd9cf427fde18207af0aae36e8575；旧前缀保持不变。
+
+## WL-20260924-007｜G6-A05 GUI 会话重启
+
+时间／时区：2026-09-24，Asia/Shanghai。关联 G6-A05；状态：新 GUI 候选正在运行，人工确认与正式发布仍待完成。
+
+用户要求重启服务。检查发现旧会话 g6-control-review-20260924-0010 已于 21:40 失败退出：AMASE 在未经过当前 G6 控制操作的情况下产生 Reset 状态并推进到 0.01 仿真秒，StartupProbe 记录 unexpected-start，运行保护报 AMASE started before barrier。原始 runtime-result 与 case-result 为 failed；所属进程正常退出，固定端口均已释放。不能将旧会话当作合格退出或人工确认，也不据此推定操作来源。
+
+通过隐藏窗口启动新会话 g6-control-review-20260924-2144，启动器 PID 6976，独立启动日志位于 out/runs/g6-control-review-20260924-2144-launch。session-ready.json 记录 segment-001-1 与当前后端运行身份；8080 页面返回 HTTP 200，8001 控制状态绑定本轮 runId／segmentId，尚未开始；AMASE、G4 网关、地图和控制端口均在监听。新会话仍待用户查看与反馈，退出和发布收据尚未产生。旧失败记录保留，G5 正式指针未变。
+
+追加前 worklog 为 470366 字节，SHA256=d330d6e86a932aea0fa93c555bb1c7357094211a670ad658d88664cbcd4e2690；旧前缀保持不变。
+
+## WL-20260924-008｜G6-A 旧 Play 绕过控制入口修复与新 GUI 候选
+
+时间／时区：2026-09-24，Asia/Shanghai。关联 G6-A05；状态：修复后的 GUI 候选正在运行，人工确认、当前源码完整自动资格和发布仍待完成。本条纠正 WL-20260924-007 对短暂可访问会话的当前性判断，保留旧记录。
+
+用户指出点击 Play 后服务退出。第二轮 g6-control-review-20260924-2144 在就绪约 15 秒后出现相同的 unexpected-start；该轮 control-operations 为空、AMASE 配置含 avtas.amase.ui.SimControls，源码确认其 Play 直接调用 SimTimer.go，绕过 G6 页面带运行身份的写入口。该轮 failed 并正常清理，不能作人工确认。旧轮 0010 的操作来源未能直接取证；不追溯改写其收据。
+
+当前 G6 backend_probe.py 生成运行配置时移除旧 SimControls 插件及停靠控件，避免 GUI 中残留绕过控制入口的 Play／Reset。独立真实 GUI 冒烟 g6-control-fix-smoke-20260924-2149 验证插件数 0，控制 API 的 start 操作 confirmed、StartupProbe 记录 start-request 且无 unexpected-start，仿真继续推进；request-stop 后 runtime-result passed、normalExit=true、端口释放。新人工查看会话 g6-control-review-20260924-2152 由隐藏窗口启动，PID 25732；8080 页面返回 200，8001 状态绑定 segment-001-1，复查时已开始且启动器仍存活。
+
+由于 G6 源码变化，先前自动矩阵和自动资格的来源哈希已不再代表当前代码。待本轮人工查看结束后重跑 A01～A05 适用自动矩阵与资格，再核对人工确认、正常退出并发布；G5 正式指针不变。已同步 G6-A 验收记录、status、backlog 和 G6 总计划。追加前 worklog 为 471695 字节，SHA256=63578a7c221d76001a79966360659734100c1624c1eb94794a41300bfd1c4962；旧前缀保持不变。
+
+## WL-20260924-009｜G6-A 正式发布与 B01 输入基线
+
+时间／时区：2026-09-24，Asia/Shanghai。关联 G6-A05、G6-B01；状态：A 已完成本地发布，B01 通过，B02 为下一卡，G6 全阶段未完成。
+
+用户对 g6-control-review-20260924-2152 页面反馈“我都实测了，很好。继续”。收尾时发现该轮首段 reset passed，第二段在约 222.5 仿真秒因 AMASE ExecutionProbe 写入异常、观察流断开而 failed；所有所属进程退出并释放端口，未取得该轮正常退出。不能确定断流外部诱因，不改写失败收据。已在发布管理器明确拆分人工视觉会话与同源码正常退出会话，并复核两轮来源及人工轮已确认的开始／暂停／继续／倍率与重置证据。
+
+当前源码 A02 HTTP g6-a02-api-post-play-20260924-2211、A03 浏览器 g6-a03-post-play-20260924-2202、A04 重置 g6-a04-reset-post-play-20260924-2204、故障 g6-a04-fault-post-play-20260924-2204、A05 两模式持久组合 g6-a05-smoke-post-play-http-20260924-2206 与浏览器重置 g6-a05-smoke-post-play-browser-20260924-2208 均 passed；A01 原收据未受源码变化影响继续使用。故障矩阵原始 G4 退出 1／case failed 为预期负例，顶层通过。首次自动资格 g6-a05-qualify-post-play-20260924-2210 因误选底层探针而拒绝，补跑 A02 HTTP 后 g6-a05-qualify-post-play-20260924-2212 passed。g6-a05-confirm-post-play-20260924-2213 将用户视觉反馈绑定 failed 会话，正常退出绑定浏览器组合的 GUI 两段 passed；g6-a05-publish-post-play-20260924-2214 原子发布 G6-A 指针，g6-control-production-check-20260924-2215 GUI 生产入口正常启停 passed。G5 正式指针不变。
+
+启动 B01 后创建机器可读首批搜索任务契约及独立核对入口。真实 G6-A 生产场景三任务 3000／3001／3002、实体 400／500／600、90 点完整水道、相机／云台、EPSG:5773 正高与零 DwellTime 均与 CMASI／UXTASK 和实际 XML 对照；冻结点／线／矩形草稿、身份、预算、错误反馈及预览隔离门槛。g6-b01-baseline-20260924-2223 passed，七类非法草稿拒绝，导出真实草稿和仅作设计示例的预览／确认样本；未发送规划或执行消息，executionQualified=false。旧 B01 首跑 2222 保留，补强 UxAS 规划服务源码断言后重跑。下一卡 B02 必须用真实双侧消息证明预览对活动执行链零命令副作用。文档 status、backlog、G6 计划、UxAS 复用说明、AGENTS 和两份专题报告已同步。追加前 worklog 为 473567 字节，SHA256=aca0876f5d330430836266599865e2400be603db3543d72ab420f17184189aa5；旧前缀保持不变。
+
+## WL-20260924-010｜G6-B02 独立规划预览与活动侧隔离
+
+时间／时区：2026-09-24，Asia/Shanghai。关联 G6-B02；状态：B02 已通过，B03 为下一卡，G6 全阶段未完成。G6-A/G5 正式指针不变。
+
+先用正式 UxAS 可执行文件和 G6-A 生产场景启动仅有 10031 桥的隔离规划实例，去掉 AMASE 桥和 WaypointPlanManagerService。首轮 g6-b02-isolated-probe-20260924-2235 只检查响应 ID，错误地将矩形任务 RequestValidator 的空方案信息记为成功；SensorManagerService 被误删。修正后保留传感器覆盖计算，强制核查响应无失败 Info、唯一匹配实体和任务关联、非空航线，g6-b02-isolated-probe-20260924-2240 三类真实规划分别得到 73／14／5 航点。所有原始帧和方案 XML 留存。
+
+新增独立 8002 本地业务服务、B01 草稿到真实 LMCP 任务及 G5 正高网格双线性高度转换；预览严格绑定活动 G6-A 的运行／分段／后端／流身份、进程身份、修订及幂等键，当前只接受尚未开始的冻结初始状态。双模式真实 HTTP 组合 g6-b02-acceptance-20260924-2400 passed：每种模式依次请求线、点、矩形方案，逐项查询方案和幂等收据，活动观察流预览前后无新增规划请求或执行命令，AMASE/UxAS 正常退出、六个端口释放。未知任务类型、错误响应 ID 和 30 秒规划超时均单独 rejected 且隔离 UxAS 正常结束；HTTP 同键异文、非法几何、旧流、缺 Origin 和未开放确认路由被拒绝。旧 API 联测 2315／2321／2324／2327 的初始状态判断与导入路径失败，以及随后 2331／2343／2351 的阶段性通过记录均保留，当前资格以 2400 的来源哈希和收据为准。未打开确认下发，executionQualified=false。
+
+已同步 B02 报告、status、backlog、G6 计划、UxAS 复用说明和 AGENTS。下一卡 B03 将真实草稿编辑、保存与刷新恢复接入该受控预览接口。追加前旧 worklog 为 476250 字节，SHA256=1494ebb6339961c3594a273159d5888c97752e41d3b4741bd37f08f8890eb8dc；旧前缀保持不变。
+
+## WL-20260924-011｜B02 地形闭区间修正与当前源码复验
+
+时间／时区：2026-09-24，Asia/Shanghai。关联 G6-B02；状态：通过，B03 为下一卡。
+
+复核发现 B01 合格范围包含经度 -120 和纬度 45／46 边界，B02 的 `ground_height` 最初把东、北边界排除。改为与契约一致的闭区间，边界格使用最后一个单元并取插值权重 1，不访问网格以外元素。此前 2400 通过收据的来源哈希已不能代表当前源码，保留该收据并重跑完整两模式 HTTP／隔离／拒绝矩阵。`g6-b02-acceptance-20260924-2410` 的 `status=passed`、`previewIsolationQualified=true`、`executionQualified=false`，两模式各三份真实航线及正常退出通过；未知类型、错误响应 ID、规划超时均拒绝。5555／9999／8000／8001／8002／10031 端口释放。B02 报告、status、backlog 指向 2410；没有改变 G6-A 或 G5 正式指针。追加前旧 worklog 为 478367 字节，SHA256=06836d9682a91a3e62c0fb0234aec08fb0a04cd0e3e86fe469f071c0c2586a8b；旧前缀保持不变。
+
+## WL-20260924-012｜G6-B03 地图任务编辑与草稿验收
+
+时间／时区：2026-09-24，Asia/Shanghai。关联任务：G6-B03；状态：已完成，B04 为下一卡，G6 全阶段未完成。
+
+背景与范围：基于已合格 B01 契约和 B02 初始状态隔离预览，接入中文 Cesium 点／折线／矩形任务编辑、候选实体、服务端草稿与预览；本卡不开放确认下发或执行中重规划。
+
+过程与成果：新增 apps/cesium_tasks/panel.ts、style.css 和 apps/g6_drafts/server.py；使用独立 8003 版本草稿 API 保存、修改、复制、删除和按已保存修订预览，草稿及操作收据保存在本次运行目录。新增 scripts/g6_drafts/build_viewer.py、session.py、acceptance.py 和 tests/g6_drafts/api.py、browser.py。真实地图点击生成折线，数值编辑点和矩形；刷新后恢复三份草稿及点任务预览。B03 构建产物与收据见 out/runs/g6-b03-build-20260924-2438 和 out/runs/g6-b03-acceptance-20260924-2439。同步 B03 报告、status、backlog、G6 计划、UxAS 复用说明与 AGENTS。
+
+验证：在仓库根目录用项目 Python 3.14.7 执行 scripts/g6_drafts/build_viewer.py --run-id g6-b03-build-20260924-2438，退出 0；执行 scripts/g6_drafts/acceptance.py --run-id g6-b03-acceptance-20260924-2439 --build-id g6-b03-build-20260924-2438，退出 0。Headless API、Headless Edge、Gui Edge 三轮均 passed 且 normalExit=true；API 拒绝旧修订、错误实体／高度基准、额外高度、倒置经纬、缺 Origin，核对预览 XML 与已保存点坐标，修改后旧预览失效。浏览器验证复制／删除、地图折线、矩形和刷新恢复。活动网关流与 UxAS 进程身份未变，无新增规划／执行命令；5555、9999、8000～8003、9224、10031 端口全部释放。
+
+问题与处理：首次组合 2432 的 API 轮通过，浏览器轮复制后旧轮询结果覆盖新草稿选择，删除步骤超时。给页面轮询增加操作版本检查，并要求浏览器断言复制后确实选中新草稿；重建 2438 并重跑 2439 完整组合通过。早期失败和单项探针记录均保留，不冒充当前资格。自动截图中页面任务面板正常显示，阶段人工页面确认仍按 B08 要求单独取得。
+
+决定与下一步：当前仅记录 taskDraftQualified=true、executionQualified=false；G6-A 与 G5 正式指针未切换。B04 审查同一方案修订、完整航线及分配顺序，再验证显式确认、结果查询、实际执行和重复／过期拒绝。追加前旧 worklog 为 479443 字节，SHA256=aa2bf6006dd6b6acd9824ca82d6028c72bb0c22848ef244107e42e0123d13953；旧前缀保持不变。

@@ -1,0 +1,10 @@
+#simulation-controls{border-top:1px solid #496574;margin-top:12px;padding-top:14px}
+#simulation-controls h2{font-size:16px;margin:0 0 9px}
+#simulation-controls p{margin:5px 0;color:#d5e5e9;font-size:12px;line-height:1.5}
+#simulation-controls progress{display:block;width:100%;height:11px;margin:9px 0;accent-color:#7be1c9}
+#simulation-controls progress[hidden]{display:none}
+#simulation-controls .actions{margin:10px 0}
+#simulation-controls .control-rate{display:flex;align-items:center;gap:7px;margin:10px 0}
+#simulation-controls .control-rate label{white-space:nowrap}
+#simulation-controls select{width:90px;margin:0;padding:6px;font-size:12px}
+#simulation-controls button:disabled,#simulation-controls select:disabled{opacity:.5;cursor:default}

@@ -2,18 +2,22 @@
 
 初次了解本项目，可先阅读 [项目整体说明与界面使用指南](project-overview-and-user-guide.md)，包含原项目背景、组件分工、当前场景、界面释义与启停方法。
 
-更新日期：2026-09-24（G5-T11 人工确认、正式发布与生产入口复验通过）。依据：[总体实施计划](../04.项目总体实施计划与阶段验收.md)、[G0 报告](g0-baseline.md)、[Java 环境验收](g1-java-validation.md)、[T03 消息库验收](g1-lmcp-validation.md)、[T04 AMASE 验收](g1-amase-validation.md)、[T05 TCP 验收](g1-tcp-validation.md)、[G2 实施方案](g2-windows-uxas-plan.md)、[G3 实施方案](g3-system-integration-plan.md)、[任务清单](backlog.md)。过程记录见根级 [worklog.md](../worklog.md)。
+更新日期：2026-09-24（G6-A 已正式发布；G6-B03 地图草稿编辑与隔离预览通过，下一卡 B04）。依据：[总体实施计划](../04.项目总体实施计划与阶段验收.md)、[G0 报告](g0-baseline.md)、[Java 环境验收](g1-java-validation.md)、[T03 消息库验收](g1-lmcp-validation.md)、[T04 AMASE 验收](g1-amase-validation.md)、[T05 TCP 验收](g1-tcp-validation.md)、[G2 实施方案](g2-windows-uxas-plan.md)、[G3 实施方案](g3-system-integration-plan.md)、[任务清单](backlog.md)。过程记录见根级 [worklog.md](../worklog.md)。
 
 ## 当前关卡
 
-**G0～G4 已完成；G4-T01～T09 验收通过，正式网关及日常入口已发布。G5-T01～T10 已完成；20 实体真实地形两模式各 30 分钟、三客户端、真实浏览器、恢复、逐架执行／统计和正常退出通过。T11 本地完整包、三类来源资格、当前 GUI 人工确认、正常退出、正式发布和生产入口复验均通过；G5 已完成。** G5 见 [实施方案](g5-cesium-display-plan.md) 和 [十一张任务卡](backlog.md#9-g5-顺序与任务卡)。G4 方案见 [实施方案](g4-message-gateway-plan.md)；规划提交 `908fdfd` 已推送并核对远程。原生 UxAS 历史正式发布见 [T07 报告](g2-uxas-release-validation.md)。
+2026-09-24 B02 补充：两模式隔离预览及活动侧零新增命令已通过，当前下一卡为 B03；下方早期 B01／B02 表述以本补充和 [B02 报告](g6-b02-planning-preview-validation.md)为准。
+
+2026-09-24 B03 补充：真实 Edge 两模式草稿编辑、地图取点、保存／复制／删除、预览及刷新恢复，服务端修订／拒绝矩阵和活动侧零新增命令通过；当前下一卡 B04，见 [B03 报告](g6-b03-task-editor-validation.md)。上方 B02 时间点表述保留历史语境。
+
+**G0～G5、G6-A 已完成并发布。G6-B01～B03 已通过；B04 方案审查与确认下发为下一卡，G6 全阶段未完成。** B03 两模式真实浏览器任务编辑、持久草稿和 B02 隔离预览通过，活动侧零新增命令；当前预览限尚未开始的冻结初始状态，确认下发未开放。G6-A 的用户实测会话第二段断流失败保留，正式正常退出由同源码独立 GUI 复验证明；见 [A 验收](g6-a-control-validation.md)、[B01](g6-b01-task-contract-validation.md)、[B02](g6-b02-planning-preview-validation.md)与 [B03](g6-b03-task-editor-validation.md)。
 
 | 项目 | 当前记录 |
 | --- | --- |
-| 最近完成的规划 | [G6 后续计划](g6-task-planning-interaction-plan.md)：定位为具有侦察监视任务库的通用自主任务规划框架；A 基础控制先行，B 八张卡补齐任务界面／后端接口、预览／下发、自由分配与重规划；尚未实施 |
-| 最近通过的实现任务 | [G5-T11 阶段验收](g5-stage-validation.md)：本轮页面人工确认、完整本地包发布、正式生产入口与正常退出通过；T10 高负载约 5 FPS 限制保留 |
+| 当前 G6 工作 | G6-A [正式验收](g6-a-control-validation.md)已完成；G6-B01 [输入基线](g6-b01-task-contract-validation.md)、B02 [隔离预览](g6-b02-planning-preview-validation.md)与 B03 [草稿编辑](g6-b03-task-editor-validation.md)通过，B04 为下一卡 |
+| 最近通过的实现任务 | G6-B03 两模式真实 Edge 地图编辑与刷新恢复、API 拒绝矩阵、活动侧零命令及正常退出 |
 | 三维模型输入 | 用户提供 16 个 AFSIM OSGB；本轮 UCAV 已转换及校准，1 单位＝1 显示米，可快捷键缩放；其余保持 [输入登记](g5-model-inputs.md) |
-| 当前执行结果 | G5 正式本地包构建 cesium-stage-build-20260924-030247-362、发布 cesium-stage-publish-20260924-145557-121；正式生产入口复验见 [T11 报告](g5-stage-validation.md) |
+| 当前执行结果 | G6-A 正式指针 `g6-a05-publish-post-play-20260924-2214`、生产复验 `g6-control-production-check-20260924-2215` passed；B01 `g6-b01-baseline-20260924-2223`、B02 `g6-b02-acceptance-20260924-2410` 与 B03 `g6-b03-acceptance-20260924-2439` passed。旧失败收据保留；G5 正式入口保持 |
 | G3 历史基线 | T07 起点 `6c0294e3`，当时工作区干净；新增独立阶段验收，业务源码／XML／生成代码及 T03～T06 实现保持。inputRevision=3、43 项冻结输入复查通过 |
 | 已归档历史 | G1-T01～T03 为 `304def9`，G1-T04 为 `f2f73ab`，G1-T05 为 `d77dd78`；T04 `b8ccf72`／`68ed420`、T05 `0fe8553`／交接 `5c2d387` 已推送 origin/main |
 | 本轮变更 | G4 方案 `908fdfd`、T01 `ca21032`、T02 `22cacc6` 已归档；T03 `71c5906` 已归档并发布日志修复；T04 `f3b4d08` 已归档；T05 `a206fe5` 已归档；T06 `g4-t06-test-20260920-010936-703` 两模式全程及独立审计通过 |
@@ -21,9 +25,9 @@
 | 正式网关与入口 | g4-t09-publish-20260920-115418-723744；入口资格 g4-t09-release-check-20260920-115528-388842；使用 start-g4-session.ps1，见 [G5 交接](g4-g5-handoff.md) |
 | 已确定的 G2 路线 | MSVC v143＋CMake 3.31、Release x64／动态 CRT；固定 vcpkg baseline／overlay；Zyre／串口关闭，CZMQ／TCP 保留 |
 | 已验证工具 | Temurin 11.0.32.1+1、Ant 1.10.18、Python 3.14.7 x64；Build Tools 17.14.41／cl 19.44.35229、SDK 工具 10.0.26100.7705、CMake 3.31.12、Ninja 1.13.2、固定 vcpkg 提交及工具；Node 24.21.0／npm 11.19.0、独立 Rasterio／GDAL 与 PyProj／PROJ，见 [G5-T01](g5-environment-validation.md) |
-| 已验证能力 | G0～G5；真实规划／执行／完成，20 米统计，严格协议、状态／持久记录、HTTP／WS、两路观察和网关恢复，20 实体两模式各 30 分钟及三客户端；当前 GUI 确认与正常退出 |
-| 尚未完成验收 | G6-A 控制／重置分段、G6-B 任务操作与规划交互；G7 正式回放；G8 第二机器与离线部署 |
-| 下一动作 | 按 [G5 → G6 交接](g5-g6-handoff.md)细化并实施 G6-A 基础控制；日常 G5 页面使用正式 `cesium-stage.ps1 -Action Run` 入口 |
+| 已验证能力 | G0～G5、G6-A 正式能力；G6-B01 三任务契约、B02 初始状态隔离预览、B03 中文地图草稿编辑／版本保存／恢复／预览。B03 不登记执行能力 |
+| 尚未完成验收 | G6-B04～B08 确认下发、执行跟踪及阶段发布；G7 正式回放；G8 第二机器与离线部署 |
+| 下一动作 | B04 审查同一修订的预览方案、分配和完整航线，设计并验证显式确认、结果查询与实际执行绑定 |
 | 当前边界 | G4 已发布；G5 用原矢量＋USGS 区域主地形，Copernicus 只作对照，旧 Terrarium 归档；西经 122～120／北纬 45～46 度外仅按未验收参考椭球浏览。无覆盖率／FPS 硬门槛，不开展寻优 |
 | 本轮实际倍率 | G4-T08 两模式各 3385 条 Running SessionStatus 均为 1.0，均到 1800009 ms；历史变速取证保持原记录 |
 | 已确定的 G3 验收 | GUI／无界面分别完成任务执行，AMASE 20 米栅格覆盖计算与报告正确，本轮 GUI 确认及正常退出；不设最低覆盖率，算法／参数寻优归后续 |
@@ -47,7 +51,7 @@ G4 及 G5 页面仍按既有只读契约运行，自动演示链尚无本计划�
 | Java 源码与依赖兼容性 | AMASE 保持 source／target 11；统一消息库保留 Java 8 字节码，指定场景通过 | 新场景按任务验证；不宣称已在 JDK 8 运行 | 后续任务 |
 | 生成器 CLI 诊断 | T02 检查诊断，T03 还检查输出文件、编译、类型清单与双向样本 | 后续保持输入／输出及版本校验 | 后续复用 |
 | 消息库一致性及 Python（R03／R09） | 完整 AMASE 编译及指定场景的真实 TCP 状态使用新库通过；UXTASK 7→8 的兼容差异仍成立 | 其他场景的动态使用、双向命令按任务检查 | G3／后续场景 |
-| GUI 重置与验收区间 | 人工重置触发既有全程时间单调检查，原 failed 记录保留；同版本受控复验与正常退出通过 | 重置及场景切换按不同时间段建立验收，不沿用全程单调假设 | G6 |
+| GUI 重置与验收区间 | 原全程单调检查的 failed 记录保留；G6-A04 已以整组新分段分别验收时间零起点、身份更新和正常退出 | A05 本轮真人查看、正式资格后继续 B；场景切换仍须独立定义分段 | G6 |
 | AMASE 路径与地形（R06／R08） | G4 零高程基线保留；G5-T02／T03 地理和地图、T04 两模式真实地形执行及统计通过 | 当前非负区域查询不消费错误间距字段；负高程继续拒绝，相机四角仍为局部平面近似；扩大区域或修改算法须重验 | G5-T05～T11 |
 | AMASE 与 UxAS 封装（R04） | T02 正式真实双向 Sentinel／属性／LMCP、分包、来源和正常关闭通过 | G3 核查双向封装、来源过滤、完整执行／覆盖及基础断线处理；自动重连／快照补齐归 G4 | G3／G4 |
 | C++／Node 与旧依赖补丁（R02／R10） | T01 工具链、T02 固定依赖及 T03 七模型 LMCP 通过，生成器／模型未变；微软目录描述哈希差异原因仍未知，实体已有独立签名验证；Node 24.21.0 及最小 Cesium 构建已由 G5-T01 验证 | G2 构建、HelloWorld 和正式发布已通过；既有转换、符号性及弃用警告保留，其他服务按 G3 场景验证 | G2／G5 |
@@ -82,7 +86,7 @@ T03 新登记：旧 LMCP 字符串长度与 UTF-8 字节长度存在差异，当
 
 ## 下一次工作的起点
 
-先读 [G5 阶段报告](g5-stage-validation.md)、[G5 → G6 交接](g5-g6-handoff.md)、[十一张任务卡](backlog.md#9-g5-顺序与任务卡)及工作日志 WL-20260924-004。T01～T11 均已完成，G5 正式本地包已发布。当前使用 `cesium-stage.ps1 -Action Run` 联合启动；页面关闭不结束后端。
+先读 [G6-A 验收记录](g6-a-control-validation.md)、[B01 任务契约](g6-b01-task-contract-validation.md)、[B02 隔离预览](g6-b02-planning-preview-validation.md)及工作日志 WL-20260924-005～011。A01～A05 已完成正式资格；B01 已取得输入基线资格，B02 已在两模式真实运行中证明初始状态预览与活动命令链隔离。B03 地图草稿尚未实施。G5 正式本地包与 `cesium-stage.ps1 -Action Run` 入口保持可用。
 
 G3 已完成，最终资格 `g3-t01-check-20260919-172312-180`、阶段验收 `g3-t07-test-20260919-173116-474` 及本轮 GUI 确认／正常退出已通过。先读 [T07 报告](g3-stage-validation.md)、[G4 交接](g3-g4-handoff.md) 与工作日志 WL-20260919-010。唯一连接配置为 config/g3-startup.json；execution／completion／acceptance 配置分别约束执行、完成和阶段验收，来源与摘要在合格 handoff 中绑定。
 

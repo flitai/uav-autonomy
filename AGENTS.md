@@ -6,6 +6,12 @@
 
 2026-09-24 当前进度补充：G5-T09 原两实体完整任务及 G5-T10 二十实体真实地形两模式各 30 分钟均已通过，见 [T09 报告](docs/g5-full-validation.md)与 [T10 报告](docs/g5-scale-validation.md)；G5-T11 完整本地包、自动来源资格、当前三任务 GUI 人工确认与正常退出、正式发布及生产入口复验均通过，G5 已完成。旧预览／首次生产入口失败记录保留，当前证据见 [T11 报告](docs/g5-stage-validation.md)。下文历史任务段落中写于 T09 之前的“下一卡 T08／T09”保留当时语境，当前顺序以本段、status 和 backlog 为准。用户已于 T11 本轮页面确认“一切正常”；此前累计覆盖的视觉反馈按该次确认关闭。
 
+2026-09-24 G6 进度补充：G6-A 已按移除旧 AMASE Play 后的当前源码完成自动复验、用户视觉确认、同源独立正常退出、正式本地发布与生产入口复验，见 [A 验收记录](docs/g6-a-control-validation.md)。用户实测会话第二段的 AMASE 观察流失败原样保留，不能写成正常退出；正常退出证据来自单独的同源 GUI 会话。G6-B01 任务契约及真实三任务输入基线已通过，见 [B01 记录](docs/g6-b01-task-contract-validation.md)；下一卡 B02 规划预览隔离，G6 全阶段尚未完成。下文“G6 尚未实施”等早期段落保留历史语境；当前以本段、status 和 backlog 为准。
+
+2026-09-24 G6-B02 补充：两模式独立 UxAS 预览服务已返回线／点／矩形真实航线，活动 AMASE/UxAS 观察流零新增规划或执行命令；同源任务草稿、地形高度、来源、身份、幂等和拒绝矩阵通过，见 [B02 报告](docs/g6-b02-planning-preview-validation.md)。B02 仅接受尚未开始的活动会话初始状态，不提供确认下发；B03 地图任务编辑为下一卡。上段“B02 为下一卡”保留其更新时语境，当前以本段、status 和 backlog 为准。
+
+2026-09-24 G6-B03 补充：中文 Cesium 点／线／矩形编辑、服务端版本草稿、保存／复制／删除、隔离预览及刷新恢复已通过 Headless／Gui 真实 Edge 和独立 API 验收；活动执行侧零新增命令、三轮正常退出，见 [B03 报告](docs/g6-b03-task-editor-validation.md)。B03 `taskDraftQualified=true`、`executionQualified=false`，当前下一卡 B04 方案审查与确认下发；G6 全阶段未完成。上段“B03 为下一卡”保留当时语境，当前以本段、status 和 backlog 为准。
+
 ## 1. 项目目标与当前状态
 
 本项目基于 LmcpGen、OpenAMASE、OpenUxAS，建设无人系统任务级仿真与自主策略研发环境。

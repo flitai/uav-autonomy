@@ -1,0 +1,73 @@
+{
+  "schemaVersion": 1,
+  "contractId": "g6-b01-cmasi-search-v1",
+  "scope": "first-batch-fixed-assignment-candidate",
+  "sourceSceneRunId": "g6-control-production-check-20260924-2215-session",
+  "sourceSegment": "segment-001",
+  "coordinateOrder": "longitude-latitude",
+  "taskAltitudeDatum": "EPSG:5773",
+  "taskAltitudeType": "MSL",
+  "editableAltitude": false,
+  "qualifiedTerrainBoundsDegrees": {
+    "west": -122.0,
+    "south": 45.0,
+    "east": -120.0,
+    "north": 46.0
+  },
+  "limits": {
+    "draftCount": 3,
+    "linePointCount": [2, 128],
+    "rectangleWidthMeters": [100, 2000],
+    "rectangleHeightMeters": [100, 2000],
+    "labelCodePoints": 64,
+    "requestBytes": 65536,
+    "previewTimeoutSeconds": 30,
+    "planValidSimulationSeconds": 30
+  },
+  "searchParameters": {
+    "dwellTimeMs": "0",
+    "revisitRateSeconds": 0,
+    "groundSampleDistanceMetersPerPixel": 1000,
+    "wavelengthBand": "AllAny",
+    "priority": 0,
+    "required": true,
+    "viewAngles": [],
+    "standoffDistanceMeters": 0,
+    "rectangleRotationDegrees": 0,
+    "taskRelationships": "",
+    "operatingRegionId": "0",
+    "redoAllTasks": false
+  },
+  "taskTypes": {
+    "line": {
+      "lmcpType": "afrl.cmasi.LineSearchTask",
+      "baselineTaskId": "3000",
+      "baselineEntityIds": ["400"],
+      "geometry": "LineString"
+    },
+    "point": {
+      "lmcpType": "afrl.cmasi.PointSearchTask",
+      "baselineTaskId": "3001",
+      "baselineEntityIds": ["500"],
+      "geometry": "Point"
+    },
+    "area": {
+      "lmcpType": "afrl.cmasi.AreaSearchTask",
+      "baselineTaskId": "3002",
+      "baselineEntityIds": ["600"],
+      "geometry": "Rectangle"
+    }
+  },
+  "api": {
+    "version": "g6.tasks.v1",
+    "draftStates": ["draft", "preview_pending", "previewed", "stale", "confirmed", "executing", "completed"],
+    "operationStates": ["pending", "confirmed", "rejected", "uncertain"],
+    "requiredBinding": ["runId", "segmentId", "backendRunId", "streamId", "revision", "idempotencyKey"],
+    "previewInputIdentity": ["taskRevision", "entityConfigurationEventId", "entityStateEventId", "terrainManifestSHA256", "plannerConfigurationSHA256"],
+    "previewMessage": "uxas.messages.task.TaskAutomationRequest",
+    "previewSandboxRequired": true,
+    "confirmationMustMatchPreviewBytes": true,
+    "allowExecutionFromPreviewResponse": false,
+    "allowAutomaticRetryAfterUnknownConfirm": false
+  }
+}

@@ -1,0 +1,15 @@
+#task-editor{position:absolute;z-index:3;left:290px;top:76px;width:316px;max-height:calc(100vh - 135px);overflow:auto;
+  padding:16px;background:#142630f2;border:1px solid #496574;border-radius:9px;color:#e8eff2;box-shadow:0 6px 24px #09171e50}
+#task-editor h2{font-size:16px;margin:0 0 7px}#task-editor h3{font-size:13px;margin:16px 0 7px}
+#task-editor p{font-size:12px;line-height:1.5;margin:7px 0;overflow-wrap:anywhere}
+#task-editor label{display:block;font-size:12px;margin:9px 0}
+#task-editor input,#task-editor textarea,#task-editor select{display:block;width:100%;margin:4px 0 0;padding:7px;
+  background:#233c49;border:1px solid #577382;border-radius:4px;color:#e8eff2;font:inherit;font-size:12px}
+#task-editor textarea{resize:vertical;min-height:68px}#task-editor .task-coordinate-fields{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+#task-editor .task-actions{display:flex;flex-wrap:wrap;gap:6px;margin:9px 0}
+#task-editor .task-actions button{margin:0}#task-editor button:disabled{opacity:.45;cursor:default}
+#task-drafts{display:flex;flex-direction:column;gap:5px}#task-drafts button{text-align:left}
+#task-drafts button[aria-pressed=true]{border-color:#7be1c9;background:#315d62}
+#task-status{color:#aee6d4}#task-result{color:#ffd58c}
+@media(max-width:1080px){#task-editor{left:280px;width:275px;padding:11px}}
+@media(max-width:800px){#task-editor{left:10px;top:auto;bottom:48px;width:270px;max-height:42vh}}
