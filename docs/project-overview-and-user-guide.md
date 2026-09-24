@@ -1,8 +1,8 @@
 # 无人系统仿真项目整体说明与界面使用指南
 
-更新日期：2026-09-23。适用对象：希望了解原项目、当前移植成果以及 Cesium 界面含义的使用者。9 月 23 日补充界面分工、规划能力和操作流程，并登记后续任务交互计划；其余实现状态沿用 9 月 22 日核对结果。
+更新日期：2026-09-24。适用对象：希望了解原项目、当前移植成果以及 Cesium 界面含义的使用者。G5 阶段验收及正式本地包入口已更新；功能含义仍以各专项报告和实际源码为准。
 
-本文以仓库内的上游说明、当前源码、已完成的验收和实际三实体场景为依据。它是一份使用说明；具体实施状态以 [项目状态](status.md) 为准，验收证据见文末索引。文中“当前”指本日期的 G5 候选页面，后续版本可能调整界面和入口。
+本文以仓库内的上游说明、当前源码、已完成的验收和实际三实体场景为依据。它是一份使用说明；具体实施状态以 [项目状态](status.md) 为准，验收证据见文末索引。文中“当前”指本日期的 G5 正式本地页面，后续版本可能调整界面和入口。
 
 ## 阅读导航
 
@@ -205,7 +205,7 @@ flowchart LR
 
 当前移植版把上述步骤编排为：**启动后端 → 等待真实实体配置与动态状态齐全 → 发送任务 → 等待 `TaskInitialized` → 发送规划请求 → 核查响应与实际执行**。它移除了运行副本中固定延时发送预置状态的做法，保留原规划服务；单次初始化的证据见 [G3 启动验收](g3-startup-validation.md)，当前混合任务按各自屏障顺序请求。
 
-用户目前启动 `start-g5-coverage-session.ps1` 后，规划会由联合入口自动触发。Cesium 中可以看完整规划、当前命令、执行目标和任务状态；**还不能在网页上画新任务、重新分配飞机或手动点击重新规划**。2026-09-23 已将这套交互列入后续 G6-B；G6-A 先完成基础仿真控制，两部分分别验收。
+用户目前启动 `cesium-stage.ps1 -Action Run` 后，规划会由联合入口自动触发。Cesium 中可以看完整规划、当前命令、执行目标和任务状态；**还不能在网页上画新任务、重新分配飞机或手动点击重新规划**。2026-09-23 已将这套交互列入后续 G6-B；G6-A 先完成基础仿真控制，两部分分别验收。
 
 ### 4.6 想换任务或重新规划，需要改变什么
 
@@ -376,7 +376,7 @@ flowchart LR
 
 以上数字是本场景运行中出现的结果示例，不是其他场景必须达到的指标。20 米是统计离散尺度，不是 DEM 的真实精度，也不是相机每像素对应 20 米。
 
-**截至本说明日期，用户反馈的“累计覆盖没有生效”仍在排查。** 已确认当前运行后台累计存在，独立真实浏览器能定位到绿色累计结果；同时发现点观察时长更新会触发累计几何重建，其视觉影响仍待确认。本说明不把该反馈登记为已修复，后续以 [当前状态](status.md) 和工作日志 WL-20260922-006 为准。
+**2026-09-24 本轮正式包页面的人工确认结果为“一切正常”。** 此前累计覆盖显示反馈按本轮视觉确认关闭；累计数据与页面结果另由 T09／T10 独立复算和真实浏览器验收。
 
 ## 9. 坐标、高度、姿态和时间
 
@@ -483,20 +483,20 @@ flowchart LR
 
 ### 11.1 当前应使用哪个入口
 
-日常查看本版全部图层，使用 **`start-g5-coverage-session.ps1` 联合入口**。它启动合格三实体真实地形场景、正式 G4 网关以及带覆盖的 Cesium 页面。
+日常查看本版全部图层，使用 **`cesium-stage.ps1 -Action Run` 正式入口**。它核对正式本地包，启动三实体真实地形场景、正式 G4 网关以及带覆盖的 Cesium 页面。
 
 较早的 `start-g5-state-session.ps1`、`start-g5-entities-session.ps1`、`start-g5-missions-session.ps1` 对应历史阶段页面；使用它们可能看不到后续补充。`start-g4-session.ps1` 是网关入口，也不等于当前 Cesium 组合页面。
 
-以下命令在**仓库根目录的 PowerShell** 执行，使用本机已准备好的工具与候选。无需每次重新安装或构建。
+以下命令在**仓库根目录的 PowerShell** 执行，使用本机已准备好的工具与正式本地包。无需每次重新安装或构建。
 
 ```powershell
 $pythonExe = Join-Path $env:LOCALAPPDATA 'Python/pythoncore-3.14-64/python.exe'
-powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\windows\start-g5-coverage-session.ps1 -PythonExecutable $pythonExe -BuildRunId g5-coverage-build-20260922-140926-685 -Mode Headless
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\windows\cesium-stage.ps1 -Action Run -PythonExecutable $pythonExe -BaselineRunId g3-t01-check-20260923-214731-692 -CoverageBuildRunId g5-coverage-build-20260922-140926-685 -FullRunId g5-t09-test-20260923-232112-235 -ScaleRunId g5-t10-test-20260924-013823-667 -StageBuildRunId cesium-stage-build-20260924-030247-362 -QualificationRunId cesium-stage-test-20260924-030402-656
 ```
 
-启动成功后访问 [本机三维页面](http://127.0.0.1:8080)。`-Mode Gui` 会另外显示 AMASE 原桌面窗口。前台启动命令会持续运行，停止操作可在另一个 PowerShell 中执行。
+启动成功后访问 [本机三维页面](http://127.0.0.1:8080)。本入口使用 GUI 模式，会另外显示 AMASE 原桌面窗口。前台启动命令会持续运行，停止操作可在另一个 PowerShell 中执行。
 
-这里的构建编号是本日期已验证的候选，后续更新以 [覆盖显示报告](g5-coverage-display-validation.md) 和 [当前状态](status.md) 的有效编号为准；它不是一个在任意机器都已安装的正式发行版。
+这里的编号绑定本机已验收的来源和正式包；后续更新以 [阶段报告](g5-stage-validation.md) 和 [当前状态](status.md) 的有效编号为准。当前包依赖本工作区合格后端及数据，第二机器部署归 G8。
 
 ### 11.2 正常停止本次会话，再重新启动
 
@@ -506,9 +506,9 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\windows\start-
 $g5Snapshot = Invoke-RestMethod 'http://127.0.0.1:8080/api/v1/snapshot'
 $g5SessionId = ($g5Snapshot.run_id -split '/')[0]
 $g5SessionPath = Join-Path (Get-Location) ('out/runs/' + $g5SessionId)
-if ($g5SessionId -notmatch '^g5-coverage-session-\d{8}-\d{6}-\d{3}$' -or
+if ($g5SessionId -notmatch '^cesium-stage-run-\d{8}-\d{6}-\d{3}$' -or
     -not (Test-Path -LiteralPath $g5SessionPath -PathType Container)) {
-    throw '当前运行不是本仓库的 G5 覆盖会话，请核对运行编号。'
+    throw '当前运行不是本仓库的 G5 正式会话，请核对运行编号。'
 }
 New-Item -ItemType File -Path (Join-Path $g5SessionPath 'request-stop') -Force | Out-Null
 ```
@@ -543,8 +543,8 @@ New-Item -ItemType File -Path (Join-Path $g5SessionPath 'request-stop') -Force |
 | 原 AMASE GUI／无界面运行 | 均已验证；原场景设置工具保留，当前 Cesium 不承担编辑功能 |
 | 原 AMASE 回放工具 | 上游包含该工具；本项目的统一浏览器记录回放仍归 G7 |
 | UxAS 多种任务服务 | 上游示例还包括监视、护航、盘旋、集合等；本轮新显示／统计资格重点为点、线、矩形区域搜索，其他类型须单独接入验证 |
-| 实体、姿态、任务、航线、区域与时间显示 | G5-T05～T07 及补充已实现，完整阶段尚未发布 |
-| 相机当前覆盖与任务累计覆盖 | 已实现独立开关与对应验证；近期累计显示反馈仍未关闭 |
+| 实体、姿态、任务、航线、区域与时间显示 | G5-T05～T11 已实现并完成阶段发布 |
+| 相机当前覆盖与任务累计覆盖 | 独立开关、真实浏览器、统计复算及本轮人工页面确认通过 |
 | 浏览器控制开始／暂停／倍速／重置 | G6 待实施 |
 | 时间进度条 | G6 待实施；当前底部只有后端时间与状态 |
 | 拖动时间查看历史 | G7 待实施 |
@@ -565,14 +565,14 @@ G 表示本项目的实施关卡，T 表示该关卡内的任务卡。例如 G5-
 | G2 | Windows 原生 UxAS | 已完成 |
 | G3 | AMASE／UxAS 完整任务执行与统计 | 已完成 |
 | G4 | 网关、状态、记录与观察恢复 | 已完成并发布 |
-| G5 | Cesium 显示与同源真实地形 | T01～T07 完成，T08 为下一主要实施卡；T09～T11 待前置 |
+| G5 | Cesium 显示与同源真实地形 | T01～T11 已完成并发布正式本地包 |
 | G6 | A 基础控制与重置；B 任务操作与规划交互 | 待实施，A 先行、分别验收 |
 | G7 | 记录与回放 | 待实施 |
 | G8 | 部署与离线验收 | 待实施 |
 
-G5 后续仍需完成完整生命周期／恢复矩阵、原两实体地形全程显示、20 实体稳定性，以及本轮人工确认和正式发布。G4 的 20 实体、两模式各 30 分钟结果不能替代 G5 三维页面与真实地形组合的同规模验收。
+G5 已完成完整生命周期／恢复矩阵、原两实体地形全程显示、20 实体两模式各 30 分钟、本轮人工确认和正式发布；具体证据见 [阶段报告](g5-stage-validation.md)。
 
-当前“候选包可查看”与“整个 G5 正式发布”需要区分。已完成的小卡和专项证据有效，但不自动覆盖尚未执行的后续验收。
+正式本地包只覆盖当前工作区及已验收区域；第二机器部署与离线卫星影像包仍归 G8。
 
 ## 13. 常见疑问
 
@@ -657,4 +657,4 @@ G5 后续仍需完成完整生命周期／恢复矩阵、原两实体地形全�
 | 航线、任务、区域与覆盖的具体实现 | [任务图层说明](../apps/cesium_missions/README.md)、[业务显示验收](g5-missions-validation.md)、[覆盖显示验收](g5-coverage-display-validation.md) |
 | 过去的决定、故障与仍未解决的问题 | [工作日志](../worklog.md)；按日期或 `WL-` 编号查找 |
 
-本说明整理期间只做了文档与只读核对，没有改动场景、算法、数据或运行服务，也没有因此扩大现有功能的验收范围。
+本说明的 G5 正式入口与阶段状态依据 [阶段报告](g5-stage-validation.md) 更新；场景、算法和业务能力边界以专项收据为准。

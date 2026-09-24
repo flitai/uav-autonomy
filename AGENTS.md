@@ -4,7 +4,7 @@
 
 这是项目级工作约定。遵循当前会话中更高优先级的指令和用户明确要求；修改子目录前检查是否还有适用于该目录的说明。源码、构建配置和实际运行结果用于判断工程事实，规划文档不代表功能已实现。
 
-2026-09-24 当前进度补充：G5-T09 原两实体完整任务及 G5-T10 二十实体真实地形两模式各 30 分钟均已通过，见 [T09 报告](docs/g5-full-validation.md)与 [T10 报告](docs/g5-scale-validation.md)；下一主要任务为 G5-T11 阶段验收与发布。下文历史任务段落中写于 T09 之前的“下一卡 T08／T09”保留当时语境，当前顺序以本段、status 和 backlog 为准。累计覆盖的用户视觉反馈仍待 T11 人工确认。
+2026-09-24 当前进度补充：G5-T09 原两实体完整任务及 G5-T10 二十实体真实地形两模式各 30 分钟均已通过，见 [T09 报告](docs/g5-full-validation.md)与 [T10 报告](docs/g5-scale-validation.md)；G5-T11 完整本地包、自动来源资格、当前三任务 GUI 人工确认与正常退出、正式发布及生产入口复验均通过，G5 已完成。旧预览／首次生产入口失败记录保留，当前证据见 [T11 报告](docs/g5-stage-validation.md)。下文历史任务段落中写于 T09 之前的“下一卡 T08／T09”保留当时语境，当前顺序以本段、status 和 backlog 为准。用户已于 T11 本轮页面确认“一切正常”；此前累计覆盖的视觉反馈按该次确认关闭。
 
 ## 1. 项目目标与当前状态
 
@@ -17,7 +17,7 @@
 3. 新增消息网关，以 CesiumJS 三维 GIS 逐步替换原有态势可视化与操作界面。
 4. 后续为 TorchRL／BenchMARL 训练集成复用协议与仿真控制接口。
 
-2026-09-23 用户确定 UxAS 的主要改造方向：具有侦察监视任务库的通用自主任务规划框架。复用既有规划与任务服务，新增 Cesium 任务操作界面和后端业务接口。后续 G6 分为 A 基础仿真控制、B 任务规划交互，依次独立验收；B 首批接入点／线／矩形草稿、规划预览、确认下发、执行跟踪，再验证自由分配与受控重规划。见 [G6 后续计划](docs/g6-task-planning-interaction-plan.md)；尚未实施，下一主要任务为 G5-T11。当前自动规划执行链不能直接当作纯预览接口；实现时必须验证执行隔离、方案版本及运行身份绑定，不把新增页面按钮视为后端能力已具备。
+2026-09-23 用户确定 UxAS 的主要改造方向：具有侦察监视任务库的通用自主任务规划框架。复用既有规划与任务服务，新增 Cesium 任务操作界面和后端业务接口。后续 G6 分为 A 基础仿真控制、B 任务规划交互，依次独立验收；B 首批接入点／线／矩形草稿、规划预览、确认下发、执行跟踪，再验证自由分配与受控重规划。见 [G6 后续计划](docs/g6-task-planning-interaction-plan.md)；尚未实施，下一主要任务为 G6-A 基础控制。当前自动规划执行链不能直接当作纯预览接口；实现时必须验证执行隔离、方案版本及运行身份绑定，不把新增页面按钮视为后端能力已具备。
 
 截至上述核对日期，G0、G1 已完成，G1-T01～T05 均已完成；G2-T01 已完成，原生工具链十组验收及 VS／Ninja 在两类路径下的 C/C++ 探针通过；T02 已完成固定依赖的源码重建、11 组验收与迁移发布；T03 已完成七模型 C++ 库、164 类型及三语言双向样本验收和发布，T04 已完成 UxAS 构建图与独立桥配置探针，T05 已完成两类路径的候选构建及平台／来源验收，T06 已完成 HelloWorld 内部双向消息、正常退出与真实配置拒绝，T07 已完成复验和正式发布，G2 已完成；G3-T01～T07 已完成，G3 已完成，见 [G3-T03 记录](docs/g3-startup-validation.md)、 [G3-T01 记录](docs/g3-input-baseline-validation.md)、 [T07 记录](docs/g2-uxas-release-validation.md)、[T06 记录](docs/g2-uxas-helloworld-validation.md)、 [T05 记录](docs/g2-uxas-build-validation.md)、[T01 记录](docs/g2-cpp-toolchain-validation.md)、[T02 记录](docs/g2-dependencies-validation.md)、[T03 记录](docs/g2-lmcp-cpp-validation.md)和 [T04 记录](docs/g2-uxas-cmake-validation.md)。G2 历史方案及任务卡见 [G2 实施方案](docs/g2-windows-uxas-plan.md)和 [G2 任务清单](docs/backlog.md#4-g2-顺序与任务卡)；G4 已按 [实施方案](docs/g4-message-gateway-plan.md)和 [九张任务卡](docs/backlog.md#8-g4-顺序与任务卡)完成；后续按 [G5 实施方案](docs/g5-cesium-display-plan.md)和 [十一张任务卡](docs/backlog.md#9-g5-顺序与任务卡)推进。项目内 Temurin JDK 11.0.32.1+1、Ant 1.10.18 已构建生成器、统一消息库和正式 AMASE；七模型已生成 Java／C++／Python 代码，Python 3.14.7 x64 的跨语言样本通过。T05 的 GUI／无界面真实 TCP 接收、十四组自动验收、GUI 人工确认、同版本受控复验及正常退出均完成；两层封装、分包、中文路径及故障处理已验证。证据见 [Java 验收](docs/g1-java-validation.md)、[T03 消息库验收](docs/g1-lmcp-validation.md)、[T04 AMASE 验收](docs/g1-amase-validation.md)和 [T05 TCP 验收](docs/g1-tcp-validation.md)。AMASE↔UxAS 双向协议及正式发布复验已通过；T05 已验证正式两模式完整任务、可靠 TaskComplete 与覆盖统计正确性，本轮新 AMASE GUI 确认／发布、UxAS 交接更新及来源修订通过；T06 稳定性、故障拒绝及整组重启矩阵已通过，G4 网关及观察恢复的当前结果见下文；Cesium 已完成 T01～T10 地图、真实接入、实体、业务图层、恢复矩阵及两实体／20 实体完整联调；阶段发布与训练集成尚待后续；其他未登记的 Python 项目依赖未验证。继续工作时先读 [当前状态](docs/status.md) 与 [任务清单](docs/backlog.md)，并重新检查实际环境，不把历史快照当成永久结论。
 
@@ -586,3 +586,8 @@ T08 已完成，见 [恢复报告](docs/g5-lifecycle-validation.md)。独立入�
 T09 已完成，见 [完整联调报告](docs/g5-full-validation.md)。入口 `tests/windows/g5-full.tests.ps1` 绑定 T08 收据、合格覆盖候选与 T04 原两实体真实地形副本；原 90 点水道、400／500 和一次原始规划请求保留，统一飞行高度适配为 +390 米。实际 UxAS 规划两模式均选择 500 执行任务 1000，400 仍持续有真实状态；TaskComplete 和终端导航按规划实体核查，不强制两架同时列入完成消息。Headless／Gui 在 750839／749239 仿真毫秒完成；原生、独立和页面累计 20 米格均为 724／724，页面全量状态与网关暂停快照相同，刷新／网关重连、正常退出和端口释放通过。最终收据 `g5-t09-test-20260923-232112-235` passed，acceptance SHA256=`941caf70a0c534f26e70d85743916182fa8ab190f9c8274d073a7e290fff9372`；stageQualified=false。
 
 一次失败诊断中内部重叠航段交接短暂从航点 14 回到 12／13，公开实体状态和位置未倒退。T09 独立有界核查只为保留并识别这类换命令、1 秒内追上、位置连续、下一公开状态不倒退的原始证据；位置跳变、同命令倒退、公开状态倒退均拒绝。正式两模式的该类交接数均为 0，直接通过原 G3 连续航点审计；旧失败记录不改写。T10 为下一卡，20 实体各 30 分钟、三客户端和资源实测尚未验收；T11 当前页面人工确认及正式发布仍待后续。
+
+
+### G5-T11 当前正式入口与交接
+
+G5-T11 已完成：完整本地包构建 `cesium-stage-build-20260924-030247-362`、自动资格 `cesium-stage-test-20260924-030402-656`、本轮用户确认与正常退出 `cesium-stage-review-20260924-143556-061`、正式发布 `cesium-stage-publish-20260924-145557-121`、生产入口 `cesium-stage-run-20260924-150104-558` 均有独立记录。首次生产入口 `cesium-stage-run-20260924-145724-732` 因 AMASE 观察断线 failed，保留原始记录；同包重跑通过。详见 [阶段报告](docs/g5-stage-validation.md)与 [G5 → G6 交接](docs/g5-g6-handoff.md)。正式运行使用 `scripts/windows/cesium-stage.ps1 -Action Run`，绑定当前合格前置与包双编号，不把旧候选入口当成正式发布。第二机器部署、离线卫星影像归 G8；下一主要实施任务为 G6-A。
