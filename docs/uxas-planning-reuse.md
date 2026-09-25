@@ -10,6 +10,8 @@
 
 2026-09-24 B03 补充：地图点／线／矩形编辑与服务端版本草稿已接入 B02 隔离预览；两模式真实 Edge、API 拒绝与刷新恢复、活动侧零命令及正常退出通过，见 [B03 报告](g6-b03-task-editor-validation.md)。确认下发和执行跟踪仍待 B04，运行中重规划仍待 B06；上方 B02 时点描述保留历史语境。
 
+2026-09-25 B04 补充：首批固定实体 400／折线任务 3000 已从隔离预览的同一 `AutomationResponse` 经显式确认进入活动 UxAS。任务服务还需同一 `UniqueAutomationRequest/Response` 提供分配上下文；只送 `AutomationResponse` 会飞行却不会生成 TaskComplete。当前 Headless API 与 Gui Edge 两模式 19／19 航点、AMASE 实际飞行、TaskActive／TaskComplete 和正常退出通过，见 [B04 报告](g6-b04-plan-confirmation-validation.md)。自由分配、运行中重规划与覆盖统计仍按后续卡验证；上方各历史补充保留当时语境。
+
 **当前可复用的核心是整条任务级规划与执行链：请求校验 → 任务选项 → 路线与代价 → 分配与顺序 → 完整计划 → 分段命令。** 点、线和矩形搜索已经通过本项目真实规划、执行及统计验证；上游还包含多种后续可接入的任务。
 
 “已有源码”“已纳入 Windows 构建”“当前场景启用”“已完成真实运行验收”分别代表不同程度。一个任务服务被编入 `uxas.exe`，不表示 Cesium 已提供该任务的输入、显示、控制和统计。

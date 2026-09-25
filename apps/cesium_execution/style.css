@@ -1,0 +1,11 @@
+#execution-review{position:absolute;right:16px;top:16px;width:min(390px,35vw);max-height:88vh;overflow:auto;
+  z-index:12;background:rgba(13,29,47,.94);color:#eef6ff;padding:14px;border:1px solid #82b7d3;
+  border-radius:8px;font:13px/1.5 sans-serif;box-shadow:0 8px 24px #0009}
+#execution-review h2{font-size:17px;margin:0 0 8px}
+#execution-review #execution-summary,#execution-review #execution-status{overflow-wrap:anywhere}
+#execution-review button{padding:7px 10px;margin:5px;color:#eef6ff;background:#24617f;border:1px solid #83b9d1;border-radius:4px;cursor:pointer}
+#execution-review button:disabled{opacity:.5;cursor:default}
+#execution-review label{display:block;margin:8px 0}
+#execution-review #execution-route{max-height:30vh;overflow:auto;font-size:12px}
+#execution-review ol{padding-left:24px}
+#execution-review li{margin-bottom:3px}

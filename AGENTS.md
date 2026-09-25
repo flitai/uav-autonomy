@@ -12,6 +12,8 @@
 
 2026-09-24 G6-B03 补充：中文 Cesium 点／线／矩形编辑、服务端版本草稿、保存／复制／删除、隔离预览及刷新恢复已通过 Headless／Gui 真实 Edge 和独立 API 验收；活动执行侧零新增命令、三轮正常退出，见 [B03 报告](docs/g6-b03-task-editor-validation.md)。B03 `taskDraftQualified=true`、`executionQualified=false`，当前下一卡 B04 方案审查与确认下发；G6 全阶段未完成。上段“B03 为下一卡”保留当时语境，当前以本段、status 和 backlog 为准。
 
+2026-09-25 G6-B04 补充：独立候选 `g6-b04-build-20260925-0023` 和两模式收据 `g6-b04-acceptance-20260925-0026` 通过，固定实体 400／任务 3000 的同一预览方案经页面审查和显式确认，活动 UxAS 两段 19 航点命令由 AMASE 收到，TaskActive／TaskComplete、真实飞行、正常退出及端口释放通过，见 [B04 报告](docs/g6-b04-plan-confirmation-validation.md)。当前下一卡 B05 多机多任务分配；B04 未产出原生覆盖报告，G6 全阶段未完成。上方早期“下一卡 B04”保留历史语境，当前以本段、status 和 backlog 为准。
+
 ## 1. 项目目标与当前状态
 
 本项目基于 LmcpGen、OpenAMASE、OpenUxAS，建设无人系统任务级仿真与自主策略研发环境。
