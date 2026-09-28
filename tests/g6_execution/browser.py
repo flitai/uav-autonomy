@@ -17,7 +17,7 @@ ROOT=Path(__file__).resolve().parents[2]
 spec=importlib.util.spec_from_file_location('g6_b04_cdp',ROOT/'tests/g5_entities/browser.py')
 previous=importlib.util.module_from_spec(spec);spec.loader.exec_module(previous)
 
-async def verify(output):
+async def verify(output,manual_start=False,reset_after_start=False):
     output.mkdir(parents=True,exist_ok=False)
     edge=Path(os.environ['ProgramFiles(x86)'])/'Microsoft/Edge/Application/msedge.exe'
     args=[str(edge),'--headless=new','--no-first-run','--no-default-browser-check',
@@ -67,13 +67,62 @@ async def verify(output):
 
             task='window.__g6Tasks?.inspect()';execution='window.__g6Execution?.inspect()'
             await until('Boolean(window.__g6Execution&&window.__g6Tasks?.inspect().ready)',bool,70)
+            await until("!document.getElementById('control-start').disabled",bool,15)
+            warning=await evaluate("""(()=>{const previous=window.confirm;
+              window.confirm=message=>{window.__startWarning=message;return false};
+              document.getElementById('control-start').click();window.confirm=previous;
+              return window.__startWarning})()""")
+            if '无法再创建或预览任务' not in warning:
+                raise RuntimeError('Manual start did not explain the task-planning boundary')
+            control=await evaluate("fetch('http://127.0.0.1:8001/api/control/v1/state').then(r=>r.json()).then(v=>v.started)")
+            if control:raise RuntimeError('Cancelled manual start still started simulation')
+            result['steps'].append(dict(action='cancel-manual-start',warning=warning))
             fallback=await until("""(()=>({base:document.querySelector('#base-layer')?.value,
               notice:document.querySelector('#notice')?.textContent,
               layers:window.__g5Map?.viewer.imageryLayers.length,
               ready:document.documentElement.dataset.ready}))()""",
-              lambda v:v and v['base']=='local' and '恢复本地矢量底图' in (v['notice'] or '')
-                       and v['layers']==1 and v['ready']=='true',25)
+              lambda v:v and v.get('base')=='local' and '恢复本地矢量底图' in (v.get('notice') or '')
+                       and v.get('layers')==1 and v.get('ready')=='true',25)
             result['steps'].append(dict(action='offline-basemap-fallback',**fallback))
+            if manual_start:
+                await evaluate("""(()=>{const previous=window.confirm;window.confirm=()=>true;
+                  document.getElementById('control-start').click();window.confirm=previous})()""")
+                locked=await until("""(()=>({status:document.getElementById('task-status').textContent,
+                  hidden:getComputedStyle(document.getElementById('task-kind').parentElement).display==='none',
+                  nextHidden:getComputedStyle(document.getElementById('workspace-next')).display==='none'}))()""",
+                  lambda v:v and '仿真已开始' in v['status'] and v['hidden'] and v['nextHidden'],35)
+                result['steps'].append(dict(action='manual-start-task-boundary',**locked))
+                if reset_after_start:
+                    original=await evaluate("fetch('http://127.0.0.1:8001/api/control/v1/state').then(r=>r.json())")
+                    await until("!document.getElementById('control-reset').disabled",bool,20)
+                    await evaluate("document.getElementById('control-reset').click()")
+                    updated=await until("""fetch('http://127.0.0.1:8001/api/control/v1/state')
+                      .then(r=>r.ok?r.json():null).catch(()=>null)""",
+                      lambda v:v and v['segmentId']!=original['segmentId'] and not v['started'],85)
+                    restored=await until("""(()=>({ready:window.__g6Tasks?.inspect().ready,
+                      status:document.getElementById('task-status').textContent,
+                      hidden:document.getElementById('task-editor').classList.contains('is-unavailable')}))()""",
+                      lambda v:v and v['ready'] and not v['hidden'] and '初始状态可编辑' in v['status'],35)
+                    result['steps'].append(dict(action='reset-restores-task-editor',
+                                                fromSegment=original['segmentId'],
+                                                toSegment=updated['segmentId'],**restored))
+                    await evaluate("(()=>{const e=document.getElementById('task-kind');e.value='line';e.dispatchEvent(new Event('change',{bubbles:true}))})()")
+                    await evaluate("""(()=>{const e=document.getElementById('task-line');
+                      e.value='-120.9923, 45.3171\\n-120.9800, 45.3171';
+                      e.dispatchEvent(new Event('input',{bubbles:true}))})()""")
+                    await evaluate("(()=>{const e=document.getElementById('task-entity');e.value='400';e.dispatchEvent(new Event('change',{bubbles:true}))})()")
+                    await evaluate("document.getElementById('task-save').click()")
+                    await until(task,lambda v:v and len(v['items'])==1 and not v['dirty'],20)
+                    await evaluate("document.getElementById('task-preview').click()")
+                    plan=await until(task,lambda v:v and v['items'][0]['planId'],45)
+                    state=await evaluate("fetch('http://127.0.0.1:8001/api/control/v1/state').then(r=>r.json())")
+                    if state['started']:raise RuntimeError('Preview after reset started simulation')
+                    result['steps'].append(dict(action='preview-after-reset',
+                                                planId=plan['items'][0]['planId']))
+                screenshot=await cdp.call('Page.captureScreenshot',{'format':'png'},session=session)
+                (output/'started.png').write_bytes(base64.b64decode(screenshot['data']))
+                result['status']='passed'
+                return 0
             guidance=await evaluate("""(()=>{const selectors=['#entity-panel .hint',
               '#camera-controls-hint','#left-stack>details aside .hint',
               '#task-editor .hint','#coverage-panel>p:last-child',
@@ -175,6 +224,13 @@ async def verify(output):
                                   v['receipt'].get('taskCompleteSHA256'),150)
             result['steps'].append(dict(action='complete',
                                         taskCompleteSHA256=completed['receipt']['taskCompleteSHA256']))
+            locked=await until("""(()=>({status:document.getElementById('task-status').textContent,
+              hidden:getComputedStyle(document.getElementById('task-kind').parentElement).display==='none',
+              nextHidden:getComputedStyle(document.getElementById('workspace-next')).display==='none'}))()""",
+              lambda v:v and '仿真已开始' in v['status'] and v['hidden'] and v['nextHidden'],15)
+            if 'Active backend unavailable' in locked['status']:
+                raise RuntimeError('Raw backend error leaked into the task panel')
+            result['steps'].append(dict(action='started-task-editor',**locked))
             result['status']='passed'
         except Exception as error:
             result.update(status='failed',error=str(error),traceback=traceback.format_exc())
@@ -192,6 +248,10 @@ async def verify(output):
 
 def main():
     parser=argparse.ArgumentParser();parser.add_argument('--output',type=Path,required=True)
-    args=parser.parse_args();return asyncio.run(verify(args.output.resolve()))
+    parser.add_argument('--manual-start',action='store_true')
+    parser.add_argument('--reset-after-start',action='store_true')
+    args=parser.parse_args()
+    if args.reset_after_start and not args.manual_start:parser.error('--reset-after-start requires --manual-start')
+    return asyncio.run(verify(args.output.resolve(),args.manual_start,args.reset_after_start))
 
 if __name__=='__main__':sys.exit(main())

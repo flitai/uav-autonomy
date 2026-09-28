@@ -59,6 +59,31 @@ def main():
                     "'覆盖数据暂不可用'")
         replace_one(project/'coverage/ui.ts',"+' 个；累计覆盖恢复中'", "+' 个'")
         replace_one(project/'missions/ui.ts',"'等待同连接快照恢复'","'暂无对象'")
+        task_entry=project/'tasks/panel.ts'
+        replace_one(task_entry,
+                    '      this.catalog=catalog;this.items=rows.items;',
+                    "      this.catalog=catalog;this.items=rows.items;this.root.classList.remove('is-unavailable');")
+        replace_one(task_entry,
+                    "    }catch(error){if(!this.busy&&epoch===this.epoch){this.catalog=null;this.items=[];this.status.textContent='任务服务不可用：'+String(error);}}",
+                    """    }catch{
+      let started=false;
+      try{const response=await fetch('http://127.0.0.1:8001/api/control/v1/state',
+        {cache:'no-store',signal:AbortSignal.timeout(2500)});
+        if(response.ok)started=(await response.json() as {started?:boolean}).started===true;
+      }catch{/* Keep the generic unavailable state when control is unreachable. */}
+      if(!this.busy&&epoch===this.epoch){this.catalog=null;this.items=[];
+        this.root.classList.add('is-unavailable');
+        this.status.textContent=started?
+          '仿真已开始，当前仿真段无法再创建或预览任务。请在左侧点击“重置”，等待新仿真段就绪后再保存并审查方案；确认下发会自动开始仿真。':
+          '任务服务暂不可用，请检查连接后重试。';}
+    }""")
+        control_entry=project/'control/panel.ts'
+        replace_one(control_entry,
+                    "button.id='control-'+action;button.textContent=label;button.onclick=()=>void this.send(action);actions.append(button);",
+                    """button.id='control-'+action;button.textContent=label;
+      button.onclick=()=>{if(action==='start'&&!window.confirm(
+        '直接开始仿真后，当前仿真段无法再创建或预览任务；可点击“重置”返回规划前状态。若要规划任务，请先在右侧保存草稿并审查方案；确认下发会自动开始仿真。仍要直接开始吗？'))return;
+        void this.send(action);};actions.append(button);""")
         map_entry=project/'src/main.ts'
         replace_one(map_entry,
                     "    if(message)fail(message);viewer.scene.requestRender();",

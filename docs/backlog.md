@@ -1,6 +1,6 @@
 # 实施任务清单
 
-更新日期：2026-09-28（G6-A 已正式发布；G6-B04 默认卫星影像与离线回退复验通过，下一卡 B05）。总约束见[总体实施计划](../04.项目总体实施计划与阶段验收.md)，当前状态见 [status.md](status.md)，当前阶段见 [G6-A 验收](g6-a-control-validation.md)、[B01 记录](g6-b01-task-contract-validation.md)、[B03 报告](g6-b03-task-editor-validation.md)、[B04 报告](g6-b04-plan-confirmation-validation.md)与 [G6 计划](g6-task-planning-interaction-plan.md)；历史方案见 [G5](g5-cesium-display-plan.md)、[G4](g4-message-gateway-plan.md)、[G3](g3-system-integration-plan.md)、[G2](g2-windows-uxas-plan.md)，原始基线见 [G0](g0-baseline.md)。
+更新日期：2026-09-28（G6-A 已正式发布；G6-B04 先开始提示与重置恢复复验通过，下一卡 B05）。总约束见[总体实施计划](../04.项目总体实施计划与阶段验收.md)，当前状态见 [status.md](status.md)，当前阶段见 [G6-A 验收](g6-a-control-validation.md)、[B01 记录](g6-b01-task-contract-validation.md)、[B03 报告](g6-b03-task-editor-validation.md)、[B04 报告](g6-b04-plan-confirmation-validation.md)与 [G6 计划](g6-task-planning-interaction-plan.md)；历史方案见 [G5](g5-cesium-display-plan.md)、[G4](g4-message-gateway-plan.md)、[G3](g3-system-integration-plan.md)、[G2](g2-windows-uxas-plan.md)，原始基线见 [G0](g0-baseline.md)。
 
 任务状态使用：待细化、待前置、可执行、进行中、待验证、已完成、阻塞、延期。G0、G1 已完成，G1-T01～T05 均已完成；G2-T01～T07 已完成，G2 已完成；G3-T01～T07 已完成，G3 已完成；G4-T01～T09 已完成，G4 已验收并发布；G5-T01～T11 已完成，原两实体及 20 实体两模式全程、真实 Cesium、恢复、独立统计、当前页面确认、正式包发布与生产入口通过；G5 已完成。一次只推进一个主要实现任务。
 
@@ -636,7 +636,7 @@ T01 的来源阻塞及 T02 的旧配方兼容问题均已解决，历史失败�
 
 ### G6-B04 方案审查与确认下发
 
-- **状态／前置**：已完成；B03 通过。当前页面候选 `g6-b04-build-20260928-basemap02`、两模式收据 `g6-b04-acceptance-basemap-20260928` passed，见 [B04 报告](g6-b04-plan-confirmation-validation.md)；此前 B04 收据保留。固定实体 400／任务 3000，一机一任务；G6-A／G5 正式指针不变。
+- **状态／前置**：已完成；B03 通过。当前页面候选 `g6-b04-build-20260928-start-guard02`、两模式收据 `g6-b04-acceptance-start-guard02-20260928` passed，见 [B04 报告](g6-b04-plan-confirmation-validation.md)；此前 B04 收据保留。固定实体 400／任务 3000，一机一任务；G6-A／G5 正式指针不变。
 - **目标／范围**：分配／顺序／完整航线、方案版本与输入时刻展示；显式确认和同一方案激活；首批固定分配任务执行跟踪。
 - **验收／证据**：两模式同一预览方案 19／19 航点经两段命令由 AMASE 接收，实体真实飞行、TaskActive／TaskComplete 与轨迹／持续时间独立复算；未勾选禁用、错误摘要、旧预览、重复确认拒绝，未知结果不自动重试。当前未产出原生覆盖报告，覆盖统计留后续组合验收。
 - **停止／回退**：下发另一份重新计算结果、旧方案被执行或未知结果自动重试即失败；阻止冲突操作并查询后端，保留原始记录。本卡通过只登记固定分配交互闭环。

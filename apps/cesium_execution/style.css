@@ -30,6 +30,9 @@
 #mission-workspace #task-editor select{font-size:14px}
 #mission-workspace #task-editor input,#mission-workspace #task-editor textarea,
 #mission-workspace #task-editor select{box-sizing:border-box}
+#mission-workspace #task-editor.is-unavailable > :not(h2):not(#task-status),
+#mission-workspace #task-editor.is-unavailable + #workspace-next{display:none}
+#mission-workspace #task-editor.is-unavailable #task-status{color:#ffd58c}
 #mission-workspace #workspace-next{display:block;width:100%;margin:18px 0 2px;background:#287a68}
 #execution-review h2{font-size:17px;margin:0 0 8px}
 #execution-review #execution-summary,#execution-review #execution-status{overflow-wrap:anywhere}

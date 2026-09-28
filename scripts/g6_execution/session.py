@@ -62,6 +62,29 @@ class ExecutionSession(draft_session.DraftSession):
         self.item['disabledPlannerServices'] = sorted(removed)
 
     def session_exercise(self, session):
+        if getattr(self, 'pending_reset', None):
+            old = self.pending_reset
+            health = self.host.health()
+            c.need(session['segmentId'] != old['segmentId'] and
+                   session['backendRunId'] != old['backendRunId'] and
+                   health['stream_id'] != old['streamId'], 'Reset reused backend identity')
+            current = self.amase.events(self.java_dir)
+            initialized = next(row for row in current if row['kind'] == 'initialized-paused')
+            c.need(float(initialized['simTimeSeconds']) == 0, 'Reset did not return to time zero')
+            history = self.run / 'control-reset-receipts'
+            history.mkdir(exist_ok=True)
+            receipt = dict(key=old['key'], sequence=old['sequence'], action='reset',
+                           status='confirmed', submittedAtMs=old['submittedAtMs'],
+                           fromRunId=old['runId'], fromSegmentId=old['segmentId'],
+                           fromBackendRunId=old['backendRunId'], toSegmentId=session['segmentId'],
+                           toBackendRunId=session['backendRunId'], toStreamId=health['stream_id'],
+                           newSimulationTimeMs='0')
+            c.save(history / (old['key'] + '.json'), receipt)
+            code, found = draft_session.control_session.browser_probe.api_probe.http(
+                'GET', '/operations/' + old['key'])
+            c.need(code == 200 and found == receipt, 'Reset receipt not queryable')
+            self.item['resetFrom'] = receipt
+            self.pending_reset = None
         self.task_services = []
         for label, script in [('preview','apps/g6_tasks/server.py'),
                               ('drafts','apps/g6_drafts/server.py'),
@@ -98,6 +121,21 @@ class ExecutionSession(draft_session.DraftSession):
             self.alive()
             c.need(all(process.poll() is None for _,process in self.task_services),
                    'B04 task service exited')
+            if (self.directory / 'request-reset').exists():
+                code, rows = draft_session.control_session.browser_probe.api_probe.http(
+                    'GET', '/operations')
+                pending = [row for row in rows['items']
+                           if row['action'] == 'reset' and row['status'] == 'pending']
+                c.need(code == 200 and len(pending) == 1,
+                       'Reset marker lacks one pending operation')
+                row = pending[0]
+                self.pending_reset = dict(key=row['key'], sequence=row['sequence'],
+                    submittedAtMs=row['submittedAtMs'], runId=row['runId'],
+                    segmentId=row['segmentId'], backendRunId=session['backendRunId'],
+                    streamId=self.host.health()['stream_id'])
+                self.item['resetRequested'] = self.pending_reset
+                self.item['exitReason'] = 'reset'
+                return
             time.sleep(.1)
         self.item['exitReason']='stop'
 

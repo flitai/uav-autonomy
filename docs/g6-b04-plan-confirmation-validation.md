@@ -53,3 +53,10 @@ GUI 页面自动操作和截图不代替 B08 要求的本轮人工页面确认�
 最终构建 `g6-b04-build-20260928-basemap02` passed。真实 Edge 联网结果 `g6-b04-basemap-rendered-online-20260928`：底图值 `satellite`、影像图层 2、Esri 瓦片 HTTP 200 两次，延后截图可见卫星影像。禁用外部 DNS 的结果 `g6-b04-basemap-rendered-offline-20260928`：底图值 `local`、图层 1、地图 `ready=true`，可见本地矢量与简短回退提示；两种截图均在对应 `out/runs` 目录。断网状态下的真实 Edge 完整任务交互 `g6-b04-browser-basemap-20260928-gui3` passed；Gui 会话 `g6-b04-session-basemap-20260928-gui3` 和 Headless 会话 `g6-b04-session-basemap-20260928-headless2` 正常退出、端口释放。两模式审计 `g6-b04-acceptance-basemap-20260928` passed、`executionQualified=true`，同一方案 19／19 航点和 TaskComplete 再次通过。
 
 首次 Headless 探针误把会话根目录传给 `flow.py --session`，脚本从错误父目录寻找观察流，尽管实际收到 TaskComplete，仍等待超时；失败目录 `g6-b04-flow-basemap-20260928-headless` 保留。随后用新会话及正确的 `segment-001/control-session.json` 路径重新执行并通过。当前 B04 页面资格以 basemap02 和本轮收据为准；B05 仍为下一卡。
+## 2026-09-28 仿真先开始后的任务面板与重置恢复
+
+用户在 B04 待看页面点击左侧“仿真开始”后，任务面板暴露 `Active backend unavailable: B02 preview requires frozen pre-start simulation state` 和完整控制状态。实际控制状态为 started=true、仿真运行中；B02 预览资格明确限制于未开始的冻结初始状态。B04 的正常任务流程是先保存草稿、请求预览、审查完整方案，再确认下发；确认操作本身会启动仿真。直接启动后的实时新增或修订任务需要后续 B06 的切换协议，不能直接使用初始状态预览。
+
+当前 B04 构建副本在单独点击“开始”前给出可取消的流程提示；直接启动后，任务工作区显示简短中文说明并隐藏无效表单，不再展示后端异常堆栈。B04 会话接入 G6-A 已有的分段重置：核对旧段的待处理操作、新段与流身份、时间零点及重置收据；新段重新启动任务服务，草稿编辑与隔离预览恢复。用户可点击左侧“重置”后在新仿真段重新规划。G5／B03 合格源码及 G5／G6-A 正式指针未修改。
+
+最终构建 `g6-b04-build-20260928-start-guard02` passed。真实 Edge `g6-b04-browser-start-reset-20260928-gui2` 验证取消直接开始不改变控制状态、确认直接开始后任务面板安全提示、重置后段身份变化及零时间、重新保存草稿并取得隔离预览；预览后仿真仍未开始。对应 `g6-b04-session-start-reset-20260928-gui2` 两段正常退出。Gui 完整执行 `g6-b04-browser-start-guard02-20260928-gui` 和 Headless API `g6-b04-flow-start-guard02-20260928-headless` 再次验证同一方案 19／19 航点、TaskComplete 与正常退出；两模式独立收据 `g6-b04-acceptance-start-guard02-20260928` passed、`executionQualified=true`。首个 GUI 探针 `g6-b04-browser-start-guard-20260928-gui` 因地图 ready 字段尚未出现而 KeyError，失败记录保留；探针改为等待缺省字段后新会话通过。当前 B04 页面资格以 start-guard02 和本轮收据为准，B05 仍为下一卡。

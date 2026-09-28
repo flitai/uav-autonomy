@@ -16,9 +16,11 @@
 
 2026-09-28 G6-B04 页面复验补充：用户反馈页面组织拥挤、清晰度不足后，B04 候选把编辑／预览与审查／执行整合为可收起工作区，仿真控制归左侧折叠组，Cesium 实际画布像素比提高。当前候选 `g6-b04-build-20260928-ui06`、两模式独立收据 `g6-b04-acceptance-ui-20260928` passed，19／19 航点、TaskComplete、正常退出及端口释放再次通过；G5／G6-A 正式指针未变。G6-A 控制服务固定临时文件可能并发争用，B04 已按同一操作键查询开始结果且不重复提交；底层修复需独立复验。当前下一卡仍为 B05，详见 [B04 报告](docs/g6-b04-plan-confirmation-validation.md)、[status](docs/status.md)和 [backlog](docs/backlog.md)。
 
+2026-09-28 G6-B04 先开始提示与重置补充：用户直接点击“仿真开始”后，B02 冻结初始状态预览按契约拒绝；旧页面暴露英文错误与状态字典。当前 B04 候选 `g6-b04-build-20260928-start-guard02` 提供开始前确认、开始后简短状态并隐藏无效表单；B04 会话接通分段重置，新段恢复草稿和隔离预览。真实 Edge 两段重置与新段预览、Gui／Headless 19／19 航点及 TaskComplete 均通过，收据 `g6-b04-acceptance-start-guard02-20260928` passed。运行中新增／修订任务及旧命令切换仍归 B06，B05 为下一卡；见 [B04 报告](docs/g6-b04-plan-confirmation-validation.md)。
+
 2026-09-28 G6-B04 底图补充：当前 B04 候选 `g6-b04-build-20260928-basemap02` 启动时优先尝试 Esri 在线卫星影像；访问失败时自动回到本地矢量，并保持地图就绪。真实 Edge 联网卫星瓦片／影像截图及禁用外部 DNS 后本地矢量截图通过；两模式独立收据 `g6-b04-acceptance-basemap-20260928` passed，19／19 航点、TaskComplete 与正常退出再通过。修改限 B04 构建副本，G5／B03 合格源码及 G5／G6-A 正式指针不变；B05 仍为下一卡，见 [B04 报告](docs/g6-b04-plan-confirmation-validation.md)。
 
-2026-09-28 G6-B04 页面文字补充：用户要求移除模型尺寸、视角操作、覆盖／航线颜色与断线清理等常驻说明。B04 当前候选 `g6-b04-build-20260928-ui07`、两模式收据 `g6-b04-acceptance-guidance-20260928` passed；真实 Edge 确认所列文字不可见，Headless／Gui 执行链 19／19 航点、TaskComplete、正常退出及端口释放再通过。修改限 B04 构建副本，G5／B03 合格源码和 G5／G6-A 正式指针不变；B05 仍为下一卡。前段 ui06 保留当时资格，当前以底图补充及 [B04 报告](docs/g6-b04-plan-confirmation-validation.md)为准。
+2026-09-28 G6-B04 页面文字补充：用户要求移除模型尺寸、视角操作、覆盖／航线颜色与断线清理等常驻说明。B04 当前候选 `g6-b04-build-20260928-ui07`、两模式收据 `g6-b04-acceptance-guidance-20260928` passed；真实 Edge 确认所列文字不可见，Headless／Gui 执行链 19／19 航点、TaskComplete、正常退出及端口释放再通过。修改限 B04 构建副本，G5／B03 合格源码和 G5／G6-A 正式指针不变；B05 仍为下一卡。前段 ui06 保留当时资格，当前以先开始提示与重置补充及 [B04 报告](docs/g6-b04-plan-confirmation-validation.md)为准。
 
 ## 1. 项目目标与当前状态
 
