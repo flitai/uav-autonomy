@@ -31,3 +31,11 @@ Headless HTTP 轮拒绝错误方案摘要、确认后的旧预览和第二个确
 候选复用入口：先执行 `scripts/g6_execution/build_viewer.py --run-id <新的 g6-b04-build-* 编号>`，再以 `scripts/g6_execution/session.py --run-id <新的 g6-b04-session-* 编号> --viewer-build g6-a03-build-20260924-2330 --draft-build g6-b03-build-20260924-2438 --execution-build <构建编号> --mode Headless|Gui` 启动。会话就绪信息在本次 `out/runs/<编号>/b04-session-ready.json`；通过该文件的 `request-stop` 路径结束并核查 `runtime-result.json`。验收脚本为 `tests/g6_execution/flow.py`、`browser.py`、`audit.py`；每次使用新的输出目录，不能把历史编号当本次成功。
 
 GUI 页面自动操作和截图不代替 B08 要求的本轮人工页面确认。B05 接下来验证多机候选、任务序列、真实分配与两模式执行；B04 不扩大为自由分配或运行中重规划。
+
+## 2026-09-28 页面组织与清晰度复验
+
+用户指出 B04 页面面板拥挤、网页显示偏糊。本轮在 B04 候选中把草稿编辑与方案审查合为右侧可收起的“任务工作区”，分“编辑与预览”“审查与执行”两步；仿真连接、控制和实体详情归入左侧折叠组。方案摘要改为简短字段，完整标识与哈希保留在可展开详情中，19 航点列表单独滚动。B04 构建副本按设备像素比将 Cesium 实际画布设为 CSS 尺寸的 1.5～2 倍，并把地球细节误差从 3 调至 2；正式 G5、G6-A 页面源码和指针未修改。
+
+最终候选 `g6-b04-build-20260928-ui06`、独立两模式收据 `g6-b04-acceptance-ui-20260928` 均 passed，后者 `executionQualified=true`。真实 Edge 验证 1896×可用窗口与 1366×768 视口：左右面板不重叠、步骤标签可见、无横向溢出、工作区可收起、画布像素比 1.5。截图见 `out/runs/g6-b04-browser-ui-validation-20260928-gui/review.png`。Headless API 与 Gui Edge 再次验证同一方案 19／19 航点下发、TaskActive／TaskComplete、正常退出和端口释放；两模式方案字节 SHA256 仍为 `8b8b1706d0de10e2465b28f90c19eb213b12a3b03670e86247d5b3e306f1979a`。当前资格以本轮新候选和收据为准，2026-09-25 记录保留历史结果。
+
+本轮 GUI 探针 `g6-b04-session-ui-check-20260928-08` 曾遇到控制服务同一固定 `.json.tmp` 文件的并发争用：开始操作实际已确认，但 POST 返回 500，旧 B04 误记为 rejected。B04 现在把开始请求发出后视为结果可能已生效；若响应失败，仅查询同一操作键并核对运行、分段和流身份，确认后继续下发，无法确认则保留 uncertain，不重复发送开始。G6-A 控制服务的固定临时文件争用本身尚未改动，后续控制服务维护应单独修复并复验；本轮 B04 端已完成结果核查保护。B04 仍不登记原生覆盖率，也不替代 B08 人工页面确认。

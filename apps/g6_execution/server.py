@@ -151,12 +151,31 @@ class ExecutionStore:
             start_body = dict(runId=row['runId'], segmentId=row['segmentId'],
                 expectedSequence=control['controlSequence'], idempotencyKey=start_key,
                 action='start', multiple=None)
-            code, started = request(8001, 'POST', '/api/control/v1/operations', start_body, 12)
             irreversible = True
+            try:
+                code, started = request(8001, 'POST', '/api/control/v1/operations', start_body, 12)
+            except Exception:
+                code, started = 0, None
+            if code != 200 or not isinstance(started, dict) or started.get('status') != 'confirmed':
+                # The control service may commit start before its HTTP reply fails.
+                # Query the same operation key; never submit start a second time.
+                def committed_start():
+                    try:
+                        status, receipt = request(8001, 'GET', '/api/control/v1/operations/' + start_key)
+                    except (OSError, ValueError):
+                        return None
+                    if status == 200 and receipt.get('status') == 'confirmed':
+                        return receipt
+                    if status == 200 and receipt.get('status') in ('rejected', 'uncertain'):
+                        raise RuntimeError('Start operation ' + receipt['status'])
+                    return None
+                started = wait('start operation confirmation', committed_start, 15)
+            if (started.get('key') != start_key or started.get('runId') != row['runId'] or
+                    started.get('segmentId') != row['segmentId'] or
+                    started.get('streamId') != row['streamId'] or started.get('action') != 'start'):
+                raise RuntimeError('Start receipt identity differs')
             row['controlReceipt'] = started
             save(path, row)
-            if code != 200 or started.get('status') != 'confirmed':
-                raise RuntimeError('Start result is not confirmed')
             vehicle = row['vehicleId']
             def first_state():
                 return next((item for item in core.observer_rows(self.session_file) if

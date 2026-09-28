@@ -9,6 +9,13 @@ type Receipt={key:string;status:string;phase:string;missionCommandId?:string;tas
 const BASE='http://127.0.0.1:8004/api/tasks/v1';
 
 export class ExecutionPanel {
+  private simulationGroup=document.createElement('details');private backend:HTMLElement;
+  private workspace=document.createElement('aside');private content=document.createElement('div');
+  private tabs=document.createElement('nav');private taskTab=document.createElement('button');
+  private reviewTab=document.createElement('button');private collapse=document.createElement('button');
+  private taskPage=document.createElement('div');private reviewPage=document.createElement('div');
+  private next=document.createElement('button');private activeTab:'task'|'review'='task';
+  private collapsed=false;
   private root=document.createElement('section');private summary=document.createElement('div');
   private route=document.createElement('div');private message=document.createElement('p');
   private select=document.createElement('button');private confirm=document.createElement('button');
@@ -17,6 +24,32 @@ export class ExecutionPanel {
   private timer:number|undefined;private busy=false;
 
   constructor(){
+    const editor=document.getElementById('task-editor');
+    const backend=document.getElementById('backend-panel');
+    const stack=document.getElementById('left-stack');
+    if(!editor||!backend||!stack)throw Error('任务工作区依赖的页面尚未初始化');
+    this.backend=backend;
+    this.simulationGroup.id='workspace-simulation';
+    const simulationTitle=document.createElement('summary');simulationTitle.textContent='仿真状态与控制';
+    this.simulationGroup.append(simulationTitle,backend);
+    stack.insertBefore(this.simulationGroup,stack.children[1]??null);
+    this.workspace.id='mission-workspace';this.workspace.setAttribute('aria-label','任务工作区');
+    const header=document.createElement('header');const heading=document.createElement('h2');
+    heading.textContent='任务工作区';
+    this.collapse.id='workspace-collapse';this.collapse.type='button';
+    this.collapse.onclick=()=>{this.collapsed=!this.collapsed;this.render();};
+    header.append(heading,this.collapse);
+    this.tabs.setAttribute('aria-label','任务步骤');
+    this.taskTab.id='workspace-task-tab';this.taskTab.type='button';this.taskTab.textContent='1 编辑与预览';
+    this.reviewTab.id='workspace-review-tab';this.reviewTab.type='button';this.reviewTab.textContent='2 审查与执行';
+    this.taskTab.onclick=()=>{this.activeTab='task';this.collapsed=false;this.render();};
+    this.reviewTab.onclick=()=>{this.activeTab='review';this.collapsed=false;this.render();
+      if(this.selection()?.planId!==this.current?.planId)void this.load();};
+    this.tabs.append(this.taskTab,this.reviewTab);
+    this.taskPage.id='workspace-task-page';this.reviewPage.id='workspace-review-page';
+    this.next.id='workspace-next';this.next.type='button';this.next.textContent='下一步：审查已保存的预览';
+    this.next.onclick=()=>{this.activeTab='review';this.render();void this.load();};
+    this.taskPage.append(editor,this.next);
     this.root.id='execution-review';this.root.setAttribute('aria-label','方案审查与确认下发');
     const title=document.createElement('h2');title.textContent='方案审查与确认下发';
     const hint=document.createElement('p');hint.textContent='先审查完整航线和固定分配，再明确确认。确认会启动仿真并下发该方案。';
@@ -30,9 +63,13 @@ export class ExecutionPanel {
     this.message.id='execution-status';this.message.setAttribute('role','status');
     this.summary.id='execution-summary';this.route.id='execution-route';
     this.root.append(title,hint,this.select,this.summary,this.route,label,this.confirm,this.message);
-    document.body.append(this.root);this.render();this.poll();
+    this.reviewPage.append(this.root);
+    this.content.id='workspace-content';this.content.append(this.taskPage,this.reviewPage);
+    this.workspace.append(header,this.tabs,this.content);document.body.append(this.workspace);
+    this.render();this.poll();
     Object.assign(window,{__g6Execution:{inspect:()=>structuredClone({review:this.current,
-      receipt:this.receipt,busy:this.busy,message:this.message.textContent})}});
+      receipt:this.receipt,busy:this.busy,message:this.message.textContent,
+      activeTab:this.activeTab,collapsed:this.collapsed})}});
   }
 
   private selection(){
@@ -58,12 +95,30 @@ export class ExecutionPanel {
       const review=await this.api(`/plans/${item.planId}/review`) as Review;
       if(this.selection()?.planId!==review.planId)throw Error('当前草稿或预览已改变，请重新审查');
       this.current=review;this.acknowledge.checked=false;this.key=null;this.receipt=null;
-      this.summary.textContent=`方案 ${review.planId} · 任务 ${review.taskId} · 修订 ${review.revision} · 固定实体 ${review.assignment.vehicleId} · 顺序 ${review.assignment.order.join(' → ')} · ${review.waypoints.length} 航点 · 全局动作 ${review.actions.map(a=>a.type).join('、')||'无'} · 审查摘要 ${review.reviewSHA256} · 方案字节摘要 ${review.planBytesSHA256}`;
+      const facts=document.createElement('dl');
+      for(const [name,value] of [
+        ['任务',review.taskId],['草稿修订',review.revision],
+        ['固定实体',review.assignment.vehicleId],
+        ['执行顺序',review.assignment.order.join(' → ')],
+        ['航点',String(review.waypoints.length)],
+        ['全局动作',review.actions.map(a=>a.type).join('、')||'无']]){
+        const term=document.createElement('dt');term.textContent=name;
+        const description=document.createElement('dd');description.textContent=value;
+        facts.append(term,description);
+      }
+      const details=document.createElement('details');const detailsTitle=document.createElement('summary');
+      detailsTitle.textContent='方案标识与校验摘要';
+      for(const [name,value] of [['方案',review.planId],['审查摘要',review.reviewSHA256],
+        ['方案字节摘要',review.planBytesSHA256]]){
+        const line=document.createElement('p');line.textContent=`${name}：${value}`;details.append(line);
+      }
+      details.prepend(detailsTitle);this.summary.replaceChildren(facts,details);
       const list=document.createElement('ol');
       for(const point of review.waypoints){const row=document.createElement('li');
         row.textContent=`航点 ${point.number}：${point.longitude.toFixed(6)}, ${point.latitude.toFixed(6)}；高程 ${point.altitudeMeters.toFixed(1)} m；动作 ${point.actions.map(a=>a.type).join('、')||'无'}`;
         list.append(row);}
-      this.route.replaceChildren(list);
+      const routeTitle=document.createElement('h3');routeTitle.textContent=`完整航线 · ${review.waypoints.length} 航点`;
+      this.route.replaceChildren(routeTitle,list);
       this.message.textContent='完整方案已载入，请核对后确认。';
     }catch(error){this.current=null;this.message.textContent='审查失败：'+String(error);}
     finally{this.busy=false;this.render();}
@@ -81,7 +136,16 @@ export class ExecutionPanel {
     finally{this.busy=false;this.render();}
   }
 
-  private render(){this.select.disabled=this.busy||!!this.key||!this.selection();
+  private render(){
+    const selection=this.selection();
+    this.workspace.classList.toggle('is-collapsed',this.collapsed);
+    this.collapse.textContent=this.collapsed?'展开':'收起';
+    this.collapse.setAttribute('aria-expanded',String(!this.collapsed));
+    this.taskTab.setAttribute('aria-current',this.activeTab==='task'?'step':'false');
+    this.reviewTab.setAttribute('aria-current',this.activeTab==='review'?'step':'false');
+    this.taskPage.hidden=this.activeTab!=='task';this.reviewPage.hidden=this.activeTab!=='review';
+    this.next.disabled=this.busy||!!this.key||!selection;
+    this.select.disabled=this.busy||!!this.key||!selection;
     this.confirm.disabled=this.busy||!!this.key||!this.current||!this.acknowledge.checked||
       this.selection()?.planId!==this.current.planId;}
 
@@ -91,6 +155,7 @@ export class ExecutionPanel {
     }).catch(()=>{this.message.textContent='操作记录暂不可用，请保留本次页面并核查服务端记录。';});}
     this.render();this.timer=window.setTimeout(()=>this.poll(),1500);
   }
-  destroy(){this.stopped=true;clearTimeout(this.timer);this.root.remove();
+  destroy(){this.stopped=true;clearTimeout(this.timer);this.workspace.remove();
+    document.body.append(this.backend);this.simulationGroup.remove();
     Object.assign(window,{__g6Execution:undefined});}
 }

@@ -23,7 +23,7 @@ def distance(a,b):
     y=math.radians(b[1]-a[1])
     return math.hypot(x,y)*6371000
 
-def audit(session_id,evidence_file):
+def audit(session_id,evidence_file,build_run_id):
     run=ROOT/'out/runs'/session_id
     folder=run/'segment-001';session=folder/'control-session.json'
     runtime=core.release.load(run/'runtime-result.json')
@@ -32,8 +32,8 @@ def audit(session_id,evidence_file):
     need(runtime['status']==case['status']==evidence['status']=='passed' and
          runtime['normalExit'] and case['normalExit'] and case['portsReleased'],
          'Case, browser/API flow or group exit failed')
-    build=ROOT/'out/runs/g6-b04-build-20260925-0023/result.json'
-    need(runtime['b04ViewerBuildRunId']=='g6-b04-build-20260925-0023' and
+    build=ROOT/'out/runs'/build_run_id/'result.json'
+    need(runtime['b04ViewerBuildRunId']==build_run_id and
          runtime['b04ViewerBuildSHA256']==core.release.digest(build),
          'Session used a different B04 viewer build')
     operations=list((folder/'task-execution').glob('*.json'))
@@ -115,6 +115,7 @@ def audit(session_id,evidence_file):
 
 def main():
     parser=argparse.ArgumentParser();parser.add_argument('--run-id',required=True)
+    parser.add_argument('--build-run-id',default='g6-b04-build-20260925-0023')
     parser.add_argument('--headless-session',default='g6-b04-session-20260925-0024')
     parser.add_argument('--headless-evidence',default='g6-b04-flow-20260925-0024')
     parser.add_argument('--gui-session',default='g6-b04-session-20260925-0025')
@@ -123,16 +124,16 @@ def main():
     run.mkdir(parents=True,exist_ok=False)
     result=dict(task='G6-B04',runId=args.run_id,status='running',executionQualified=False)
     try:
-        build=ROOT/'out/runs/g6-b04-build-20260925-0023/result.json'
+        build=ROOT/'out/runs'/args.build_run_id/'result.json'
         candidate=core.release.load(build)
         need(candidate['status']=='passed' and candidate['task']=='G6-B04',
              'B04 viewer build failed')
         need(all(core.release.digest(ROOT/row['path']).lower()==row['sha256'].lower()
                  for row in candidate['inputs']),'B04 built source changed')
         headless=audit(args.headless_session,
-                       ROOT/'out/runs'/args.headless_evidence/'result.json')
+                       ROOT/'out/runs'/args.headless_evidence/'result.json',args.build_run_id)
         gui=audit(args.gui_session,
-                  ROOT/'out/runs'/args.gui_evidence/'result.json')
+                  ROOT/'out/runs'/args.gui_evidence/'result.json',args.build_run_id)
         need(headless['planSHA256']==gui['planSHA256'] and
              headless['waypointsReviewed']==gui['waypointsReviewed'],
              'Two-mode reviewed plan differs')

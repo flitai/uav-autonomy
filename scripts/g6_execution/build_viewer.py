@@ -48,6 +48,15 @@ def main():
         shutil.copytree(ROOT/'apps/cesium_execution',project/'execution')
         entry=project/'entities/main.ts';source_text=entry.read_text(encoding='utf-8')
         source_text="import { ExecutionPanel } from '../execution/panel';\n"+source_text
+        anchor="  requireValue(viewer,'地图初始化未完成');"
+        need(source_text.count(anchor)==1,'B03 map init changed')
+        quality="""  const devicePixelRatio=Math.max(1,window.devicePixelRatio||1);
+  const canvasPixelRatio=Math.min(2,Math.max(1.5,devicePixelRatio));
+  viewer.useBrowserRecommendedResolution=false;
+  viewer.resolutionScale=canvasPixelRatio/devicePixelRatio;
+  viewer.scene.globe.maximumScreenSpaceError=2;
+  viewer.resize();viewer.scene.requestRender();"""
+        source_text=source_text.replace(anchor,anchor+'\n'+quality)
         anchor='  const taskPanel=new TaskPanel(viewer,missions.model.heights);'
         need(source_text.count(anchor)==1,'B03 viewer init changed')
         source_text=source_text.replace(anchor,anchor+'\n  const executionPanel=new ExecutionPanel();')

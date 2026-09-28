@@ -14,6 +14,8 @@
 
 2026-09-25 G6-B04 补充：独立候选 `g6-b04-build-20260925-0023` 和两模式收据 `g6-b04-acceptance-20260925-0026` 通过，固定实体 400／任务 3000 的同一预览方案经页面审查和显式确认，活动 UxAS 两段 19 航点命令由 AMASE 收到，TaskActive／TaskComplete、真实飞行、正常退出及端口释放通过，见 [B04 报告](docs/g6-b04-plan-confirmation-validation.md)。当前下一卡 B05 多机多任务分配；B04 未产出原生覆盖报告，G6 全阶段未完成。上方早期“下一卡 B04”保留历史语境，当前以本段、status 和 backlog 为准。
 
+2026-09-28 G6-B04 页面复验补充：用户反馈页面组织拥挤、清晰度不足后，B04 候选把编辑／预览与审查／执行整合为可收起工作区，仿真控制归左侧折叠组，Cesium 实际画布像素比提高。当前候选 `g6-b04-build-20260928-ui06`、两模式独立收据 `g6-b04-acceptance-ui-20260928` passed，19／19 航点、TaskComplete、正常退出及端口释放再次通过；G5／G6-A 正式指针未变。G6-A 控制服务固定临时文件可能并发争用，B04 已按同一操作键查询开始结果且不重复提交；底层修复需独立复验。当前下一卡仍为 B05，详见 [B04 报告](docs/g6-b04-plan-confirmation-validation.md)、[status](docs/status.md)和 [backlog](docs/backlog.md)。
+
 ## 1. 项目目标与当前状态
 
 本项目基于 LmcpGen、OpenAMASE、OpenUxAS，建设无人系统任务级仿真与自主策略研发环境。

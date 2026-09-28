@@ -2294,3 +2294,17 @@ WL-20260923-008｜G5-T09 原两实体真实地形完整联调
 早期 0011／0012 组合分别因测试把动态操作收据要求字面相同、把开始后审查的明确拒绝限定为 HTTP 409 而失败；实际后端已执行并产生完成事件。测试改为比较不可变命令摘要，并接受 409／503 拒绝，随后当前源码完整两模式重跑通过。0014 浏览器过早点击尚未刷新的审查按钮，新增等待按钮可用，0016／0020 真实 Edge 通过。一次用于定位 Python 环境的非 `-B` 查询生成了 G2 来源目录的 `__pycache__`，导致 0015 候选启动资格失败；核对生成时间和工作区路径后清理该次生成字节码，0016 起正式资格恢复。所有失败批次保留。
 
 B04 报告、status、backlog、G6 计划、UxAS 复用说明和 AGENTS 已同步。G6-A／G5 及 UxAS／网关正式指针未切换，下一卡 B05 验证多机候选、任务序列与两模式真实执行。追加前旧 worklog 为 482125 字节，SHA256=e240ab820ed4f5f7b8122032e1977746ebd1b929a279cf9afe0042c94595c6d2；旧前缀保持不变。
+
+## WL-20260928-001｜G6-B04 页面组织与清晰度复验
+
+时间／时区：2026-09-28，Asia/Shanghai。关联任务与状态：G6-B04 页面可用性修订已完成，B05 仍为下一卡；G6 全阶段未完成。
+
+背景、目标与范围：用户实看后反馈面板组织混乱、网页分辨率偏低。本轮只在独立 B04 候选页整理任务编辑／审查、仿真状态与地图像素密度，并核查原固定分配执行链；G5／G6-A 正式指针不切换。
+
+工作过程与修改：检查 1920×1080 显示、旧 Edge 截图和 Cesium 画布逻辑，确认 B03 草稿、B04 审查及旧右侧仿真控制同时占用地图，Cesium 按 1 倍 CSS 像素绘制。修改 `apps/cesium_execution/panel.ts`、`style.css`：右侧单一可收起任务工作区，步骤标签、简明审查摘要、独立滚动的完整航线、可展开校验摘要；旧控制面板归入左侧折叠组。`scripts/g6_execution/build_viewer.py` 只在 B04 构建副本按 DPR 设置 1.5～2 倍画布像素并提高地球细节。`tests/g6_execution/browser.py` 增加 1896 与 1366×768 布局、1.5 倍画布、收起、完整航线、确认及 TaskComplete 核查；`tests/g6_execution/audit.py` 增加显式候选编号。同步 [B04 报告](docs/g6-b04-plan-confirmation-validation.md)、[status](docs/status.md)、[backlog](docs/backlog.md)与 AGENTS。
+
+问题与解决办法：早期候选中旧全局 `aside`、`header` 样式分别把工作区定位到左侧、盖住步骤标签；真实截图与矩形断言发现后明确重置定位，并改为不透底背景。一次启动漏加 `-I`，随后发现首次非 `-B` 启动写入 UxAS 来源目录四个 Python 缓存文件，固定发布输入校验拒绝；核对只清理该次生成文件后来源匹配，旧失败运行保留。`g6-b04-session-ui-check-20260928-08` 中控制服务固定 `.json.tmp` 并发争用导致 POST 500，实际开始回执已 confirmed，旧 B04 却记 rejected。修改 `apps/g6_execution/server.py`：开始操作提交前标记结果可能已生效；HTTP 失败后只查原操作键，核对运行／分段／流身份，确认才继续，无法核实则 uncertain 且不重复发送。底层 G6-A 临时文件争用未改动，后续维护需独立处理。
+
+验证：在仓库根目录，项目 Python 3.14.7 以 `-I -B -X utf8` 执行 `scripts/g6_execution/build_viewer.py --run-id g6-b04-build-20260928-ui06` 退出 0；Headless 会话 `g6-b04-session-ui-validation-20260928-headless` 加 `tests/g6_execution/flow.py` 退出 0；Gui 会话 `g6-b04-session-ui-validation-20260928-gui` 加真实 Edge `tests/g6_execution/browser.py` 退出 0；`tests/g6_execution/audit.py --run-id g6-b04-acceptance-ui-20260928 --build-run-id g6-b04-build-20260928-ui06` 退出 0、`executionQualified=true`。两模式相同方案 19／19 航点、TaskActive／TaskComplete、正常退出与端口释放；GUI 审查截图、桌面和 1366×768 无面板重叠、画布像素比 1.5。未做本轮用户人工视觉确认，也未产出原生覆盖报告。独立候选会话 `g6-b04-session-review-20260928-ui06` 已启动，8080 页面 HTTP 200、8004 初始操作数 0，等待用户复看。
+
+重要决定与下一步：保持 B04 固定一机一任务边界和正式指针不变；继续 B05 多机多任务分配需以本轮 B04 候选／收据为当前来源。G6-A 固定临时文件并发争用需单独修复与完整复验，B04 端已避免把已开始误判为安全失败。追加前旧 worklog 为 485644 字节，SHA256=a5a79a779988bcabbbadfc5c3baf0d07be91c51c55360af73b2a219218ccd094；旧前缀保持不变。

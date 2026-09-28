@@ -24,7 +24,7 @@ async def verify(output):
           '--disable-background-networking','--disable-background-mode','--disable-extensions',
           '--host-resolver-rules=MAP * ~NOTFOUND, EXCLUDE 127.0.0.1, EXCLUDE localhost',
           '--remote-debugging-address=127.0.0.1','--remote-debugging-port=9224',
-          '--window-size=1600,1100','--user-data-dir='+str(output/'profile'),'about:blank']
+          '--window-size=1920,1080','--user-data-dir='+str(output/'profile'),'about:blank']
     result=dict(task='G6-B04',status='running',browser='Microsoft Edge',steps=[])
     process=ws=cdp=None
     with (output/'stdout.log').open('wb') as stdout,(output/'stderr.log').open('wb') as stderr:
@@ -67,6 +67,46 @@ async def verify(output):
 
             task='window.__g6Tasks?.inspect()';execution='window.__g6Execution?.inspect()'
             await until('Boolean(window.__g6Execution&&window.__g6Tasks?.inspect().ready)',bool,70)
+            layout_expression="""(()=>{const editor=document.getElementById('task-editor');
+              const review=document.getElementById('execution-review');
+              const dock=document.getElementById('mission-workspace');
+              const left=document.getElementById('left-stack');
+              const canvas=window.__g5Map?.viewer?.scene.canvas;
+              const a=left?.getBoundingClientRect(),b=dock?.getBoundingClientRect();
+              const h=dock?.querySelector('header')?.getBoundingClientRect();
+              const n=dock?.querySelector('nav')?.getBoundingClientRect();
+              const c=document.getElementById('workspace-content')?.getBoundingClientRect();
+              return {width:innerWidth,dockContainsEditor:dock?.contains(editor),
+                dockContainsReview:dock?.contains(review),
+                backendInLeft:left?.contains(document.getElementById('backend-panel')),
+                separateColumns:!!a&&!!b&&a.right<b.left,
+                stepsVisible:!!h&&!!n&&!!c&&h.bottom<=n.top&&n.bottom<=c.top,
+                leftRect:a?{left:a.left,right:a.right,width:a.width}:null,
+                dockRect:b?{left:b.left,right:b.right,width:b.width}:null,
+                canvasRatio:canvas?.width/canvas?.clientWidth,
+                horizontalOverflow:document.documentElement.scrollWidth>innerWidth};})()"""
+            layout=await evaluate(layout_expression)
+            if not (layout['dockContainsEditor'] and layout['dockContainsReview'] and
+                    layout['backendInLeft'] and
+                    layout['separateColumns'] and layout['stepsVisible'] and
+                    not layout['horizontalOverflow'] and
+                    layout['canvasRatio']>=1.45):
+                raise RuntimeError('Workspace or map resolution invalid: '+str(layout))
+            await evaluate("document.getElementById('workspace-collapse').click()")
+            collapsed=await evaluate("window.__g6Execution.inspect().collapsed")
+            if not collapsed:raise RuntimeError('Workspace did not collapse')
+            await evaluate("document.getElementById('workspace-collapse').click()")
+            result['steps'].append(dict(action='layout',**layout,collapseWorks=collapsed))
+            await cdp.call('Emulation.setDeviceMetricsOverride',
+                           {'width':1366,'height':768,'deviceScaleFactor':1,'mobile':False},session=session)
+            await asyncio.sleep(.4)
+            narrow=await evaluate(layout_expression)
+            if not (narrow['width']==1366 and narrow['separateColumns'] and
+                    narrow['stepsVisible'] and not narrow['horizontalOverflow'] and
+                    narrow['canvasRatio']>=1.45):
+                raise RuntimeError('Narrow desktop layout invalid: '+str(narrow))
+            result['steps'].append(dict(action='narrow-layout',**narrow))
+            await cdp.call('Emulation.clearDeviceMetricsOverride',session=session)
             def field(name,value):
                 return ("(()=>{const e=document.getElementById("+json.dumps(name)+");e.value="+
                         json.dumps(value)+";e.dispatchEvent(new Event('input',{bubbles:true}));return e.value;})()")
@@ -80,8 +120,9 @@ async def verify(output):
             preview=await until(task,lambda v:v and v['items'][0]['planId'],45)
             plan_id=preview['items'][0]['planId']
             result['steps'].append(dict(action='preview',planId=plan_id))
-            await until("!document.getElementById('execution-load').disabled",bool,10)
-            await evaluate("document.getElementById('execution-load').click()")
+            await evaluate("document.getElementById('workspace-review-tab').click()")
+            if await evaluate("window.__g6Execution.inspect().activeTab")!='review':
+                raise RuntimeError('Review tab did not open')
             reviewed=await until(execution,lambda v:v and v['review'] and
                                  v['review']['planId']==plan_id and len(v['review']['waypoints'])>=2)
             disabled=await evaluate("document.getElementById('execution-confirm').disabled")
@@ -100,6 +141,11 @@ async def verify(output):
             receipt=await until(execution,lambda v:v and v['receipt'] and
                                 v['receipt']['status'] in ('confirmed','completed'),70)
             result['steps'].append(dict(action='confirm',receipt=receipt['receipt']))
+            completed=await until(execution,lambda v:v and v['receipt'] and
+                                  v['receipt']['status']=='completed' and
+                                  v['receipt'].get('taskCompleteSHA256'),150)
+            result['steps'].append(dict(action='complete',
+                                        taskCompleteSHA256=completed['receipt']['taskCompleteSHA256']))
             result['status']='passed'
         except Exception as error:
             result.update(status='failed',error=str(error),traceback=traceback.format_exc())
