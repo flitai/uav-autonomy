@@ -2,9 +2,11 @@
 
 初次了解本项目，可先阅读 [项目整体说明与界面使用指南](project-overview-and-user-guide.md)，包含原项目背景、组件分工、当前场景、界面释义与启停方法。
 
-更新日期：2026-09-28（G6-A 已正式发布；G6-B04 先开始提示与重置恢复复验通过，下一卡 B05）。依据：[总体实施计划](../04.项目总体实施计划与阶段验收.md)、[G0 报告](g0-baseline.md)、[Java 环境验收](g1-java-validation.md)、[T03 消息库验收](g1-lmcp-validation.md)、[T04 AMASE 验收](g1-amase-validation.md)、[T05 TCP 验收](g1-tcp-validation.md)、[G2 实施方案](g2-windows-uxas-plan.md)、[G3 实施方案](g3-system-integration-plan.md)、[任务清单](backlog.md)。过程记录见根级 [worklog.md](../worklog.md)。
+更新日期：2026-09-28（G6-A 已正式发布；G6-B04 长航线时长截断修复已验证，下一卡 B05）。依据：[总体实施计划](../04.项目总体实施计划与阶段验收.md)、[G0 报告](g0-baseline.md)、[Java 环境验收](g1-java-validation.md)、[T03 消息库验收](g1-lmcp-validation.md)、[T04 AMASE 验收](g1-amase-validation.md)、[T05 TCP 验收](g1-tcp-validation.md)、[G2 实施方案](g2-windows-uxas-plan.md)、[G3 实施方案](g3-system-integration-plan.md)、[任务清单](backlog.md)。过程记录见根级 [worklog.md](../worklog.md)。
 
 ## 当前关卡
+
+2026-09-28 B04 长航线补充：用户 65.1 公里折线在旧 1800 秒场景被截断，未收到 TaskComplete。B04 运行副本现为 7200 秒，并按预览航线速度计算最低飞行时间和确认预算；预算不足在页面及后端确认前拒绝。Gui 原折线于 2962.910 秒完成，11／11 航点与实际飞行经独立审计；Headless 原短方案在新时长下完成并正常退出。当前页面候选 `g6-b04-build-20260928-duration02`，待看会话已恢复用户草稿并停在确认前，见 [B04 报告](g6-b04-plan-confirmation-validation.md)。B05 仍为下一卡。
 
 2026-09-28 B04 操作补充：用户先点“仿真开始”触发 B02 初始状态预览拒绝，旧页面暴露完整异常。当前候选 `g6-b04-build-20260928-start-guard02` 在单独开始前提醒确认；开始后仅显示简短状态并隐藏无效表单，左侧“重置”可生成新仿真段，重新开放草稿与预览。真实 Edge 两段重置、重新保存与隔离预览通过，Gui／Headless 固定方案执行收据 `g6-b04-acceptance-start-guard02-20260928` passed。运行中新增任务仍归 B06；见 [B04 报告](g6-b04-plan-confirmation-validation.md)。
 

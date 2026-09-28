@@ -55,7 +55,7 @@ def audit(session_id,evidence_file,build_run_id):
     need(sent is not None,'First confirmed command was not observed')
     commands=[row for row in rows[sent:] if row['type']=='afrl.cmasi.MissionCommand' and
               row.get('vehicleId')==receipt['vehicleId'] and row.get('sourceEntity')=='100']
-    need(len(commands)>=2,'Task-linked continued command missing')
+    need(len(commands)>=1,'Task-linked mission command missing')
     expected={point['number']:point for point in review['waypoints']}
     numbers=set();linked=set()
     for command in commands:

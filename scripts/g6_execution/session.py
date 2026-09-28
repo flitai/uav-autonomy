@@ -1,7 +1,9 @@
 """B04 candidate: G6-A backend plus isolated preview, drafts and fixed plan activation."""
 import argparse
 import json
+import os
 from pathlib import Path
+import shutil
 import subprocess
 import sys
 import time
@@ -19,6 +21,7 @@ c = draft_session.c
 DISABLED = {'AutomationRequestValidatorService', 'RoutePlannerVisibilityService',
             'RouteAggregatorService', 'AssignmentTreeBranchBoundService',
             'PlanBuilderService', 'AutomationDiagramDataService'}
+TASK_DURATION_SECONDS = 7200
 
 
 class ExecutionSession(draft_session.DraftSession):
@@ -45,6 +48,23 @@ class ExecutionSession(draft_session.DraftSession):
 
     def files(self, mode, fault):
         super().files(mode, fault)
+        scene_file = self.directory / 'scene/scenario.xml'
+        scene = ET.parse(scene_file)
+        duration = scene.find('ScenarioData/ScenarioDuration')
+        c.need(duration is not None and float(duration.text) == 1800.0,
+               'B04 source scenario duration differs')
+        duration.text = str(float(TASK_DURATION_SECONDS))
+        scene.write(scene_file, encoding='utf-8', xml_declaration=True)
+        shutil.copy2(scene_file, self.java_dir / 'scenario.xml')
+        self.scene['durationSeconds'] = TASK_DURATION_SECONDS
+        source = next(row for row in self.scene['files'] if row['path'] == 'scenario.xml')
+        source['sha256'] = c.sha(scene_file)
+        c.save(self.directory / 'scene/scene.json', self.scene)
+        self.item['scene'] = self.scene
+        self.item['runtimeInputs'] = c.base.inventory(self.java_dir,
+            [self.java_dir / 'scenario.xml', *sorted((self.java_dir / 'config').glob('*.xml')),
+             *sorted((self.java_dir / 'data/g5-dted').rglob('*.dt1'))])
+        self.item['taskDurationMs'] = str(TASK_DURATION_SECONDS * 1000)
         config = self.cpp_dir / 'uxas.xml'
         tree = ET.parse(config)
         root = tree.getroot()
@@ -60,6 +80,51 @@ class ExecutionSession(draft_session.DraftSession):
         tree.write(config, encoding='utf-8', xml_declaration=True)
         self.item['executionConfigSHA256'] = c.sha(config)
         self.item['disabledPlannerServices'] = sorted(removed)
+
+    def body(self, mode, fault, keep_gui):
+        # B04 uses a longer run-local scene. Keep the published G6-A probe and
+        # its fixed 1800-second qualification input untouched.
+        api = draft_session.control_session.browser_probe.api_probe
+        self.initial_started = time.monotonic()
+        self.initial_deadline = self.initial_started + 30
+        self.transition('initialization-started', timeoutSeconds=30)
+        argv = [self.java, '-Dfile.encoding=UTF-8', '-Djava.awt.headless=true',
+                '-Djava.io.tmpdir=' + str(self.java_dir / 'tmp'), '-Duser.home=' + str(self.java_dir / 'home'),
+                '-Dg3.integration.directory=' + str(self.java_dir), '-cp', os.pathsep.join(map(str, self.cp)),
+                'avtas.app.Application', '--config', self.java_dir / 'config', '--scenario', 'scenario.xml',
+                '--sim_rate', '1']
+        self.java_process = self.launch(self.java_dir, argv)
+        self.wait('amase-paused', lambda: any(e['kind'] == 'initialized-paused'
+                  for e in self.amase.events(self.java_dir)))
+        startup = api.probe.backend.mixed.startup
+        self.monitor = startup.Stream(startup.protocol.connect(self.ports['amasePort'], self.java_process, 20),
+                                      self.directory, 'amase', self.factory)
+        self.streams.append(self.monitor)
+        self.cpp = self.launch(self.cpp_dir, [self.uxas / 'uxas.exe', '-cfgPath', self.cpp_dir / 'uxas.xml'])
+        self.observer = startup.Stream(startup.protocol.connect(self.ports['observerPort'], self.cpp, 20),
+                                       self.directory, 'observer', self.factory)
+        self.streams.append(self.observer)
+        self.handshake()
+        c.need(not any(row['type'] == 'afrl.cmasi.AirVehicleState' for row in self.observer.rows),
+               'Simulation advanced before start operation')
+        session = dict(runId=self.args.run_id, segmentId=self.item['name'] + '-1',
+                       backendRunId=self.host.manifest['run_id'],
+                       durationMs=str(TASK_DURATION_SECONDS * 1000),
+                       amaseProcess=api.process_identity(self.java_process.pid),
+                       javaDirectory=str(self.java_dir))
+        c.save(self.directory / 'control-session.json', session)
+        with (self.directory / 'control.stdout').open('wb') as out, \
+             (self.directory / 'control.stderr').open('wb') as err:
+            self.control_process = subprocess.Popen([str(self.web_python), '-I', '-B', '-X', 'utf8',
+                str(ROOT / 'apps/g6_control/server.py'), '--session', str(self.directory / 'control-session.json')],
+                cwd=self.directory, stdout=out, stderr=err, creationflags=subprocess.CREATE_NO_WINDOW)
+        self.wait('control-api-ready', lambda: self.control_process.poll() is not None or self.is_ready(), 15)
+        c.need(self.control_process.poll() is None, 'Control API process exited at startup')
+        code, state = api.http('GET', '/state')
+        c.need(code == 200 and state['runId'] == session['runId'] and
+               state['segmentId'] == session['segmentId'] and state['backendRunId'] == session['backendRunId'] and
+               state['durationMs'] == session['durationMs'], 'Control state identity or duration differs')
+        return self.session_exercise(session)
 
     def session_exercise(self, session):
         if getattr(self, 'pending_reset', None):

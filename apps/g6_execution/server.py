@@ -266,6 +266,8 @@ class ExecutionStore:
                     body['reviewSHA256'] != review['reviewSHA256'] or
                     any(body[name] != review['identity'][name] for name in IDENTITY)):
                 raise HTTPException(409, 'Reviewed plan or active identity changed')
+            if not review['timeBudget']['fits']:
+                raise HTTPException(409, '规划航线超出本次仿真时长，请缩短航线后重新预览。')
             row = dict(task='G6-B04', key=key, planId=plan_id,
                 draftId=review['draftId'], revision=review['revision'],
                 taskId=review['taskId'], vehicleId=review['assignment']['vehicleId'],

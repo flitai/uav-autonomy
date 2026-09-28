@@ -2,6 +2,7 @@
 import base64
 import hashlib
 import json
+import math
 from pathlib import Path
 import sys
 import xml.dom.minidom
@@ -50,6 +51,28 @@ def observer_rows(session_file):
                 except json.JSONDecodeError:
                     continue
     return result
+
+
+def route_budget(waypoints, duration_ms):
+    distance = 0.0
+    minimum_seconds = 0.0
+    for start, end in zip(waypoints, waypoints[1:]):
+        lat1, lat2 = map(math.radians, (start['latitude'], end['latitude']))
+        delta_lat = lat2 - lat1
+        delta_lon = math.radians(end['longitude'] - start['longitude'])
+        arc = (math.sin(delta_lat / 2) ** 2 +
+               math.cos(lat1) * math.cos(lat2) * math.sin(delta_lon / 2) ** 2)
+        leg = 2 * 6371000 * math.asin(min(1, math.sqrt(arc)))
+        speed = min(start['speedMetersPerSecond'], end['speedMetersPerSecond'])
+        need(math.isfinite(speed) and speed > 0, 'Preview route speed is invalid')
+        distance += leg
+        minimum_seconds += leg / speed
+    # Turns, command handoffs and task lifecycle need time beyond straight-line flight.
+    budget_seconds = math.ceil(minimum_seconds * 2 + 300)
+    available_seconds = int(duration_ms) // 1000
+    return dict(routeMeters=round(distance, 1), minimumFlightSeconds=math.ceil(minimum_seconds),
+                requiredBudgetSeconds=budget_seconds, availableSeconds=available_seconds,
+                fits=budget_seconds <= available_seconds)
 
 
 def resolve(session_file, plan_id, require_frozen=True):
@@ -153,7 +176,10 @@ def resolve(session_file, plan_id, require_frozen=True):
                   responseRawSHA256=plan['responseSHA256'],
                   actions=actions, waypoints=waypoints,
                   previewRunId=source['previewRunId'],
-                  simulationTimeMs='0', confirmationAllowed=bool(active))
+                  simulationTimeMs='0', timeBudget=route_budget(waypoints,
+                      release.load(session_file)['durationMs']),
+                  confirmationAllowed=bool(active))
+    review['confirmationAllowed'] = review['confirmationAllowed'] and review['timeBudget']['fits']
     review['reviewSHA256'] = digest(json.dumps(review, sort_keys=True,
                                              ensure_ascii=False).encode('utf-8'))
     return review, task_bytes, request_bytes, response_context_bytes, plan_bytes

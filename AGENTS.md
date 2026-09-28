@@ -20,6 +20,8 @@
 
 2026-09-28 G6-B04 底图补充：当前 B04 候选 `g6-b04-build-20260928-basemap02` 启动时优先尝试 Esri 在线卫星影像；访问失败时自动回到本地矢量，并保持地图就绪。真实 Edge 联网卫星瓦片／影像截图及禁用外部 DNS 后本地矢量截图通过；两模式独立收据 `g6-b04-acceptance-basemap-20260928` passed，19／19 航点、TaskComplete 与正常退出再通过。修改限 B04 构建副本，G5／B03 合格源码及 G5／G6-A 正式指针不变；B05 仍为下一卡，见 [B04 报告](docs/g6-b04-plan-confirmation-validation.md)。
 
+2026-09-28 G6-B04 长航线补充：用户 6 点／65.1 公里折线在原 1800 秒场景停止且未完成；B04 独立会话现将本次场景延至 7200 秒，并在确认前检查按航段速度估算的时间预算。Gui 同几何于 2962.910 秒 TaskComplete、11／11 航点和实际飞行经独立审计；Headless 短方案及超预算拒绝也通过。当前页面构建 `g6-b04-build-20260928-duration02`，用户原草稿已恢复到未开始的新待看会话。G5／G6-A 正式输入不变；B05 仍为下一卡，见 [B04 报告](docs/g6-b04-plan-confirmation-validation.md)。
+
 2026-09-28 G6-B04 页面文字补充：用户要求移除模型尺寸、视角操作、覆盖／航线颜色与断线清理等常驻说明。B04 当前候选 `g6-b04-build-20260928-ui07`、两模式收据 `g6-b04-acceptance-guidance-20260928` passed；真实 Edge 确认所列文字不可见，Headless／Gui 执行链 19／19 航点、TaskComplete、正常退出及端口释放再通过。修改限 B04 构建副本，G5／B03 合格源码和 G5／G6-A 正式指针不变；B05 仍为下一卡。前段 ui06 保留当时资格，当前以先开始提示与重置补充及 [B04 报告](docs/g6-b04-plan-confirmation-validation.md)为准。
 
 ## 1. 项目目标与当前状态

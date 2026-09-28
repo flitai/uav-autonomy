@@ -4,7 +4,8 @@ type Inspection={selected:string|null;dirty:boolean;items:{draft:{draftId:string
 type Review={planId:string;draftId:string;revision:string;kind:string;taskId:string;
   identity:{runId:string;segmentId:string;backendRunId:string;streamId:string};
   assignment:{vehicleId:string;order:string[]};waypoints:{number:string;longitude:number;latitude:number;altitudeMeters:number;actions:{type:string}[]}[];
-  actions:{type:string}[];reviewSHA256:string;planBytesSHA256:string};
+  actions:{type:string}[];reviewSHA256:string;planBytesSHA256:string;confirmationAllowed:boolean;
+  timeBudget:{routeMeters:number;minimumFlightSeconds:number;requiredBudgetSeconds:number;availableSeconds:number;fits:boolean}};
 type Receipt={key:string;status:string;phase:string;missionCommandId?:string;taskCompleteSHA256?:string;error?:string};
 const BASE='http://127.0.0.1:8004/api/tasks/v1';
 
@@ -101,6 +102,10 @@ export class ExecutionPanel {
         ['固定实体',review.assignment.vehicleId],
         ['执行顺序',review.assignment.order.join(' → ')],
         ['航点',String(review.waypoints.length)],
+        ['航线长度',`${(review.timeBudget.routeMeters/1000).toFixed(1)} km`],
+        ['最低飞行时间',`${Math.ceil(review.timeBudget.minimumFlightSeconds/60)} 分钟`],
+        ['所需时间预算',`${Math.ceil(review.timeBudget.requiredBudgetSeconds/60)} 分钟`],
+        ['仿真可用时间',`${Math.floor(review.timeBudget.availableSeconds/60)} 分钟`],
         ['全局动作',review.actions.map(a=>a.type).join('、')||'无']]){
         const term=document.createElement('dt');term.textContent=name;
         const description=document.createElement('dd');description.textContent=value;
@@ -119,7 +124,8 @@ export class ExecutionPanel {
         list.append(row);}
       const routeTitle=document.createElement('h3');routeTitle.textContent=`完整航线 · ${review.waypoints.length} 航点`;
       this.route.replaceChildren(routeTitle,list);
-      this.message.textContent='完整方案已载入，请核对后确认。';
+      this.message.textContent=review.timeBudget.fits?'完整方案已载入，请核对后确认。':
+        '航线过长，当前仿真时长不足。请缩短航线并重新预览。';
     }catch(error){this.current=null;this.message.textContent='审查失败：'+String(error);}
     finally{this.busy=false;this.render();}
   }
@@ -146,7 +152,7 @@ export class ExecutionPanel {
     this.taskPage.hidden=this.activeTab!=='task';this.reviewPage.hidden=this.activeTab!=='review';
     this.next.disabled=this.busy||!!this.key||!selection;
     this.select.disabled=this.busy||!!this.key||!selection;
-    this.confirm.disabled=this.busy||!!this.key||!this.current||!this.acknowledge.checked||
+    this.confirm.disabled=this.busy||!!this.key||!this.current||!this.current.confirmationAllowed||!this.acknowledge.checked||
       this.selection()?.planId!==this.current.planId;}
 
   private poll(){if(this.stopped)return;
