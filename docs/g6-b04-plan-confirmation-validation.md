@@ -45,3 +45,11 @@ GUI 页面自动操作和截图不代替 B08 要求的本轮人工页面确认�
 用户复看后要求移除与任务操作无关的模型尺寸、视角手势、断线清理、覆盖颜色和航线配色说明。当前 B04 候选以自身 CSS 隐藏这些说明以及地图／草稿的常驻提示；构建时只改写 B04 的 G5 页面副本，把覆盖断线占位清空、覆盖故障缩成简短状态、任务空列表改为“暂无对象”。任务和实体控件、覆盖计数、实际错误与确认操作保留；G5／B03 合格源码未改动。
 
 候选 `g6-b04-build-20260928-ui07` 和两模式独立收据 `g6-b04-acceptance-guidance-20260928` 均 passed，后者 `executionQualified=true`。真实 Edge 对所列说明逐项检查，页面可见文本中均不存在，保留供原模块更新使用的 `model-scale` 和 `coverage-status` DOM 节点；桌面及 1366×768 布局继续通过。截图在 `out/runs/g6-b04-browser-guidance-20260928-gui2/{task,review}.png`。Headless API 与 Gui Edge 再次取得相同方案 19／19 航点、TaskActive／TaskComplete、正常退出与端口释放。首个 GUI 探针 `g6-b04-browser-guidance-20260928-gui` 在确认后的 TaskInitialized 等待超时，B04 留下 uncertain、未下发方案；原记录保留，随后独立 GUI 新会话完整复验通过。当前 B04 页面资格以 ui07 候选和本轮收据为准，B05 仍为下一卡。
+
+## 2026-09-28 默认卫星影像与本地底图回退
+
+用户要求页面优先显示 Esri 在线卫星影像，无法联网或影像服务不可访问时自动使用本地矢量底图。B04 构建只改写其合格 B03 页面副本：启动后主动选择 Esri，底层本地矢量保持可用；影像元数据加载超时／失败或瓦片报错时，移除在线图层并切回本地。回退提示只显示“在线影像不可用，已恢复本地矢量底图。”，不把可恢复的在线故障记成地图加载失败。用户仍可手动切换底图。G5／B03 合格源码和正式指针未修改。
+
+最终构建 `g6-b04-build-20260928-basemap02` passed。真实 Edge 联网结果 `g6-b04-basemap-rendered-online-20260928`：底图值 `satellite`、影像图层 2、Esri 瓦片 HTTP 200 两次，延后截图可见卫星影像。禁用外部 DNS 的结果 `g6-b04-basemap-rendered-offline-20260928`：底图值 `local`、图层 1、地图 `ready=true`，可见本地矢量与简短回退提示；两种截图均在对应 `out/runs` 目录。断网状态下的真实 Edge 完整任务交互 `g6-b04-browser-basemap-20260928-gui3` passed；Gui 会话 `g6-b04-session-basemap-20260928-gui3` 和 Headless 会话 `g6-b04-session-basemap-20260928-headless2` 正常退出、端口释放。两模式审计 `g6-b04-acceptance-basemap-20260928` passed、`executionQualified=true`，同一方案 19／19 航点和 TaskComplete 再次通过。
+
+首次 Headless 探针误把会话根目录传给 `flow.py --session`，脚本从错误父目录寻找观察流，尽管实际收到 TaskComplete，仍等待超时；失败目录 `g6-b04-flow-basemap-20260928-headless` 保留。随后用新会话及正确的 `segment-001/control-session.json` 路径重新执行并通过。当前 B04 页面资格以 basemap02 和本轮收据为准；B05 仍为下一卡。

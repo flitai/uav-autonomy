@@ -2322,3 +2322,12 @@ B04 报告、status、backlog、G6 计划、UxAS 复用说明和 AGENTS 已同�
 问题与处理：旧待看会话 `g6-b04-session-review-20260928-ui06` 在运行后又修改了 AGENTS／worklog 等来源，收尾时总结果因“Control session sources changed” failed；该会话分段正常关闭，原记录保留。本轮首个 Gui 探针在任务包发送后 25 秒没有 TaskInitialized，B04 保留 uncertain 且未继续下发方案；失败记录 `g6-b04-browser-guidance-20260928-gui` 原样保留，新会话 gui2 按同一构建完整复验通过。该偶发初始化超时未定位到本次文字变更，后续若复现应检查活动 UxAS 输入与观察流，不把本轮成功反写成首次成功。
 
 重要决定与下一步：当前页面资格以 ui07 构建和 `g6-b04-acceptance-guidance-20260928` 为准；保留覆盖数量、实际错误、航线对象和确认风险提示等直接影响操作的信息。提交推送后再启动供用户复看的新会话，避免运行期间修改来源触发资格检查。B05 多机分配仍按计划独立实施；本轮未做用户人工视觉确认，也未验证原生覆盖报告。追加前旧 worklog 为 489261 字节，SHA256=e8258b8b9eebb044c8d4a2ea48fcf911cca19adb756ece2102a3c82f298a45b0；旧前缀保持不变。
+
+## WL-20260928-003｜G6-B04 默认卫星影像与离线底图回退
+
+时间／时区：2026-09-28，Asia/Shanghai。关联任务与状态：G6-B04 页面补充，已完成；B05 仍为下一卡，G6 全阶段未完成。
+背景、目标与范围：用户要求优先显示 Esri 在线卫星影像；未联网或影像服务不可访问时自动切至本地矢量图。本轮只改独立 B04 候选页面，不修改已验收 G5／B03 源码与正式指针。
+工作过程与修改：先正常关闭 ui07 待看会话；检查 G5 地图已有手动切换及影像错误事件。修改 scripts/g6_execution/build_viewer.py，使 B04 构建副本启动后自动选择 Esri；回退时显示简短提示且不把可恢复在线错误计为地图失败。新增 tests/g6_execution/basemap_browser.py，以真实 Edge 分别验证联网瓦片和外部 DNS 禁用；tests/g6_execution/browser.py 增加断网回退后完整任务交互断言。构建 basemap02，随后运行两模式 B04 执行审计。
+验证：仓库根目录，项目 Python 3.14.7 以 -I -B -X utf8 执行 build_viewer.py，退出 0；真实 Edge 在线证据 g6-b04-basemap-rendered-online-20260928，Esri 瓦片 HTTP 200 两次、图层 2、卫星影像实际截图；离线证据 g6-b04-basemap-rendered-offline-20260928，图层 1、本地矢量截图、地图 ready=true、简短回退提示，均 passed。Gui Edge 完整交互 g6-b04-browser-basemap-20260928-gui3 passed；Headless API g6-b04-flow-basemap-20260928-headless2 passed；两会话正常退出及端口释放。audit.py 产生 g6-b04-acceptance-basemap-20260928，status=passed、executionQualified=true，19／19 航点与 TaskComplete 两模式均通过。git diff --check 通过。
+问题与处理：最初断网提示把 Cesium 异常堆栈展示在页面，收成一句业务提示。首次在线截图早于瓦片绘制，检查改为等待渲染后截图。首次 Headless 探针误传会话根目录给 flow.py，实际 TaskComplete 已在观察流，但脚本从错误父目录读取，超时失败；保留 g6-b04-flow-basemap-20260928-headless 原记录，用新会话及 segment-001/control-session.json 正确路径复验通过。
+决定与下一步：当前 B04 页面资格以 basemap02／本轮两模式收据为准；G5／B03 合格源码和 G5／G6-A 正式指针不变。更新 B04 报告、status、backlog、AGENTS；提交推送后重启新候选供用户复看。B05 多机多任务分配仍需独立实施。追加前 worklog 为 492567 字节，SHA256=6f9aaab809db3dcab89d15f2adbb6d64b608774bae828d39f86fc11f99c6b90a；历史前缀保持不变。

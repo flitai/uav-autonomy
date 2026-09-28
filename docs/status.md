@@ -2,9 +2,11 @@
 
 初次了解本项目，可先阅读 [项目整体说明与界面使用指南](project-overview-and-user-guide.md)，包含原项目背景、组件分工、当前场景、界面释义与启停方法。
 
-更新日期：2026-09-28（G6-A 已正式发布；G6-B04 页面组织与清晰度复验通过，下一卡 B05）。依据：[总体实施计划](../04.项目总体实施计划与阶段验收.md)、[G0 报告](g0-baseline.md)、[Java 环境验收](g1-java-validation.md)、[T03 消息库验收](g1-lmcp-validation.md)、[T04 AMASE 验收](g1-amase-validation.md)、[T05 TCP 验收](g1-tcp-validation.md)、[G2 实施方案](g2-windows-uxas-plan.md)、[G3 实施方案](g3-system-integration-plan.md)、[任务清单](backlog.md)。过程记录见根级 [worklog.md](../worklog.md)。
+更新日期：2026-09-28（G6-A 已正式发布；G6-B04 默认卫星影像与离线回退复验通过，下一卡 B05）。依据：[总体实施计划](../04.项目总体实施计划与阶段验收.md)、[G0 报告](g0-baseline.md)、[Java 环境验收](g1-java-validation.md)、[T03 消息库验收](g1-lmcp-validation.md)、[T04 AMASE 验收](g1-amase-validation.md)、[T05 TCP 验收](g1-tcp-validation.md)、[G2 实施方案](g2-windows-uxas-plan.md)、[G3 实施方案](g3-system-integration-plan.md)、[任务清单](backlog.md)。过程记录见根级 [worklog.md](../worklog.md)。
 
 ## 当前关卡
+
+2026-09-28 B04 底图补充：当前候选 `g6-b04-build-20260928-basemap02`、两模式收据 `g6-b04-acceptance-basemap-20260928` passed。页面启动时优先尝试 Esri 在线卫星影像；无法访问时自动恢复本地矢量，地图保持就绪。真实 Edge 联网取得 Esri 瓦片 HTTP 200 并显示卫星影像，禁用外部 DNS 时显示本地矢量；GUI／Headless 固定方案执行链和正常退出再次通过。见 [B04 报告](g6-b04-plan-confirmation-validation.md)。
 
 2026-09-28 B04 页面说明精简：候选 `g6-b04-build-20260928-ui07`、两模式收据 `g6-b04-acceptance-guidance-20260928` passed。实体尺寸／手势、覆盖／航线配色和断线清理等常驻说明已从 B04 页面移除；实际业务状态、错误和操作控件保留。真实 Edge 逐项确认这些文字不可见，Headless／Gui 同一方案 19／19 航点、TaskComplete、正常退出及端口释放再次通过。G5／B03 合格源码及 G5／G6-A 正式指针未变，见 [B04 报告](g6-b04-plan-confirmation-validation.md)。
 
@@ -23,7 +25,7 @@
 | 当前 G6 工作 | G6-A [正式验收](g6-a-control-validation.md)已完成；G6-B01～B04 通过，B04 [固定分配确认执行](g6-b04-plan-confirmation-validation.md)为当前资格，B05 为下一卡 |
 | 最近通过的实现任务 | G6-B04 两模式同一方案 19 航点下发、AMASE 真实飞行、TaskComplete、审查／幂等拒绝及正常退出 |
 | 三维模型输入 | 用户提供 16 个 AFSIM OSGB；本轮 UCAV 已转换及校准，1 单位＝1 显示米，可快捷键缩放；其余保持 [输入登记](g5-model-inputs.md) |
-| 当前执行结果 | G6-A 正式指针 `g6-a05-publish-post-play-20260924-2214`、生产复验 `g6-control-production-check-20260924-2215` passed；B01 `g6-b01-baseline-20260924-2223`、B02 `g6-b02-acceptance-20260924-2410`、B03 `g6-b03-acceptance-20260924-2439`、B04 `g6-b04-acceptance-guidance-20260928` passed。旧失败收据保留；G5 正式入口保持 |
+| 当前执行结果 | G6-A 正式指针 `g6-a05-publish-post-play-20260924-2214`、生产复验 `g6-control-production-check-20260924-2215` passed；B01 `g6-b01-baseline-20260924-2223`、B02 `g6-b02-acceptance-20260924-2410`、B03 `g6-b03-acceptance-20260924-2439`、B04 `g6-b04-acceptance-basemap-20260928` passed。旧失败收据保留；G5 正式入口保持 |
 | G3 历史基线 | T07 起点 `6c0294e3`，当时工作区干净；新增独立阶段验收，业务源码／XML／生成代码及 T03～T06 实现保持。inputRevision=3、43 项冻结输入复查通过 |
 | 已归档历史 | G1-T01～T03 为 `304def9`，G1-T04 为 `f2f73ab`，G1-T05 为 `d77dd78`；T04 `b8ccf72`／`68ed420`、T05 `0fe8553`／交接 `5c2d387` 已推送 origin/main |
 | 本轮变更 | G4 方案 `908fdfd`、T01 `ca21032`、T02 `22cacc6` 已归档；T03 `71c5906` 已归档并发布日志修复；T04 `f3b4d08` 已归档；T05 `a206fe5` 已归档；T06 `g4-t06-test-20260920-010936-703` 两模式全程及独立审计通过 |

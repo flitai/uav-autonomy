@@ -67,6 +67,13 @@ async def verify(output):
 
             task='window.__g6Tasks?.inspect()';execution='window.__g6Execution?.inspect()'
             await until('Boolean(window.__g6Execution&&window.__g6Tasks?.inspect().ready)',bool,70)
+            fallback=await until("""(()=>({base:document.querySelector('#base-layer')?.value,
+              notice:document.querySelector('#notice')?.textContent,
+              layers:window.__g5Map?.viewer.imageryLayers.length,
+              ready:document.documentElement.dataset.ready}))()""",
+              lambda v:v and v['base']=='local' and '恢复本地矢量底图' in (v['notice'] or '')
+                       and v['layers']==1 and v['ready']=='true',25)
+            result['steps'].append(dict(action='offline-basemap-fallback',**fallback))
             guidance=await evaluate("""(()=>{const selectors=['#entity-panel .hint',
               '#camera-controls-hint','#left-stack>details aside .hint',
               '#task-editor .hint','#coverage-panel>p:last-child',

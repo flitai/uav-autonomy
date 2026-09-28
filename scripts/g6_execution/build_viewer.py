@@ -59,6 +59,16 @@ def main():
                     "'覆盖数据暂不可用'")
         replace_one(project/'coverage/ui.ts',"+' 个；累计覆盖恢复中'", "+' 个'")
         replace_one(project/'missions/ui.ts',"'等待同连接快照恢复'","'暂无对象'")
+        map_entry=project/'src/main.ts'
+        replace_one(map_entry,
+                    "    if(message)fail(message);viewer.scene.requestRender();",
+                    "    if(message){notice.textContent=message;notice.hidden=false;}viewer.scene.requestRender();")
+        replace_one(map_entry,
+                    "local('在线影像不可用，已恢复本地矢量底图。'+String(error))",
+                    "local('在线影像不可用，已恢复本地矢量底图。')")
+        replace_one(map_entry,
+                    "  let frames=0;",
+                    "  baseSelect.value='satellite';baseSelect.dispatchEvent(new Event('change'));\n  let frames=0;")
         entry=project/'entities/main.ts';source_text=entry.read_text(encoding='utf-8')
         source_text="import { ExecutionPanel } from '../execution/panel';\n"+source_text
         anchor="  requireValue(viewer,'地图初始化未完成');"
