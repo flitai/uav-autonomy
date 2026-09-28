@@ -39,3 +39,9 @@ GUI 页面自动操作和截图不代替 B08 要求的本轮人工页面确认�
 最终候选 `g6-b04-build-20260928-ui06`、独立两模式收据 `g6-b04-acceptance-ui-20260928` 均 passed，后者 `executionQualified=true`。真实 Edge 验证 1896×可用窗口与 1366×768 视口：左右面板不重叠、步骤标签可见、无横向溢出、工作区可收起、画布像素比 1.5。截图见 `out/runs/g6-b04-browser-ui-validation-20260928-gui/review.png`。Headless API 与 Gui Edge 再次验证同一方案 19／19 航点下发、TaskActive／TaskComplete、正常退出和端口释放；两模式方案字节 SHA256 仍为 `8b8b1706d0de10e2465b28f90c19eb213b12a3b03670e86247d5b3e306f1979a`。当前资格以本轮新候选和收据为准，2026-09-25 记录保留历史结果。
 
 本轮 GUI 探针 `g6-b04-session-ui-check-20260928-08` 曾遇到控制服务同一固定 `.json.tmp` 文件的并发争用：开始操作实际已确认，但 POST 返回 500，旧 B04 误记为 rejected。B04 现在把开始请求发出后视为结果可能已生效；若响应失败，仅查询同一操作键并核对运行、分段和流身份，确认后继续下发，无法确认则保留 uncertain，不重复发送开始。G6-A 控制服务的固定临时文件争用本身尚未改动，后续控制服务维护应单独修复并复验；本轮 B04 端已完成结果核查保护。B04 仍不登记原生覆盖率，也不替代 B08 人工页面确认。
+
+## 2026-09-28 页面说明文字精简
+
+用户复看后要求移除与任务操作无关的模型尺寸、视角手势、断线清理、覆盖颜色和航线配色说明。当前 B04 候选以自身 CSS 隐藏这些说明以及地图／草稿的常驻提示；构建时只改写 B04 的 G5 页面副本，把覆盖断线占位清空、覆盖故障缩成简短状态、任务空列表改为“暂无对象”。任务和实体控件、覆盖计数、实际错误与确认操作保留；G5／B03 合格源码未改动。
+
+候选 `g6-b04-build-20260928-ui07` 和两模式独立收据 `g6-b04-acceptance-guidance-20260928` 均 passed，后者 `executionQualified=true`。真实 Edge 对所列说明逐项检查，页面可见文本中均不存在，保留供原模块更新使用的 `model-scale` 和 `coverage-status` DOM 节点；桌面及 1366×768 布局继续通过。截图在 `out/runs/g6-b04-browser-guidance-20260928-gui2/{task,review}.png`。Headless API 与 Gui Edge 再次取得相同方案 19／19 航点、TaskActive／TaskComplete、正常退出与端口释放。首个 GUI 探针 `g6-b04-browser-guidance-20260928-gui` 在确认后的 TaskInitialized 等待超时，B04 留下 uncertain、未下发方案；原记录保留，随后独立 GUI 新会话完整复验通过。当前 B04 页面资格以 ui07 候选和本轮收据为准，B05 仍为下一卡。

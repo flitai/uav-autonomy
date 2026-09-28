@@ -14,6 +14,11 @@ import manage as release
 def need(value,message):
     if not value:raise RuntimeError(message)
 
+def replace_one(path, before, after):
+    source=path.read_text(encoding='utf-8')
+    need(source.count(before)==1,'Qualified viewer copy changed: '+str(path))
+    path.write_text(source.replace(before,after),encoding='utf-8')
+
 def command(args,folder,label,cwd=None,env=None):
     done=subprocess.run([str(v) for v in args],cwd=cwd or ROOT,env=env,
                         capture_output=True,timeout=180,creationflags=subprocess.CREATE_NO_WINDOW)
@@ -46,6 +51,14 @@ def main():
                  "' -Target '"+str(dependency.resolve()).replace("'","''")+"' | Out-Null"],
                 run,'dependency-junction')
         shutil.copytree(ROOT/'apps/cesium_execution',project/'execution')
+        replace_one(project/'coverage/ui.ts',
+                    "this.status.textContent='等待后端恢复；旧覆盖已清理'",
+                    "this.status.textContent=''")
+        replace_one(project/'coverage/ui.ts',
+                    "'累计覆盖暂不可用；当前传感器覆盖仍可查看'",
+                    "'覆盖数据暂不可用'")
+        replace_one(project/'coverage/ui.ts',"+' 个；累计覆盖恢复中'", "+' 个'")
+        replace_one(project/'missions/ui.ts',"'等待同连接快照恢复'","'暂无对象'")
         entry=project/'entities/main.ts';source_text=entry.read_text(encoding='utf-8')
         source_text="import { ExecutionPanel } from '../execution/panel';\n"+source_text
         anchor="  requireValue(viewer,'地图初始化未完成');"

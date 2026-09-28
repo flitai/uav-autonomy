@@ -2308,3 +2308,17 @@ B04 报告、status、backlog、G6 计划、UxAS 复用说明和 AGENTS 已同�
 验证：在仓库根目录，项目 Python 3.14.7 以 `-I -B -X utf8` 执行 `scripts/g6_execution/build_viewer.py --run-id g6-b04-build-20260928-ui06` 退出 0；Headless 会话 `g6-b04-session-ui-validation-20260928-headless` 加 `tests/g6_execution/flow.py` 退出 0；Gui 会话 `g6-b04-session-ui-validation-20260928-gui` 加真实 Edge `tests/g6_execution/browser.py` 退出 0；`tests/g6_execution/audit.py --run-id g6-b04-acceptance-ui-20260928 --build-run-id g6-b04-build-20260928-ui06` 退出 0、`executionQualified=true`。两模式相同方案 19／19 航点、TaskActive／TaskComplete、正常退出与端口释放；GUI 审查截图、桌面和 1366×768 无面板重叠、画布像素比 1.5。未做本轮用户人工视觉确认，也未产出原生覆盖报告。独立候选会话 `g6-b04-session-review-20260928-ui06` 已启动，8080 页面 HTTP 200、8004 初始操作数 0，等待用户复看。
 
 重要决定与下一步：保持 B04 固定一机一任务边界和正式指针不变；继续 B05 多机多任务分配需以本轮 B04 候选／收据为当前来源。G6-A 固定临时文件并发争用需单独修复与完整复验，B04 端已避免把已开始误判为安全失败。追加前旧 worklog 为 485644 字节，SHA256=a5a79a779988bcabbbadfc5c3baf0d07be91c51c55360af73b2a219218ccd094；旧前缀保持不变。
+
+## WL-20260928-002｜G6-B04 页面常驻说明精简
+
+时间／时区：2026-09-28，Asia/Shanghai。关联任务与状态：G6-B04 页面修订已完成、两模式独立复验通过；B05 仍为下一卡，G6 全阶段未完成。
+
+背景、目标与范围：用户复看后明确不需要模型屏幕尺寸、快捷键／视角手势、旧覆盖清理、覆盖颜色和航线配色等与任务操作无关的常驻说明。目标是精简当前 B04 页面，同时保留业务控件、实际状态和错误；不修改已验收 G5／B03 源码或正式指针。
+
+工作过程与成果：在 `apps/cesium_execution/style.css` 仅对 B04 页面隐藏实体／地图／草稿提示，以及覆盖和航线模块末尾的说明段落。`scripts/g6_execution/build_viewer.py` 只改写合格 B03 页面副本中的覆盖断线占位、覆盖故障短语和任务空列表短语；原模块 DOM 状态节点保留，不破坏动态更新。`tests/g6_execution/browser.py` 增加真实 Edge 可见文本与元素显示检查，并保存草稿和审查截图。更新 [B04 报告](docs/g6-b04-plan-confirmation-validation.md)、[status](docs/status.md)、[backlog](docs/backlog.md)和 AGENTS。
+
+验证：在仓库根目录用项目 Python 3.14.7、`-I -B -X utf8` 构建 `g6-b04-build-20260928-ui07` 退出 0。Headless 会话 `g6-b04-session-guidance-20260928-headless` 的 `tests/g6_execution/flow.py` 退出 0；Gui 会话 `g6-b04-session-guidance-20260928-gui2` 的真实 Edge `tests/g6_execution/browser.py` 退出 0，可见文字断言无残留、布局／画布断言通过，19 航点确认与 TaskComplete 到达。两会话正常退出、端口释放；`tests/g6_execution/audit.py --run-id g6-b04-acceptance-guidance-20260928 --build-run-id g6-b04-build-20260928-ui07` 退出 0、`executionQualified=true`，两模式方案字节哈希相同、19／19 航点及 TaskActive／TaskComplete 均核对。地图加载后的审查截图在 `out/runs/g6-b04-browser-guidance-20260928-gui2/review.png`；自动草稿截图抓取时地图瓦片尚未全显，仅用于检查面板文字。
+
+问题与处理：旧待看会话 `g6-b04-session-review-20260928-ui06` 在运行后又修改了 AGENTS／worklog 等来源，收尾时总结果因“Control session sources changed” failed；该会话分段正常关闭，原记录保留。本轮首个 Gui 探针在任务包发送后 25 秒没有 TaskInitialized，B04 保留 uncertain 且未继续下发方案；失败记录 `g6-b04-browser-guidance-20260928-gui` 原样保留，新会话 gui2 按同一构建完整复验通过。该偶发初始化超时未定位到本次文字变更，后续若复现应检查活动 UxAS 输入与观察流，不把本轮成功反写成首次成功。
+
+重要决定与下一步：当前页面资格以 ui07 构建和 `g6-b04-acceptance-guidance-20260928` 为准；保留覆盖数量、实际错误、航线对象和确认风险提示等直接影响操作的信息。提交推送后再启动供用户复看的新会话，避免运行期间修改来源触发资格检查。B05 多机分配仍按计划独立实施；本轮未做用户人工视觉确认，也未验证原生覆盖报告。追加前旧 worklog 为 489261 字节，SHA256=e8258b8b9eebb044c8d4a2ea48fcf911cca19adb756ece2102a3c82f298a45b0；旧前缀保持不变。

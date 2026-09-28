@@ -67,6 +67,23 @@ async def verify(output):
 
             task='window.__g6Tasks?.inspect()';execution='window.__g6Execution?.inspect()'
             await until('Boolean(window.__g6Execution&&window.__g6Tasks?.inspect().ready)',bool,70)
+            guidance=await evaluate("""(()=>{const selectors=['#entity-panel .hint',
+              '#camera-controls-hint','#left-stack>details aside .hint',
+              '#task-editor .hint','#coverage-panel>p:last-child',
+              '#mission-panel>p:last-child'];
+              const visible=selectors.flatMap(s=>[...document.querySelectorAll(s)]
+                .filter(e=>getComputedStyle(e).display!=='none').map(e=>e.textContent));
+              const text=document.body.innerText;
+              const banned=['模型屏幕尺寸','轨迹保留最近','左键拖动：平移',
+                '旧覆盖已清理','阵营色：相机当前覆盖','虚线：完整规划',
+                '区域外使用参考椭球'];
+              return {visible,remaining:banned.filter(s=>text.includes(s)),
+                modelScaleExists:!!document.getElementById('model-scale'),
+                coverageStatusExists:!!document.getElementById('coverage-status')};})()""")
+            if (guidance['visible'] or guidance['remaining'] or
+                    not guidance['modelScaleExists'] or not guidance['coverageStatusExists']):
+                raise RuntimeError('Nonessential guidance remained visible: '+str(guidance))
+            result['steps'].append(dict(action='guidance-cleanup',**guidance))
             layout_expression="""(()=>{const editor=document.getElementById('task-editor');
               const review=document.getElementById('execution-review');
               const dock=document.getElementById('mission-workspace');
@@ -97,6 +114,9 @@ async def verify(output):
             if not collapsed:raise RuntimeError('Workspace did not collapse')
             await evaluate("document.getElementById('workspace-collapse').click()")
             result['steps'].append(dict(action='layout',**layout,collapseWorks=collapsed))
+            await until("document.documentElement.dataset.ready==='true'",bool,45)
+            initial_screenshot=await cdp.call('Page.captureScreenshot',{'format':'png'},session=session)
+            (output/'task.png').write_bytes(base64.b64decode(initial_screenshot['data']))
             await cdp.call('Emulation.setDeviceMetricsOverride',
                            {'width':1366,'height':768,'deviceScaleFactor':1,'mobile':False},session=session)
             await asyncio.sleep(.4)
@@ -139,8 +159,10 @@ async def verify(output):
             if not enabled:raise RuntimeError('Acknowledged plan remained disabled')
             await evaluate("document.getElementById('execution-confirm').click()")
             receipt=await until(execution,lambda v:v and v['receipt'] and
-                                v['receipt']['status'] in ('confirmed','completed'),70)
+                                v['receipt']['status'] in ('confirmed','completed','rejected','uncertain'),70)
             result['steps'].append(dict(action='confirm',receipt=receipt['receipt']))
+            if receipt['receipt']['status'] not in ('confirmed','completed'):
+                raise RuntimeError('Confirmation did not succeed: '+str(receipt['receipt']))
             completed=await until(execution,lambda v:v and v['receipt'] and
                                   v['receipt']['status']=='completed' and
                                   v['receipt'].get('taskCompleteSHA256'),150)
