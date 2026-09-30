@@ -24,6 +24,8 @@
 
 2026-09-28 G6-B04 页面文字补充：用户要求移除模型尺寸、视角操作、覆盖／航线颜色与断线清理等常驻说明。B04 当前候选 `g6-b04-build-20260928-ui07`、两模式收据 `g6-b04-acceptance-guidance-20260928` passed；真实 Edge 确认所列文字不可见，Headless／Gui 执行链 19／19 航点、TaskComplete、正常退出及端口释放再通过。修改限 B04 构建副本，G5／B03 合格源码和 G5／G6-A 正式指针不变；B05 仍为下一卡。前段 ui06 保留当时资格，当前以先开始提示与重置补充及 [B04 报告](docs/g6-b04-plan-confirmation-validation.md)为准。
 
+2026-09-30 G6-B05 补充：多机多任务独立候选 `g6-b05-build-20260930-05` 已通过 Headless 自由分配与 Gui 真实 Edge 受限顺序两模式验收。线／点各可选 400／500／600，矩形暂限 400；三任务均由真实 UxAS 隔离规划、确认下发、AMASE 实飞并收到唯一 TaskActive／TaskComplete，两模式正常退出。当前下一卡 B06 执行中受控重规划，G6 全阶段未完成；具体资格、失败探针和边界见 [B05 报告](docs/g6-b05-multi-task-validation.md)，当前状态以 [status](docs/status.md) 与 [backlog](docs/backlog.md) 为准。
+
 ## 1. 项目目标与当前状态
 
 本项目基于 LmcpGen、OpenAMASE、OpenUxAS，建设无人系统任务级仿真与自主策略研发环境。

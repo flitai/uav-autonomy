@@ -1,6 +1,6 @@
 # 实施任务清单
 
-更新日期：2026-09-28（G6-A 已正式发布；G6-B04 长航线时长截断修复已验证，下一卡 B05）。总约束见[总体实施计划](../04.项目总体实施计划与阶段验收.md)，当前状态见 [status.md](status.md)，当前阶段见 [G6-A 验收](g6-a-control-validation.md)、[B01 记录](g6-b01-task-contract-validation.md)、[B03 报告](g6-b03-task-editor-validation.md)、[B04 报告](g6-b04-plan-confirmation-validation.md)与 [G6 计划](g6-task-planning-interaction-plan.md)；历史方案见 [G5](g5-cesium-display-plan.md)、[G4](g4-message-gateway-plan.md)、[G3](g3-system-integration-plan.md)、[G2](g2-windows-uxas-plan.md)，原始基线见 [G0](g0-baseline.md)。
+更新日期：2026-09-30（G6-B05 多机多任务分配已通过，下一卡 B06）。总约束见[总体实施计划](../04.项目总体实施计划与阶段验收.md)，当前状态见 [status.md](status.md)，当前阶段见 [G6-A 验收](g6-a-control-validation.md)、[B01 记录](g6-b01-task-contract-validation.md)、[B03 报告](g6-b03-task-editor-validation.md)、[B04 报告](g6-b04-plan-confirmation-validation.md)、[B05 报告](g6-b05-multi-task-validation.md)与 [G6 计划](g6-task-planning-interaction-plan.md)；历史方案见 [G5](g5-cesium-display-plan.md)、[G4](g4-message-gateway-plan.md)、[G3](g3-system-integration-plan.md)、[G2](g2-windows-uxas-plan.md)，原始基线见 [G0](g0-baseline.md)。
 
 任务状态使用：待细化、待前置、可执行、进行中、待验证、已完成、阻塞、延期。G0、G1 已完成，G1-T01～T05 均已完成；G2-T01～T07 已完成，G2 已完成；G3-T01～T07 已完成，G3 已完成；G4-T01～T09 已完成，G4 已验收并发布；G5-T01～T11 已完成，原两实体及 20 实体两模式全程、真实 Cesium、恢复、独立统计、当前页面确认、正式包发布与生产入口通过；G5 已完成。一次只推进一个主要实现任务。
 
@@ -611,7 +611,7 @@ T01 的来源阻塞及 T02 的旧配方兼容问题均已解决，历史失败�
 
 ## 11. G6-B 任务规划交互任务卡
 
-依据 [G6 后续计划](g6-task-planning-interaction-plan.md)。B01 输入基线、B02 预览隔离、B03 任务草稿编辑及 B04 固定分配确认执行已通过，B05～B08 待实施；进入每卡前细化精确接口、输入版本、配置、预算和执行命令。G6-A 基础控制已独立发布。首批 CMASI 点／线／矩形搜索，其他任务按独立资格逐步扩展。
+依据 [G6 后续计划](g6-task-planning-interaction-plan.md)。B01 输入基线、B02 预览隔离、B03 任务草稿编辑、B04 固定分配确认执行及 B05 多机多任务分配已通过，B06～B08 待实施；进入每卡前细化精确接口、输入版本、配置、预算和执行命令。G6-A 基础控制已独立发布。首批 CMASI 点／线／矩形搜索，其他任务按独立资格逐步扩展。
 
 ### G6-B01 任务契约与输入基线
 
@@ -645,9 +645,9 @@ T01 的来源阻塞及 T02 的旧配方兼容问题均已解决，历史失败�
 
 ### G6-B05 多机多任务分配
 
-- **状态／前置**：待前置；B04 通过。
+- **状态／前置**：已完成；B04 通过。独立候选 `g6-b05-build-20260930-05`，两模式执行和审计见 [B05 报告](g6-b05-multi-task-validation.md)。
 - **目标／范围**：固定分配与候选集合选择、受限任务顺序、资格与预计代价呈现，复用现有分配服务。
-- **验收／证据**：至少两架可竞争的合格候选、三类任务及多任务序列；独立核对请求、分配和顺序，两模式实际执行与统计留证，不设覆盖率门槛。
+- **验收／证据**：Headless 线／点各有三架合格候选，UxAS 实际分配 400／500，三类任务全部完成；Gui 同机 3000→3001→3002 顺序完成。隔离规划、成本矩阵、完整航点、AMASE 实飞、TaskActive／TaskComplete、拒绝矩阵和两模式正常退出均留证；不设覆盖率门槛，未登记原生覆盖报告。
 - **停止／回退**：以固定一架一任务冒充自由分配、违反资格／顺序或无法验证的任务关系都不通过；限制输入范围并保留最后合格模板。
 
 ### G6-B06 执行中受控重规划

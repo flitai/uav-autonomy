@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "contractId": "g6-b05-multi-search-v1",
+  "baseContractId": "g6-b01-cmasi-search-v1",
+  "mode": "pre-start-only",
+  "taskCount": [2, 3],
+  "vehicleIds": ["400", "500", "600"],
+  "qualifiedCandidates": {
+    "line": ["400", "500", "600"],
+    "point": ["400", "500", "600"],
+    "area": ["400"]
+  },
+  "relationships": ["parallel", "sequence"],
+  "sequenceVehicleId": "400",
+  "areaLimitReason": "Multiple area candidates cause UxAS SensorFootprintRequests to exceed UXTASK MaxArrayLength=16.",
+  "maximumInitialCostEntries": 18432,
+  "maximumWaypointsPerVehicle": 1024
+}

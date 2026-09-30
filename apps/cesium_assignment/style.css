@@ -1,0 +1,27 @@
+#multi-task-planning{margin:18px 0;border:1px solid #416275;border-radius:8px;padding:12px;
+  background:#13283a;color:#eef5fa;font-size:14px}
+#multi-task-planning>summary{cursor:pointer;font-size:16px;font-weight:700}
+#multi-task-planning>details{border-top:1px solid #416275;margin-top:10px;padding-top:8px}
+#multi-task-planning>details>summary{cursor:pointer;font-weight:700}
+#multi-task-planning p{margin:10px 0;line-height:1.45}
+#multi-task-planning label{display:inline-flex;align-items:center;gap:7px;margin:4px 10px 4px 0}
+#multi-task-planning select,#multi-task-planning button{font:inherit;border-radius:5px;padding:6px 9px}
+#multi-task-planning select{display:block;width:100%;background:#263f50;color:#fff;border:1px solid #638096}
+#multi-task-planning button{background:#2c6177;color:#fff;border:1px solid #75a4b6;cursor:pointer}
+#multi-task-planning button:disabled{opacity:.45;cursor:default}
+#multi-task-planning input{accent-color:#75c8e5}
+#multi-task-planning .multi-task-card{border:1px solid #416275;border-radius:6px;margin:10px 0;padding:8px}
+#multi-task-planning legend{font-weight:700;padding:0 5px}
+#multi-task-planning .multi-candidates{display:flex;flex-wrap:wrap;gap:6px}
+#multi-task-planning .multi-order-row{display:flex;align-items:center;gap:8px;margin:5px 0}
+#multi-task-planning .multi-order-row span{min-width:95px}
+#multi-task-planning #multi-preview,#multi-task-planning #multi-confirm{display:block;width:100%;margin:12px 0}
+#multi-task-planning #multi-confirm[hidden],#multi-task-planning label[hidden]{display:none}
+#multi-task-planning table{border-collapse:collapse;width:100%;margin:12px 0;text-align:left}
+#multi-task-planning caption{text-align:left;font-weight:700;margin-bottom:6px}
+#multi-task-planning td,#multi-task-planning th{border-bottom:1px solid #416275;padding:6px 4px}
+#multi-task-planning #multi-status{min-height:22px;color:#b7e5dc}
+#multi-task-planning #multi-preview:focus-visible,#multi-task-planning #multi-confirm:focus-visible,
+#multi-task-planning summary:focus-visible{outline:2px solid #75c8e5;outline-offset:2px}
+#multi-task-planning #multi-task-planning-review details{margin:8px 0}
+#multi-task-planning ol{max-height:220px;overflow:auto;padding-left:28px}
