@@ -1,0 +1,21 @@
+#controlled-replanning{margin:18px 0;border:1px solid #477582;border-radius:8px;padding:12px;
+  background:#162b3b;color:#eef5fa;font-size:14px}
+#controlled-replanning>summary{cursor:pointer;font-size:16px;font-weight:700}
+#controlled-replanning p{line-height:1.45;margin:10px 0}
+#controlled-replanning select,#controlled-replanning textarea,
+#controlled-replanning input[type=number]{display:block;width:100%;box-sizing:border-box;
+  margin:6px 0 10px;padding:7px;background:#263f50;color:#fff;border:1px solid #638096;
+  border-radius:5px;font:inherit}
+#controlled-replanning label{display:block;margin:8px 0}
+#controlled-replanning button{display:block;width:100%;margin:12px 0;padding:8px;
+  font:inherit;color:#fff;background:#2c6177;border:1px solid #75a4b6;
+  border-radius:5px;cursor:pointer}
+#controlled-replanning button:disabled{opacity:.45;cursor:default}
+#controlled-replanning input[type=checkbox]{accent-color:#75c8e5}
+#controlled-replanning [hidden]{display:none!important}
+#controlled-replanning table{border-collapse:collapse;width:100%;margin:12px 0}
+#controlled-replanning td{border-bottom:1px solid #416275;padding:6px 4px}
+#controlled-replanning details{margin:10px 0}
+#controlled-replanning details>summary{cursor:pointer}
+#controlled-replanning ol{max-height:220px;overflow:auto;padding-left:28px}
+#controlled-replanning #replan-status{min-height:22px;color:#b7e5dc}

@@ -2356,3 +2356,15 @@ B04 报告、status、backlog、G6 计划、UxAS 复用说明和 AGENTS 已同�
 修改与决定：新增 `config/g6-assignment-contract-v1.json`、`scripts/g6_assignment/`、`apps/g6_assignment/`、`apps/cesium_assignment/` 和 `tests/g6_assignment/`，独立编译 B05 页面副本；三草稿修订／来源、候选资格、真实 UxAS 成本矩阵／分配摘要、完整航线和审查摘要绑定。同机顺序仅允许 400，页面在工作区顶部折叠任务选择并突出方案表。确认自动开始仿真，只下发经审查的同一方案；未知状态不自动重发。未修改 B01～B04 合格源码。
 验证：最终构建 `g6-b05-build-20260930-05/result.json` passed。Headless `g6-b05-flow-headless-20260930-04/result.json` passed：线／点各三机候选，UxAS 实际 3000→400、3001→500、3002→400，35＋14 航点及三项唯一 TaskActive／TaskComplete、AMASE 实飞与持续时间独立复算通过，错误矩形候选和错误审查摘要被拒绝。Gui `g6-b05-browser-gui-20260930-03/result.json` passed：真实 Edge 选择单机顺序、生成审查、未勾选禁用／勾选确认、截图、3000→3001→3002 实际完成及 43 航点审计通过。两模式会话 `g6-b05-session-headless-20260930-04` 与 `g6-b05-session-gui-20260930-03` 的 runtime-result 均 passed、正常退出；独立汇总 `g6-b05-acceptance-20260930-03/acceptance.json` passed，复查来源和端口释放。详细收据与复跑命令见 [B05 报告](docs/g6-b05-multi-task-validation.md)。
 边界与下一步：矩形多候选仍因上游消息规模与模型上限未开放；本卡统计为 TaskActive／TaskComplete 时间和 AMASE 飞行距离，没有原生覆盖报告或覆盖率门槛。B06 需从活动状态规划替代方案，验证旧航段停止、新命令切换与统计版本。追加前 worklog 为 501017 字节，SHA256=744138e30ab61c9ebb34a931b46fc40e958ce6f66898165e5398600c9a99efd3；旧前缀保持不变。
+
+## WL-20261004-001｜G6-B06 执行中受控重规划
+
+时间／时区：2026-10-04，Asia/Shanghai。关联任务与状态：G6-B06 独立候选完成并通过；B07 生命周期与故障恢复为下一卡，G6 全阶段未完成。起点 Git 工作区干净；开始前正常停止用户先前的 B05 待看服务，保留该次运行记录与端口身份。
+
+背景与范围：在 B05 已确认且旧任务执行中时暂停，从活动飞机状态修订任务或加入先前保存的草稿；隔离规划新方案，展示新旧差异并经明确确认切换。范围限定每段一次、旧任务尚未完成；G5／G6-A 正式指针不改。
+
+工作过程：新增 `scripts/g6_replanning/`、`apps/g6_replanning/`、`apps/cesium_replanning/` 与 `tests/g6_replanning/`。冻结运行／分段／后端／流、飞机状态、旧航段及覆盖游标，隔离 UxAS 从实时位置规划；活动侧逐条确认新任务和同一规划响应被接收，见到新航线后 `RemoveTasks` 旧任务并恢复仿真。旧覆盖按 SHA256 归档，新任务独立累计，未知切换结果不自动重发。初次探针误用 B04 执行专用配置，改为 B01 完整规划配置；初期快照追不上事件账本及周期状态报告变化，改为追平和稳定业务状态核对，原失败记录保留。第一次真实 Edge 完成轮询与页面轮询并发写固定 `.tmp`，Windows 报 WinError 32；确认 GET 改为只读计算，失败 `g6-b06-browser-gui-20261004-01` 保留。
+
+验证：最终候选 `g6-b06-build-20261004-09`、合同检查 `g6-b06-contract-20261004-02` passed。Headless `g6-b06-session-headless-20261004-06`／`g6-b06-flow-headless-20261004-06` 执行中修订，Gui `g6-b06-session-gui-20261004-04`／真实 Edge `g6-b06-browser-gui-20261004-03` 执行中加入，三项替代任务均完成；独立审计 `g6-b06-audit-headless-20261004-05` 与 `g6-b06-audit-browser-20261004-03` 验证 30＋14／43 个新航点由 AMASE 收到并实飞，旧任务切换后完成／关联传感器动作均为零，新关联动作 95／117 条由 AMASE 接收，旧新覆盖从不可变事件账本各自复算一致。两模式正常退出，固定端口释放；来源汇总 `g6-b06-acceptance-20261004-03/acceptance.json` passed。证据与重跑入口见 [B06 报告](docs/g6-b06-replanning-validation.md)。
+
+边界与下一步：首批统计默认不继承未变任务，矩形仍限 400；多次重规划、已完成任务重开、多客户端冲突、网关／后端重启及迟到响应恢复留 B07。追加前 worklog 为 504268 字节，SHA256=AAB47CD26F21C15827DFBC930383509989473ED8CDA1C1B387F4E3EB4E40F752；旧前缀保持不变。
