@@ -1,0 +1,10 @@
+#task-lifecycle{margin:0 0 16px;border:1px solid #53798b;border-radius:5px;
+  padding:12px;background:#152e3f;color:#e8f3f5}
+#task-lifecycle summary{font-weight:700;cursor:pointer}
+#task-lifecycle p{margin:9px 0;line-height:1.45}
+#task-lifecycle .lifecycle-row{display:flex;align-items:center;gap:8px;
+  flex-wrap:wrap;border-top:1px solid #466171;padding:8px 0}
+#task-lifecycle .lifecycle-row span{flex:1 1 180px}
+#task-lifecycle button{min-height:32px;border:1px solid #82b9ca;border-radius:3px;
+  background:#24546d;color:white;cursor:pointer;padding:5px 10px}
+#task-lifecycle button:hover{background:#316d89}
