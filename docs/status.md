@@ -2,9 +2,15 @@
 
 初次了解本项目，可先阅读 [项目整体说明与界面使用指南](project-overview-and-user-guide.md)，包含原项目背景、组件分工、当前场景、界面释义与启停方法。
 
-更新日期：2026-10-09（G6-B07 生命周期与故障恢复已独立验收，下一卡 B08）。依据：[总体实施计划](../04.项目总体实施计划与阶段验收.md)、[G0 报告](g0-baseline.md)、[Java 环境验收](g1-java-validation.md)、[T03 消息库验收](g1-lmcp-validation.md)、[T04 AMASE 验收](g1-amase-validation.md)、[T05 TCP 验收](g1-tcp-validation.md)、[G2 实施方案](g2-windows-uxas-plan.md)、[G3 实施方案](g3-system-integration-plan.md)、[任务清单](backlog.md)。过程记录见根级 [worklog.md](../worklog.md)。
+更新日期：2026-10-11（G6-B08 已完成当前 GUI 人工确认、正式发布及正式包复验；G6 全阶段完成）。依据：[总体实施计划](../04.项目总体实施计划与阶段验收.md)、[G0 报告](g0-baseline.md)、[Java 环境验收](g1-java-validation.md)、[T03 消息库验收](g1-lmcp-validation.md)、[T04 AMASE 验收](g1-amase-validation.md)、[T05 TCP 验收](g1-tcp-validation.md)、[G2 实施方案](g2-windows-uxas-plan.md)、[G3 实施方案](g3-system-integration-plan.md)、[任务清单](backlog.md)。过程记录见根级 [worklog.md](../worklog.md)。
 
 ## 当前关卡
+
+2026-10-11 B08 完成：用户明确回复“验收通过”；`g6-b08-session-review-20261011-01` 的开始／重置两段正常退出并释放端口。本轮确认 `g6-b08-confirm-20261011-01`、正式发布 `g6-b08-publish-20261011-01`、正式包资源检查 `g6-b08-production-check-20261011-01` passed；发布前全球矢量完整 SHA256 和正式指针／包逐文件来源复核通过。G6-A、G6-B01～B08 均已完成，**G6 全阶段完成，下一阶段 G7**。见 [B08 阶段报告](g6-b08-stage-validation.md)；下方 10 月 9 日及本轮早些时候的“待确认”记录保留历史语境。
+
+2026-10-11 B08 续接：10 月 9 日人工复看会话达到 8 小时上限并以 `timeout:whole-run` 失败，端口已释放，不能作为人工确认或正常退出。新 GUI 会话 `g6-b08-session-review-20261011-01` 已就绪，页面 `http://127.0.0.1:8080/` 返回 HTTP 200；自动资格和候选未变。等待用户按开始前流程检查后给出明确结论，再正常停止并决定发布；见 [B08 报告](g6-b08-stage-validation.md)。
+
+2026-10-09 B08：组合页面候选 `g6-b08-build-20261009-02`、自动资格 `g6-b08-qualify-20261009-01` passed。两模式真实 Edge 从页面创建三类草稿至任务完成，暂停／继续／倍速、独立覆盖复算、在线 Esri 与离线本地矢量、中文空格工作目录、端口占用拒绝及正常退出通过；见 [B08 报告](g6-b08-stage-validation.md)。**本轮 GUI 页面人工确认和 G6-B08 正式发布仍待完成；G6 全阶段尚未完成。** 下方 B07 等旧“下一卡”描述保留当时语境。
 
 2026-10-09 B07：最终独立候选 `g6-b07-build-20261009-09`、汇总 `g6-b07-acceptance-20261009-final` passed。按段持久化规划与切换状态，真实 Edge 刷新恢复审查、第二请求端冲突、两模式完整替代任务执行及独立覆盖复算通过；取消／期限的迟到结果、网关重启新流、后端退出只读、重置新段、跨运行及观察来源拒绝、账本上限和正常退出／端口释放均有独立证据。见 [B07 报告](g6-b07-lifecycle-validation.md)。**B08 组合验收、页面人工确认与阶段发布为下一卡；G6 全阶段仍未完成。** 下方 B06 等旧“下一卡”描述保留当时语境。
 
@@ -28,14 +34,14 @@
 
 2026-09-25 B04 补充：独立候选 `g6-b04-build-20260925-0023`、两模式真实确认和执行收据 `g6-b04-acceptance-20260925-0026` 通过；同一预览方案 19／19 航点由 AMASE 接收，实体 400 实际飞行且 TaskComplete，Headless API 和 Gui Edge 均正常退出。错误摘要、重复确认和旧预览被拒绝；当前只登记固定一机一任务，未产出原生覆盖报告，见 [B04 报告](g6-b04-plan-confirmation-validation.md)。下一卡 B05 多机多任务分配，G6 全阶段未完成。上方 B02／B03 时点描述保留历史语境。
 
-**G0～G5、G6-A 已完成并发布。G6-B01～B07 已独立通过；B08 组合验收与阶段交接为下一卡，G6 全阶段未完成。** B07 候选可查询持久操作、刷新后恢复方案审查，并对取消、期限、服务／网关重启、后端退出和重置实施身份隔离与只读保护；不确定切换不自动重发。G6-A 的用户实测会话第二段断流失败保留，正式正常退出由同源码独立 GUI 复验证明；见 [A 验收](g6-a-control-validation.md)、[B01](g6-b01-task-contract-validation.md)、[B02](g6-b02-planning-preview-validation.md)、[B03](g6-b03-task-editor-validation.md)、[B04](g6-b04-plan-confirmation-validation.md)、[B05](g6-b05-multi-task-validation.md)、[B06](g6-b06-replanning-validation.md)与 [B07](g6-b07-lifecycle-validation.md)。
+**G0～G6 已完成；G6-B08 已正式发布，下一阶段 G7。** B07 候选可查询持久操作、刷新后恢复方案审查，并对取消、期限、服务／网关重启、后端退出和重置实施身份隔离与只读保护；不确定切换不自动重发。G6-A 的用户实测会话第二段断流失败保留，正式正常退出由同源码独立 GUI 复验证明；见 [A 验收](g6-a-control-validation.md)、[B01](g6-b01-task-contract-validation.md)、[B02](g6-b02-planning-preview-validation.md)、[B03](g6-b03-task-editor-validation.md)、[B04](g6-b04-plan-confirmation-validation.md)、[B05](g6-b05-multi-task-validation.md)、[B06](g6-b06-replanning-validation.md)、[B07](g6-b07-lifecycle-validation.md)与 [B08](g6-b08-stage-validation.md)。
 
 | 项目 | 当前记录 |
 | --- | --- |
-| 当前 G6 工作 | G6-A [正式验收](g6-a-control-validation.md)已完成；G6-B01～B07 独立通过，B07 [生命周期与故障恢复](g6-b07-lifecycle-validation.md)为当前候选资格，B08 为下一卡 |
-| 最近通过的实现任务 | G6-B07 Headless 修订与 Gui 刷新恢复新增均完成替代三任务及独立审计；取消、期限、网关、后端和重置故障矩阵通过 |
+| 当前 G6 工作 | G6-A、G6-B01～B08 已完成，B08 [阶段报告](g6-b08-stage-validation.md)和正式指针 `g6-b08-publish-20261011-01` 已复查；G6 全阶段完成 |
+| 最近通过的实现任务 | G6-B08 两模式真实 Edge 页面任务创建至完成、控制回归、独立覆盖复算、当前人工确认与正式包资源复验通过 |
 | 三维模型输入 | 用户提供 16 个 AFSIM OSGB；本轮 UCAV 已转换及校准，1 单位＝1 显示米，可快捷键缩放；其余保持 [输入登记](g5-model-inputs.md) |
-| 当前执行结果 | G6-A 正式指针 `g6-a05-publish-post-play-20260924-2214`、生产复验 `g6-control-production-check-20260924-2215` passed；B01～B05 资格见专题报告；B06 构建 `g6-b06-build-20261004-09`、汇总 `g6-b06-acceptance-20261004-03` passed。旧失败收据保留；G5 正式入口保持 |
+| 当前执行结果 | G6-A 正式指针 `g6-a05-publish-post-play-20260924-2214`；B07 汇总 `g6-b07-acceptance-20261009-final` passed；B08 自动资格 `g6-b08-qualify-20261009-01`、人工确认 `g6-b08-confirm-20261011-01`、正式发布 `g6-b08-publish-20261011-01` 和资源复验 passed；旧失败收据保留，G5 正式入口保持 |
 | G3 历史基线 | T07 起点 `6c0294e3`，当时工作区干净；新增独立阶段验收，业务源码／XML／生成代码及 T03～T06 实现保持。inputRevision=3、43 项冻结输入复查通过 |
 | 已归档历史 | G1-T01～T03 为 `304def9`，G1-T04 为 `f2f73ab`，G1-T05 为 `d77dd78`；T04 `b8ccf72`／`68ed420`、T05 `0fe8553`／交接 `5c2d387` 已推送 origin/main |
 | 本轮变更 | G4 方案 `908fdfd`、T01 `ca21032`、T02 `22cacc6` 已归档；T03 `71c5906` 已归档并发布日志修复；T04 `f3b4d08` 已归档；T05 `a206fe5` 已归档；T06 `g4-t06-test-20260920-010936-703` 两模式全程及独立审计通过 |
@@ -43,9 +49,9 @@
 | 正式网关与入口 | g4-t09-publish-20260920-115418-723744；入口资格 g4-t09-release-check-20260920-115528-388842；使用 start-g4-session.ps1，见 [G5 交接](g4-g5-handoff.md) |
 | 已确定的 G2 路线 | MSVC v143＋CMake 3.31、Release x64／动态 CRT；固定 vcpkg baseline／overlay；Zyre／串口关闭，CZMQ／TCP 保留 |
 | 已验证工具 | Temurin 11.0.32.1+1、Ant 1.10.18、Python 3.14.7 x64；Build Tools 17.14.41／cl 19.44.35229、SDK 工具 10.0.26100.7705、CMake 3.31.12、Ninja 1.13.2、固定 vcpkg 提交及工具；Node 24.21.0／npm 11.19.0、独立 Rasterio／GDAL 与 PyProj／PROJ，见 [G5-T01](g5-environment-validation.md) |
-| 已验证能力 | G0～G5、G6-A 正式能力；G6-B01～B04 首批任务草稿／固定执行；B05 候选支持三任务、多机候选、受限顺序、真实分配和执行跟踪 |
-| 尚未完成验收 | G6-B06～B08 运行中重规划、生命周期与阶段发布；B05 未登记原生覆盖统计；G7 正式回放；G8 第二机器与离线部署 |
-| 下一动作 | B06 验证活动状态新增／修订任务、替代方案差异、确认切换、旧命令隔离及统计版本 |
+| 已验证能力 | G0～G6 正式阶段能力；G6-B08 两模式真实页面三任务执行、控制与事件账本统计对照及发布包资源入口 |
+| 尚未完成验收 | G7 正式回放；G8 第二机器与离线部署 |
+| 下一动作 | 按独立任务卡进入 G7；G8 处理第二机器、离线资源包和绝对路径迁移 |
 | 当前边界 | G4 已发布；G5 用原矢量＋USGS 区域主地形，Copernicus 只作对照，旧 Terrarium 归档；西经 122～120／北纬 45～46 度外仅按未验收参考椭球浏览。无覆盖率／FPS 硬门槛，不开展寻优 |
 | 本轮实际倍率 | G4-T08 两模式各 3385 条 Running SessionStatus 均为 1.0，均到 1800009 ms；历史变速取证保持原记录 |
 | 已确定的 G3 验收 | GUI／无界面分别完成任务执行，AMASE 20 米栅格覆盖计算与报告正确，本轮 GUI 确认及正常退出；不设最低覆盖率，算法／参数寻优归后续 |

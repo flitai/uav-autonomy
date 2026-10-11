@@ -2382,3 +2382,25 @@ B04 报告、status、backlog、G6 计划、UxAS 复用说明和 AGENTS 已同�
 验证：最终构建 `g6-b07-build-20261009-09` passed。Headless `g6-b07-session-headless-20261009-final`／修订流程、Gui `g6-b07-session-gui-20261009-final`／真实 Edge 刷新恢复均完成三项替代任务；`g6-b07-audit-headless-20261009-final` 和 `g6-b07-audit-gui-20261009-final` 从活动命令、任务事件与网关账本复核 30＋14／43 个新航点、95／117 条新关联动作，旧任务切换后完成和关联动作均为零，覆盖复算一致。Headless 任务服务重启后同键记录仍可查。`g6-b07-faults-20261009-final` 验证取消／期限迟到结果不提升、超大 ID、幂等与两段重置；`g6-b07-gateway-20261009-final` 验证网关只读窗口、旧预览失效、新流重规划和跨运行拒绝；`g6-b07-origin-20261009-final` 验证观察／回放来源 HTTP 403；`g6-b07-ledger-20261009-final` 验证崩溃账本恢复和第 9 个操作拒绝。后端退出负例 `g6-b07-session-backend-20261009-01` 按预期 failed，B07 只读且规划 HTTP 409。四组正向会话均正常退出；汇总 `g6-b07-acceptance-20261009-final/acceptance.json` passed，来源及 18 个端口释放已复查。完整证据与命令见 [B07 报告](docs/g6-b07-lifecycle-validation.md)。
 
 边界与下一步：每段仍只切换一次，旧任务须已激活且未完成；隔离规划的期限在子进程返回时结算，取消／超时不强杀子进程。后端退出须建立新运行，不确定切换需人工核对，不能重发旧命令。B08 要做组合验收、本轮页面人工确认及阶段发布。追加前 worklog 为 506939 字节，SHA256=1D9B6A578CCB52CB15249661A72EE388850CA7C8D5ECB6B6175B9558E45DD631；旧前缀保持不变。
+
+## WL-20261009-002｜G6-B08 组合验收与阶段交接
+
+时间／时区：2026-10-09，Asia/Shanghai。关联任务与状态：G6-B08 自动组合资格已通过，本轮页面人工确认和正式发布待完成。开始时 Git 工作区干净，B07 `g6-b07-acceptance-20261009-final`、G5 与 G6-A 正式来源已核对。
+
+目标与实施：新增 `scripts/g6_stage/` 与 `tests/g6_stage/`，从 B07 已验收页面生成独立组合候选，绑定 G5 本地矢量／地形、G6-A 和 B07 来源。真实 Edge 从界面创建点／线／矩形草稿，刷新恢复后审查多任务方案、勾选确认、下发、暂停／继续／10 倍速、等待全部任务完成；独立从网关事件账本重算覆盖，核对 AMASE 实际命令、TaskActive／TaskComplete 和控制收据。阶段说明见 [B08 报告](docs/g6-b08-stage-validation.md)。
+
+验证：候选 `g6-b08-build-20261009-02`，Headless `g6-b08-session-headless-20261009-02`／Edge `g6-b08-browser-headless-20261009-06`／审计 `g6-b08-audit-headless-20261009-02` 均 passed，三任务分配 400／500；Gui `g6-b08-session-gui-20261009-01`／Edge `g6-b08-browser-gui-20261009-02`／审计 `g6-b08-audit-gui-20261009-02` 均 passed，三任务由 400 顺序完成。两模式会话正常退出、端口释放；线／点／矩形覆盖分别为 49/49、1/1、375/375，独立账本重放逐字段一致。在线 Esri 真瓦片和无外部 DNS 时本地矢量回退均通过。中文空格工作目录 `g6-b08-session-path-20261009-01` 正常退出；排他占用 8080 时 `g6-b08-probe-port-20261009-02` 证明新会话拒绝且原端口持有者存活。自动资格 `g6-b08-qualify-20261009-01` passed，仍为 `manualReview=pending`、`stageQualified=false`。
+
+问题与处理：浏览器首次试跑在确认收据尚未落盘时查询，改为等待；页面就绪早期字段未定义时改为安全读取。阶段会话第一次导入同名 G5 `manage` 模块，改用唯一模块名并重建 02；失败编号和原始日志保留。端口占用拒绝的服务诊断仍是通用启动失败，未终止占用者。`g6-b08-session-review-20261009-01` 当前已在 8080 就绪，等待本轮用户页面结论；尚未写人工确认、未发布 G6-B08 指针。追加前 worklog 为 510309 字节，SHA256=67B7302D7A7F0F9D644F86AE9058B945EB37465EEFCBD18835DE06A28B746E80；旧前缀保持不变。
+
+## WL-20261011-001｜G6-B08 人工页面复看入口续接
+
+时间／时区：2026-10-11，Asia/Shanghai。关联任务与状态：回应“下一步是什么”；B08 自动资格仍通过，本轮人工确认与正式发布仍待完成。开始时工作区保留 B08 待提交源码和文档修改，未见新的用户源码修改。
+
+核查与处理：`g6-b08-qualify-20261009-01` 仍可通过来源复查，`manualReview=pending`，G6-B08 正式指针不存在。上次 `g6-b08-session-review-20261009-01/runtime-result.json` 为 `failed`／`timeout:whole-run`，其端口已释放，不能作为正常退出或本轮人工确认。重新启动同一候选 `g6-b08-build-20261009-02` 的 GUI 检查会话 `g6-b08-session-review-20261011-01`，`b07-session-ready.json` 已产生，`http://127.0.0.1:8080/` 返回 HTTP 200。新会话等待用户按开始前流程检查页面；收到明确结论后需停止、核对正常退出，批准时再写人工收据并发布。旧超时记录保留，不改写为通过。
+
+验证与限制：从仓库根目录用项目 Python 3.14.7 x64 启动 `scripts/g6_stage/session.py --run-id g6-b08-session-review-20261011-01 --stage-build g6-b08-build-20261009-02 --mode Gui`；页面 HTTP 200，当前尚无人工确认、正常退出或正式发布证据。追加前 worklog 为 512691 字节，SHA256=0B387FFB42A2C9DD832DDFFCAAAD2974F20BE9DE536485A47C9D1AF088DA69EB；旧前缀保持不变。
+
+完成补充：用户本轮明确回复“验收通过”。检查会话第 1 段发生真实开始／重置，第 2 段按 `request-stop` 收尾；`runtime-result.json` 为 passed、`normalExit=true`、`segments=2`，两个段均正常退出并释放端口。`g6-b08-confirm-20261011-01` 写入明确 `approve` 决定及运行／自动资格哈希。`g6-b08-publish-20261011-01` 发布前完整重算 137 GB 全球矢量 SHA256，复制 404 个页面文件，原子切换 `out/artifacts/g6-stage/current.json`；`manage.py --action resolve` 通过。正式包资源检查 `g6-b08-production-check-20261011-01` 以发布包配置启动页面服务，HTTP 200、全球矢量 Range HTTP 206／16 字节，正常退出；G5／G6-A 原正式指针保持。PowerShell 命令中的可选中文确认备注在 Windows 终端转码后出现不可读字符；批准决定、用户本轮回复、会话编号、哈希和发布收据有效，原收据按哈希保留不改写。G6-B08 与 G6 全阶段完成，G7 为下一阶段，G8 仍需第二机器／离线部署。补充前 worklog 为 514127 字节，SHA256=F01F96E77CF64BD9F1682B557043DB2A5323A0C4800F4281659AF82B6AD1387E；旧前缀保持不变。
+
+正式包冒烟首次尝试把启动、探测和异常清理写在一条 PowerShell 命令中，自动审批在执行前拒绝了该命令；随后改为逐步启动本次所有的服务、请求和正常停止。PowerShell 5.1 的 `Invoke-WebRequest -Headers @{Range=...}` 拒绝受限 Range 头，改用 `HttpWebRequest.AddRange(0,15)`，得到真实 HTTP 206 和 16 字节；原试错未改动正式包或指针。
